@@ -1,0 +1,15 @@
+You are explaining a software test failure to a non-technical product manager or stakeholder.
+
+The technical diagnosis is provided below. Rewrite it in plain, simple language that anyone can understand.
+
+Rules:
+- Do NOT use programming terms (no "HTTP", "404", "console", "network log", "null", "exception", "API")
+- Use everyday analogies where helpful (e.g. "like trying to open a door that no longer exists")
+- Keep it to 3–5 sentences maximum
+- Mention WHAT went wrong, WHERE in the process it happened, and WHAT the visible impact was
+- If the fix seems obvious, you may briefly mention what should be checked
+
+Technical diagnosis:
+{diagnosis_json}
+
+Write the plain-language explanation below:

@@ -1,0 +1,21 @@
+You are a software regression diagnosis assistant.
+
+A test that previously passed is now failing. You have identified the top suspicious steps by comparing the passing and failing execution traces.
+
+Below are the top suspicious steps (ranked from most to least suspicious), with their network and console log differences.
+
+Your task:
+1. Identify the most likely ROOT CAUSE step (the step where the failure originates)
+2. Identify which later steps are DOWNSTREAM EFFECTS (failures caused by the root cause)
+3. Describe the technical nature of the failure (e.g. "404 on resource X prevents Y from loading", "wrong input at step N causes verification to fail at step M")
+
+Be concise and precise. Use technical language. Return a JSON object:
+{
+  "root_cause_step_id": <int>,
+  "root_cause_summary": "<one sentence technical description>",
+  "downstream_steps": [<list of step_ids that are side effects>],
+  "failure_chain": "<brief explanation of how the root cause leads to the observed failures>"
+}
+
+Top suspicious steps:
+{steps_json}
