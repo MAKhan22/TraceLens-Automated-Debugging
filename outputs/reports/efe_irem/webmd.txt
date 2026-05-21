@@ -1,0 +1,41 @@
+==============================================================
+TraceLens Diagnosis Report: efe_irem/webmd
+Ranking mode: heuristic (llm failed)
+==============================================================
+
+FINAL RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 2: Visit depression page directly  [network anomaly, console error]  (score=0.587) ← ACTUAL FAULT
+  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)
+  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)
+  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)
+  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+(LLM diagnosis not run — heuristic mode)
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+(LLM not run)
+
+EVALUATION
+----------------------------------------
+Actual fault step: 2
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1               2           1           0           0  ← ACTUAL FAULT
+  2               5         N/A         N/A           3
+  3               6         N/A         N/A           4
+  4               7         N/A         N/A           5
+  5               8         N/A         N/A           6
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 3.6
+==============================================================

@@ -1,0 +1,30 @@
+============================================================
+TraceLens Diagnosis Report: areeb_salem/npm
+============================================================
+
+RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 17: Verify dependencies list visible.  [console error]  (score=0.300)
+  #2  Step 26: Navigate back to search results.  [network anomaly]  (score=0.280)
+  #3  Step 18: Scroll through dependency list.  (score=0.030)
+  #4  Step 0: Navigate to NPM homepage.  (score=0.000)
+  #5  Step 1: Verify NPM homepage loaded.  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step: unknown
+Summary:      
+Failure chain:
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+
+
+EVALUATION
+----------------------------------------
+Hit@1: 1  |  Hit@3: 1  |  Hit@5: 1
+Rank position of actual fault: 1
+Rank distance: 0
+Top-1 step distance: 0
+MAD@5: 8.6
+============================================================

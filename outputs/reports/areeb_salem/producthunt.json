@@ -1,0 +1,105 @@
+{
+  "trace_id": "areeb_salem/producthunt",
+  "generated": "2026-05-20T11:16:28.520106Z",
+  "metadata": {
+    "source": "areeb_salem",
+    "fault_type": "auth_gated_action"
+  },
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 6,
+      "action": "Open the first product page.",
+      "network_score": 0.72,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.558,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to Product Hunt homepage.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.42,
+      "rank": 2
+    },
+    {
+      "step_id": 13,
+      "action": "Scroll to comments section.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.42,
+      "rank": 3
+    },
+    {
+      "step_id": 16,
+      "action": "Click the upvote button on the product.",
+      "network_score": 0.0,
+      "console_score": 0.9,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.36,
+      "rank": 4
+    },
+    {
+      "step_id": 5,
+      "action": "Verify product cards with upvote counts.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.28,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
+  },
+  "stakeholder_summary": "",
+  "evaluation": {
+    "actual_fault_step": 15,
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "rank_position": -1,
+    "rank_distance": 5,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 6,
+        "step_distance": 9
+      },
+      {
+        "rank": 2,
+        "step_id": 0,
+        "step_distance": 15
+      },
+      {
+        "rank": 3,
+        "step_id": 13,
+        "step_distance": 2
+      },
+      {
+        "rank": 4,
+        "step_id": 16,
+        "step_distance": 1
+      },
+      {
+        "rank": 5,
+        "step_id": 5,
+        "step_distance": 10
+      }
+    ],
+    "mad@5": 7.4,
+    "top1_step_distance": 9
+  },
+  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/producthunt\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.558)\n  #2  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.420)\n  #3  Step 13: Scroll to comments section.  [console error]  (score=0.420)\n  #4  Step 16: Click the upvote button on the product.  [console error, action divergence]  (score=0.360)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.280)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 0  |  Hit@5: 0\nRank position of actual fault: -1\nRank distance: 5\nTop-1 step distance: 9\nMAD@5: 7.4\n============================================================"
+}

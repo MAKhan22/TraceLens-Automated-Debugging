@@ -1,0 +1,158 @@
+{
+  "trace_id": "efe_irem/webmd",
+  "generated": "2026-05-21T15:16:54.425653Z",
+  "metadata": {
+    "source": "efe_irem",
+    "fault_type": "404_page_not_found"
+  },
+  "ranking_mode": "heuristic (llm failed)",
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 2,
+      "action": "Visit depression page directly",
+      "network_score": 0.9,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5867,
+      "rank": 1
+    },
+    {
+      "step_id": 5,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Click on the author of the article",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 3
+    },
+    {
+      "step_id": 7,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 4
+    },
+    {
+      "step_id": 8,
+      "action": "Click on Who we are to see other authors",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 5
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 2,
+      "action": "Visit depression page directly",
+      "network_score": 0.9,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5867,
+      "rank": 1
+    },
+    {
+      "step_id": 5,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Click on the author of the article",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 3
+    },
+    {
+      "step_id": 7,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 4
+    },
+    {
+      "step_id": 8,
+      "action": "Click on Who we are to see other authors",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
+  },
+  "stakeholder_summary": "",
+  "evaluation": {
+    "actual_fault_step": 2,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 2,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 5,
+        "step_distance": 3
+      },
+      {
+        "rank": 3,
+        "step_id": 6,
+        "step_distance": 4
+      },
+      {
+        "rank": 4,
+        "step_id": 7,
+        "step_distance": 5
+      },
+      {
+        "rank": 5,
+        "step_id": 8,
+        "step_distance": 6
+      }
+    ],
+    "mad@5": 3.6,
+    "top1_step_distance": 0
+  },
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/webmd\nRanking mode: heuristic (llm failed)\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error]  (score=0.587) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 2\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               2           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           3\n  3               6         N/A         N/A           4\n  4               7         N/A         N/A           5\n  5               8         N/A         N/A           6\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 3.6\n=============================================================="
+}

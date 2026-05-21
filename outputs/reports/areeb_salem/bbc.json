@@ -1,0 +1,110 @@
+{
+  "trace_id": "areeb_salem/bbc",
+  "generated": "2026-05-21T07:55:56.254098Z",
+  "metadata": {
+    "source": "areeb_salem",
+    "fault_type": "stale_cdn_cache"
+  },
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 16,
+      "action": "Scroll back to article top.",
+      "network_score": 0.7,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.495,
+      "rank": 1
+    },
+    {
+      "step_id": 19,
+      "action": "Verify category page loaded.",
+      "network_score": 0.7,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.495,
+      "rank": 2
+    },
+    {
+      "step_id": 10,
+      "action": "Scroll through more article paragraphs.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.27,
+      "rank": 3
+    },
+    {
+      "step_id": 15,
+      "action": "Verify related article links visible.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.27,
+      "rank": 4
+    },
+    {
+      "step_id": 18,
+      "action": "Navigate to a news category.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.27,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": 16,
+    "root_cause_summary": "Iframe script loading issues trigger a chain of ad rendering failures and console warnings.",
+    "downstream_steps": [
+      19,
+      10,
+      15,
+      18
+    ],
+    "failure_chain": "The root cause at step 16 leads to ad rendering issues, which in turn cause verification failures at step 19, and propagate to other steps due to the inability to access ad HTML content, resulting in a cascade of console warnings and errors."
+  },
+  "stakeholder_summary": "When our system tried to load a crucial part of the webpage, it couldn't find what it needed, kind of like trying to open a door that no longer exists. This happened during a specific step in the process where we prepare to show ads. As a result, the ads didn't display properly, and this caused a chain reaction of problems that affected several other parts of the system. The visible impact was that the ads didn't show up as expected, and we should check if the missing part is correctly set up and accessible to fix the issue.",
+  "evaluation": {
+    "actual_fault_step": 18,
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "rank_position": 5,
+    "rank_distance": 4,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 16,
+        "step_distance": 2
+      },
+      {
+        "rank": 2,
+        "step_id": 19,
+        "step_distance": 1
+      },
+      {
+        "rank": 3,
+        "step_id": 10,
+        "step_distance": 8
+      },
+      {
+        "rank": 4,
+        "step_id": 15,
+        "step_distance": 3
+      },
+      {
+        "rank": 5,
+        "step_id": 18,
+        "step_distance": 0
+      }
+    ],
+    "mad@5": 2.8,
+    "top1_step_distance": 2
+  },
+  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/bbc\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 16: Scroll back to article top.  [network anomaly, console error]  (score=0.495)\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.495)\n  #3  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.270)\n  #4  Step 15: Verify related article links visible.  [network anomaly]  (score=0.270)\n  #5  Step 18: Navigate to a news category.  [network anomaly]  (score=0.270)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: 16\nSummary:      Iframe script loading issues trigger a chain of ad rendering failures and console warnings.\nFailure chain:The root cause at step 16 leads to ad rendering issues, which in turn cause verification failures at step 19, and propagate to other steps due to the inability to access ad HTML content, resulting in a cascade of console warnings and errors.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen our system tried to load a crucial part of the webpage, it couldn't find what it needed, kind of like trying to open a door that no longer exists. This happened during a specific step in the process where we prepare to show ads. As a result, the ads didn't display properly, and this caused a chain reaction of problems that affected several other parts of the system. The visible impact was that the ads didn't show up as expected, and we should check if the missing part is correctly set up and accessible to fix the issue.\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 0  |  Hit@5: 1\nRank position of actual fault: 5\nRank distance: 4\nTop-1 step distance: 2\nMAD@5: 2.8\n============================================================"
+}

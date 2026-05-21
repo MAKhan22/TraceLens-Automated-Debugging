@@ -1,0 +1,105 @@
+{
+  "trace_id": "areeb_salem/wikipedia",
+  "generated": "2026-05-20T11:16:28.546409Z",
+  "metadata": {
+    "source": "areeb_salem",
+    "fault_type": "broken_anchor_toc"
+  },
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 17,
+      "action": "Navigate to another section via table of contents.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to the Machine Learning Wikipedia article.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Verify article page loaded.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Verify article title and lead section.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Scroll to the table of contents.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
+  },
+  "stakeholder_summary": "",
+  "evaluation": {
+    "actual_fault_step": 17,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 17,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 0,
+        "step_distance": 17
+      },
+      {
+        "rank": 3,
+        "step_id": 1,
+        "step_distance": 16
+      },
+      {
+        "rank": 4,
+        "step_id": 2,
+        "step_distance": 15
+      },
+      {
+        "rank": 5,
+        "step_id": 3,
+        "step_distance": 14
+      }
+    ],
+    "mad@5": 12.4,
+    "top1_step_distance": 0
+  },
+  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/wikipedia\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (score=0.300)\n  #2  Step 0: Navigate to the Machine Learning Wikipedia article.  (score=0.000)\n  #3  Step 1: Verify article page loaded.  (score=0.000)\n  #4  Step 2: Verify article title and lead section.  (score=0.000)\n  #5  Step 3: Scroll to the table of contents.  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 1  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 1\nRank distance: 0\nTop-1 step distance: 0\nMAD@5: 12.4\n============================================================"
+}

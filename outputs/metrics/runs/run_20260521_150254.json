@@ -1,0 +1,335 @@
+{
+  "run_id": "20260521_150254",
+  "timestamp": "2026-05-21T15:02:54.812558+00:00",
+  "mode": "heuristic",
+  "filter_source": "efe_irem",
+  "filter_trace": null,
+  "n_traces_run": 8,
+  "n_traces_evaluated": 8,
+  "aggregate": {
+    "n_traces": 8,
+    "hit@1": 0.5,
+    "hit@3": 0.625,
+    "hit@5": 0.625,
+    "mean_rank_position": 1.2,
+    "mean_rank_distance": 2.0,
+    "mean_top1_step_distance": 6.375,
+    "mean_mad@5": 8.825,
+    "found_in_top5_count": 5
+  },
+  "effectiveness": {
+    "hit_at_1_rate": "50%  (fair)",
+    "hit_at_3_rate": "62%  (fair)",
+    "hit_at_5_rate": "62%  (fair)",
+    "mean_rank_distance": "2.00  (fair)",
+    "mean_top1_step_distance": "6.38  (fair)",
+    "mean_mad_at_5": "8.82  (fair)",
+    "overall": "fair"
+  },
+  "per_trace": [
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 2,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 4.2,
+      "top1_step_distance": 5
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "rank_position": -1,
+      "rank_distance": 5,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 25
+        },
+        {
+          "rank": 2,
+          "step_id": 1,
+          "step_distance": 26
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 21
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 27
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 24
+        }
+      ],
+      "mad@5": 24.6,
+      "top1_step_distance": 25
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 7
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 5
+        }
+      ],
+      "mad@5": 5.2,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/dictionary",
+      "actual_fault_step": 25,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 25,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 26,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 27,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 25
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 24
+        }
+      ],
+      "mad@5": 10.4,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 7,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 8,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 3.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "rank_position": -1,
+      "rank_distance": 5,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 15,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 16,
+          "step_distance": 4
+        },
+        {
+          "rank": 5,
+          "step_id": 17,
+          "step_distance": 5
+        }
+      ],
+      "mad@5": 4.4,
+      "top1_step_distance": 8
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 7.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "rank_position": -1,
+      "rank_distance": 5,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 2,
+          "step_id": 2,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 7
+        },
+        {
+          "rank": 4,
+          "step_id": 23,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 10.6,
+      "top1_step_distance": 13
+    }
+  ]
+}

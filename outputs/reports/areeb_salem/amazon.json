@@ -1,0 +1,110 @@
+{
+  "trace_id": "areeb_salem/amazon",
+  "generated": "2026-05-21T07:55:11.710044Z",
+  "metadata": {
+    "source": "areeb_salem",
+    "fault_type": "auth_gated_action"
+  },
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 2,
+      "action": "Search for Python programming book.",
+      "network_score": 0.5,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.425,
+      "rank": 1
+    },
+    {
+      "step_id": 20,
+      "action": "Click the add to wish list button.",
+      "network_score": 0.0,
+      "console_score": 0.8,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.29,
+      "rank": 2
+    },
+    {
+      "step_id": 4,
+      "action": "Verify product listings in results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.245,
+      "rank": 3
+    },
+    {
+      "step_id": 5,
+      "action": "Scroll through search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.245,
+      "rank": 4
+    },
+    {
+      "step_id": 7,
+      "action": "Open the first book result.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.245,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": 2,
+    "root_cause_summary": "Failed to load resource due to net::ERR_TRUST_TOKEN_OPERATION_FAILED and 405 status code from https://www.amazon.com/suggestions",
+    "downstream_steps": [
+      20,
+      4,
+      5,
+      7
+    ],
+    "failure_chain": "The initial failure to load resources at step 2 due to trust token operation failure and 405 status code prevents subsequent steps from executing correctly, leading to downstream effects such as warnings about preloaded resources at step 20 and potential verification failures at steps 4, 5, and 7."
+  },
+  "stakeholder_summary": "When our system tried to get some information from a website, it was like trying to open a door that no longer exists - the website didn't allow us to access what we needed. This happened early in the process, at a point where we were trying to load some necessary resources. As a result, the rest of the process didn't work correctly, and we saw some warning messages and potential errors later on. It's possible that the website has changed its security settings, so we should check if our system needs to be updated to match those changes.",
+  "evaluation": {
+    "actual_fault_step": 20,
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 2,
+    "rank_distance": 1,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 2,
+        "step_distance": 18
+      },
+      {
+        "rank": 2,
+        "step_id": 20,
+        "step_distance": 0
+      },
+      {
+        "rank": 3,
+        "step_id": 4,
+        "step_distance": 16
+      },
+      {
+        "rank": 4,
+        "step_id": 5,
+        "step_distance": 15
+      },
+      {
+        "rank": 5,
+        "step_id": 7,
+        "step_distance": 13
+      }
+    ],
+    "mad@5": 12.4,
+    "top1_step_distance": 18
+  },
+  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/amazon\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 2: Search for Python programming book.  [console error]  (score=0.425)\n  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.290)\n  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.245)\n  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.245)\n  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.245)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: 2\nSummary:      Failed to load resource due to net::ERR_TRUST_TOKEN_OPERATION_FAILED and 405 status code from https://www.amazon.com/suggestions\nFailure chain:The initial failure to load resources at step 2 due to trust token operation failure and 405 status code prevents subsequent steps from executing correctly, leading to downstream effects such as warnings about preloaded resources at step 20 and potential verification failures at steps 4, 5, and 7.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen our system tried to get some information from a website, it was like trying to open a door that no longer exists - the website didn't allow us to access what we needed. This happened early in the process, at a point where we were trying to load some necessary resources. As a result, the rest of the process didn't work correctly, and we saw some warning messages and potential errors later on. It's possible that the website has changed its security settings, so we should check if our system needs to be updated to match those changes.\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 2\nRank distance: 1\nTop-1 step distance: 18\nMAD@5: 12.4\n============================================================"
+}

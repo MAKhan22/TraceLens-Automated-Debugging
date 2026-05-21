@@ -1,0 +1,30 @@
+============================================================
+TraceLens Diagnosis Report: areeb_salem/wikipedia
+============================================================
+
+RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 17: Navigate to another section via table of contents.  [console error]  (score=0.300)
+  #2  Step 0: Navigate to the Machine Learning Wikipedia article.  (score=0.000)
+  #3  Step 1: Verify article page loaded.  (score=0.000)
+  #4  Step 2: Verify article title and lead section.  (score=0.000)
+  #5  Step 3: Scroll to the table of contents.  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step: unknown
+Summary:      
+Failure chain:
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+
+
+EVALUATION
+----------------------------------------
+Hit@1: 1  |  Hit@3: 1  |  Hit@5: 1
+Rank position of actual fault: 1
+Rank distance: 0
+Top-1 step distance: 0
+MAD@5: 12.4
+============================================================

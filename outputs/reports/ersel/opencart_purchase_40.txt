@@ -1,0 +1,52 @@
+==============================================================
+TraceLens Diagnosis Report: ersel/opencart_purchase_40
+Ranking mode: llm+diagnosis
+==============================================================
+
+FINAL RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 21: Type 'xyznonexistent123' in search box  (score=0.045) ← ACTUAL FAULT
+  #2  Step 24: Verify search results contain products  [verification failed]  (score=0.295)
+  #3  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)
+  #4  Step 1: Wait for element logo  (score=0.000)
+  #5  Step 2: Click Desktops category in nav menu  (score=0.000)
+
+HEURISTIC RANKING (before LLM)
+----------------------------------------
+  #1  Step 24: Verify search results contain products  [verification failed]  (score=0.295)
+  #2  Step 21: Type 'xyznonexistent123' in search box  (score=0.045) ← ACTUAL FAULT
+  #3  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)
+  #4  Step 1: Wait for element logo  (score=0.000)
+  #5  Step 2: Click Desktops category in nav menu  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 21
+Summary:       Incorrect input 'xyznonexistent123' in search box causes search results verification to fail
+Failure chain: The incorrect search input at step 21 leads to no matching products being found, resulting in verification failure at step 24
+Downstream:    [24]
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+When a user searched for something that doesn't exist, the system got confused and couldn't find any matching products. This happened during the search process, specifically when the system was trying to verify the results. As a result, the search failed and no products were shown. It's like trying to find a book in a library that's no longer on the shelves - the system can't retrieve something that's not there. We should check the search input to make sure it's valid before trying to verify the results.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 21
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              21           1           0           0  ← ACTUAL FAULT
+  2              24         N/A         N/A           3
+  3               0         N/A         N/A          21
+  4               1         N/A         N/A          20
+  5               2         N/A         N/A          19
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 12.6
+==============================================================

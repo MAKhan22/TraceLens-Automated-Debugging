@@ -1,0 +1,105 @@
+{
+  "trace_id": "areeb_salem/imdb",
+  "generated": "2026-05-20T11:16:28.490303Z",
+  "metadata": {
+    "source": "areeb_salem",
+    "fault_type": "api_500_filmography"
+  },
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 15,
+      "action": "Verify filmography section visible.",
+      "network_score": 0.7,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.58,
+      "rank": 1
+    },
+    {
+      "step_id": 20,
+      "action": "Scroll back to movie header.",
+      "network_score": 0.7,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.55,
+      "rank": 2
+    },
+    {
+      "step_id": 5,
+      "action": "Open the Inception movie page.",
+      "network_score": 0.5,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.47,
+      "rank": 3
+    },
+    {
+      "step_id": 12,
+      "action": "Open the lead actor profile page.",
+      "network_score": 0.3,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.39,
+      "rank": 4
+    },
+    {
+      "step_id": 6,
+      "action": "Verify movie title page loaded.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.31,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
+  },
+  "stakeholder_summary": "",
+  "evaluation": {
+    "actual_fault_step": 15,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 15,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 20,
+        "step_distance": 5
+      },
+      {
+        "rank": 3,
+        "step_id": 5,
+        "step_distance": 10
+      },
+      {
+        "rank": 4,
+        "step_id": 12,
+        "step_distance": 3
+      },
+      {
+        "rank": 5,
+        "step_id": 6,
+        "step_distance": 9
+      }
+    ],
+    "mad@5": 5.4,
+    "top1_step_distance": 0
+  },
+  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/imdb\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.580)\n  #2  Step 20: Scroll back to movie header.  [network anomaly, console error]  (score=0.550)\n  #3  Step 5: Open the Inception movie page.  [console error]  (score=0.470)\n  #4  Step 12: Open the lead actor profile page.  [console error]  (score=0.390)\n  #5  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.310)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 1  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 1\nRank distance: 0\nTop-1 step distance: 0\nMAD@5: 5.4\n============================================================"
+}

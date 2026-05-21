@@ -1,0 +1,30 @@
+============================================================
+TraceLens Diagnosis Report: areeb_salem/github
+============================================================
+
+RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 20: Open the first pull request.  [console error]  (score=0.500)
+  #2  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.310)
+  #3  Step 23: Verify pull request file changes section.  [console error]  (score=0.300)
+  #4  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.300)
+  #5  Step 4: Navigate to the Code tab.  [network anomaly]  (score=0.280)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step: unknown
+Summary:      
+Failure chain:
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+
+
+EVALUATION
+----------------------------------------
+Hit@1: 0  |  Hit@3: 1  |  Hit@5: 1
+Rank position of actual fault: 3
+Rank distance: 2
+Top-1 step distance: 3
+MAD@5: 7.4
+============================================================

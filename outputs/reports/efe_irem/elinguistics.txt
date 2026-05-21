@@ -1,0 +1,41 @@
+==============================================================
+TraceLens Diagnosis Report: efe_irem/elinguistics
+Ranking mode: heuristic
+==============================================================
+
+FINAL RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 11: Open Wiktionary Kazakh Swadesh list link  [network anomaly, console error]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 0: Visit elinguistics.net home  (score=0.000)
+  #3  Step 1: Wait for the page to load  (score=0.000)
+  #4  Step 2: Click "Compare languages"  (score=0.000)
+  #5  Step 3: Wait for the compare page to load  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+(LLM diagnosis not run — heuristic mode)
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+(LLM not run)
+
+EVALUATION
+----------------------------------------
+Actual fault step: 11
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              11           1           0           0  ← ACTUAL FAULT
+  2               0         N/A         N/A          11
+  3               1         N/A         N/A          10
+  4               2         N/A         N/A           9
+  5               3         N/A         N/A           8
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 7.6
+==============================================================

@@ -1,0 +1,30 @@
+============================================================
+TraceLens Diagnosis Report: areeb_salem/pypi
+============================================================
+
+RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 2: Search for Django package.  [console error]  (score=0.524)
+  #2  Step 8: Verify project page loaded.  [console error]  (score=0.300)
+  #3  Step 21: Verify release history visible.  [console error]  (score=0.300)
+  #4  Step 0: Navigate to PyPI homepage.  (score=0.000)
+  #5  Step 1: Verify PyPI homepage loaded.  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step: unknown
+Summary:      
+Failure chain:
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+
+
+EVALUATION
+----------------------------------------
+Hit@1: 0  |  Hit@3: 1  |  Hit@5: 1
+Rank position of actual fault: 2
+Rank distance: 1
+Top-1 step distance: 6
+MAD@5: 6.8
+============================================================

@@ -1,0 +1,41 @@
+==============================================================
+TraceLens Diagnosis Report: efe_irem/wikipedia
+Ranking mode: heuristic
+==============================================================
+
+FINAL RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)
+  #2  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)
+  #3  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397)
+  #4  Step 23: Wait for history list again  [network anomaly]  (score=0.397)
+  #5  Step 1: Wait for the homepage to load  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+(LLM diagnosis not run — heuristic mode)
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+(LLM not run)
+
+EVALUATION
+----------------------------------------
+Actual fault step: 13
+Hit@1=0  Hit@3=0  Hit@5=0
+Rank position of actual fault: not in top-5
+Overall rank distance (|actual_rank - 1|): 5
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1               0         N/A         N/A          13
+  2               2         N/A         N/A          11
+  3               6         N/A         N/A           7
+  4              23         N/A         N/A          10
+  5               1         N/A         N/A          12
+
+Top-1 step distance: 13
+MAD@5 (mean step-dist over top-5): 10.6
+==============================================================

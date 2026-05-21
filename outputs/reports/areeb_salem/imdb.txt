@@ -1,0 +1,30 @@
+============================================================
+TraceLens Diagnosis Report: areeb_salem/imdb
+============================================================
+
+RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.580)
+  #2  Step 20: Scroll back to movie header.  [network anomaly, console error]  (score=0.550)
+  #3  Step 5: Open the Inception movie page.  [console error]  (score=0.470)
+  #4  Step 12: Open the lead actor profile page.  [console error]  (score=0.390)
+  #5  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.310)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step: unknown
+Summary:      
+Failure chain:
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+
+
+EVALUATION
+----------------------------------------
+Hit@1: 1  |  Hit@3: 1  |  Hit@5: 1
+Rank position of actual fault: 1
+Rank distance: 0
+Top-1 step distance: 0
+MAD@5: 5.4
+============================================================

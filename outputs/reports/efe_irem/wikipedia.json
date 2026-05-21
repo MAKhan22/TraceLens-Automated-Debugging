@@ -1,0 +1,158 @@
+{
+  "trace_id": "efe_irem/wikipedia",
+  "generated": "2026-05-21T15:08:29.388774Z",
+  "metadata": {
+    "source": "efe_irem",
+    "fault_type": "broken_anchor_toc"
+  },
+  "ranking_mode": "heuristic",
+  "ranked_suspicious_steps": [
+    {
+      "step_id": 0,
+      "action": "Visit wikipedia.org",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "rank": 1
+    },
+    {
+      "step_id": 2,
+      "action": "Click the search field",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Open first wikilink in the first paragraph with a link",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "rank": 3
+    },
+    {
+      "step_id": 23,
+      "action": "Wait for history list again",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "rank": 4
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the homepage to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 0,
+      "action": "Visit wikipedia.org",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "rank": 1
+    },
+    {
+      "step_id": 2,
+      "action": "Click the search field",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Open first wikilink in the first paragraph with a link",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "rank": 3
+    },
+    {
+      "step_id": 23,
+      "action": "Wait for history list again",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "rank": 4
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the homepage to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "technical_diagnosis": {
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
+  },
+  "stakeholder_summary": "",
+  "evaluation": {
+    "actual_fault_step": 13,
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "rank_position": -1,
+    "rank_distance": 5,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 0,
+        "step_distance": 13
+      },
+      {
+        "rank": 2,
+        "step_id": 2,
+        "step_distance": 11
+      },
+      {
+        "rank": 3,
+        "step_id": 6,
+        "step_distance": 7
+      },
+      {
+        "rank": 4,
+        "step_id": 23,
+        "step_distance": 10
+      },
+      {
+        "rank": 5,
+        "step_id": 1,
+        "step_distance": 12
+      }
+    ],
+    "mad@5": 10.6,
+    "top1_step_distance": 13
+  },
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/wikipedia\nRanking mode: heuristic\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)\n  #2  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)\n  #3  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397)\n  #4  Step 23: Wait for history list again  [network anomaly]  (score=0.397)\n  #5  Step 1: Wait for the homepage to load  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=0  Hit@3=0  Hit@5=0\nRank position of actual fault: not in top-5\nOverall rank distance (|actual_rank - 1|): 5\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               0         N/A         N/A          13\n  2               2         N/A         N/A          11\n  3               6         N/A         N/A           7\n  4              23         N/A         N/A          10\n  5               1         N/A         N/A          12\n\nTop-1 step distance: 13\nMAD@5 (mean step-dist over top-5): 10.6\n=============================================================="
+}

@@ -1,0 +1,41 @@
+==============================================================
+TraceLens Diagnosis Report: ersel/opencart_manufacturer_404_35
+Ranking mode: heuristic (llm failed)
+==============================================================
+
+FINAL RANKED SUSPICIOUS STEPS
+----------------------------------------
+  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT
+  #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)
+  #3  Step 1: Wait for element logo  (score=0.000)
+  #4  Step 2: Scroll homepage  (score=0.000)
+  #5  Step 3: Desktops menu  (score=0.000)
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+(LLM diagnosis not run — heuristic mode)
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+(LLM not run)
+
+EVALUATION
+----------------------------------------
+Actual fault step: 23
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              23           1           0           0  ← ACTUAL FAULT
+  2               0         N/A         N/A          23
+  3               1         N/A         N/A          22
+  4               2         N/A         N/A          21
+  5               3         N/A         N/A          20
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 17.2
+==============================================================
