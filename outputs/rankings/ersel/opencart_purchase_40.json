@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 21,
+    "action": "Type 'xyznonexistent123' in search box",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.3,
+    "intent_score": 0.0,
+    "combined_score": 0.045,
+    "rank": 1
+  },
+  {
+    "step_id": 24,
+    "action": "Verify search results contain products",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.3,
+    "intent_score": 1.0,
+    "combined_score": 0.295,
+    "rank": 2
+  },
+  {
+    "step_id": 0,
+    "action": "Navigate to https://demo.opencart.com/",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 3
+  },
+  {
+    "step_id": 1,
+    "action": "Wait for element logo",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 4
+  },
+  {
+    "step_id": 2,
+    "action": "Click Desktops category in nav menu",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 5
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 2,
+    "action": "Verify that the login screen is visible",
+    "network_score": 0.7,
+    "console_score": 0.5,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.4933,
+    "rank": 1
+  },
+  {
+    "step_id": 7,
+    "action": "Click the login button",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 2
+  },
+  {
+    "step_id": 1,
+    "action": "Wait for the page to load",
+    "network_score": 0.56,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.2613,
+    "rank": 3
+  },
+  {
+    "step_id": 4,
+    "action": "Type the username: standard_user",
+    "network_score": 0.0,
+    "console_score": 0.1,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0333,
+    "rank": 4
+  },
+  {
+    "step_id": 0,
+    "action": "Visit saucedemo.com",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 5
+  }
+]

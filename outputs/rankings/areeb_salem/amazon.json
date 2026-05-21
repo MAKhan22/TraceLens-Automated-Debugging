@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 2,
+    "action": "Search for Python programming book.",
+    "network_score": 0.5,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.425,
+    "rank": 1
+  },
+  {
+    "step_id": 20,
+    "action": "Click the add to wish list button.",
+    "network_score": 0.0,
+    "console_score": 0.8,
+    "action_score": 0.6,
+    "intent_score": 0.0,
+    "combined_score": 0.29,
+    "rank": 2
+  },
+  {
+    "step_id": 4,
+    "action": "Verify product listings in results.",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.245,
+    "rank": 3
+  },
+  {
+    "step_id": 5,
+    "action": "Scroll through search results.",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.245,
+    "rank": 4
+  },
+  {
+    "step_id": 7,
+    "action": "Open the first book result.",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.245,
+    "rank": 5
+  }
+]

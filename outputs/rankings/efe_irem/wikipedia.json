@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 0,
+    "action": "Visit wikipedia.org",
+    "network_score": 0.85,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.6967,
+    "rank": 1
+  },
+  {
+    "step_id": 2,
+    "action": "Click the search field",
+    "network_score": 0.85,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.6967,
+    "rank": 2
+  },
+  {
+    "step_id": 6,
+    "action": "Open first wikilink in the first paragraph with a link",
+    "network_score": 0.85,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3967,
+    "rank": 3
+  },
+  {
+    "step_id": 23,
+    "action": "Wait for history list again",
+    "network_score": 0.85,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3967,
+    "rank": 4
+  },
+  {
+    "step_id": 1,
+    "action": "Wait for the homepage to load",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 5
+  }
+]

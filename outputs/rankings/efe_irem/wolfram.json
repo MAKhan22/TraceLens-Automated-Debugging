@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 4,
+    "action": "Hit enter",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 1
+  },
+  {
+    "step_id": 14,
+    "action": "Click Division Problems",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 2
+  },
+  {
+    "step_id": 15,
+    "action": "Wait for the Division Problems page",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 3
+  },
+  {
+    "step_id": 16,
+    "action": "Click Ham Sandwich Theorem",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 4
+  },
+  {
+    "step_id": 17,
+    "action": "Wait for the Ham Sandwich Theorem page",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 5
+  }
+]

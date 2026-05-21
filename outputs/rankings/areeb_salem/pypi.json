@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 2,
+    "action": "Search for Django package.",
+    "network_score": 0.56,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.524,
+    "rank": 1
+  },
+  {
+    "step_id": 8,
+    "action": "Verify project page loaded.",
+    "network_score": 0.0,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3,
+    "rank": 2
+  },
+  {
+    "step_id": 21,
+    "action": "Verify release history visible.",
+    "network_score": 0.0,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3,
+    "rank": 3
+  },
+  {
+    "step_id": 0,
+    "action": "Navigate to PyPI homepage.",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 4
+  },
+  {
+    "step_id": 1,
+    "action": "Verify PyPI homepage loaded.",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 5
+  }
+]

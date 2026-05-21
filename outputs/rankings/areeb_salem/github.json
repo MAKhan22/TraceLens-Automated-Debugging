@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 20,
+    "action": "Open the first pull request.",
+    "network_score": 0.5,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.5,
+    "rank": 1
+  },
+  {
+    "step_id": 30,
+    "action": "Navigate to the repository Insights page.",
+    "network_score": 0.7,
+    "console_score": 0.1,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.31,
+    "rank": 2
+  },
+  {
+    "step_id": 23,
+    "action": "Verify pull request file changes section.",
+    "network_score": 0.0,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3,
+    "rank": 3
+  },
+  {
+    "step_id": 31,
+    "action": "Verify Insights activity data loaded.",
+    "network_score": 0.0,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3,
+    "rank": 4
+  },
+  {
+    "step_id": 4,
+    "action": "Navigate to the Code tab.",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.28,
+    "rank": 5
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 16,
+    "action": "Scroll back to article top.",
+    "network_score": 0.7,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.495,
+    "rank": 1
+  },
+  {
+    "step_id": 19,
+    "action": "Verify category page loaded.",
+    "network_score": 0.7,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.495,
+    "rank": 2
+  },
+  {
+    "step_id": 10,
+    "action": "Scroll through more article paragraphs.",
+    "network_score": 0.7,
+    "console_score": 0.1,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.27,
+    "rank": 3
+  },
+  {
+    "step_id": 15,
+    "action": "Verify related article links visible.",
+    "network_score": 0.7,
+    "console_score": 0.1,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.27,
+    "rank": 4
+  },
+  {
+    "step_id": 18,
+    "action": "Navigate to a news category.",
+    "network_score": 0.7,
+    "console_score": 0.1,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.27,
+    "rank": 5
+  }
+]

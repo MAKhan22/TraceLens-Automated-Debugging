@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 8,
+    "action": "Click on Read Now to read the book",
+    "network_score": 0.9,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.72,
+    "rank": 1
+  },
+  {
+    "step_id": 0,
+    "action": "Visit gutenberg.org",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 2
+  },
+  {
+    "step_id": 1,
+    "action": "Wait for the page to load",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 3
+  },
+  {
+    "step_id": 2,
+    "action": "Click on Frequently Downloaded",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 4
+  },
+  {
+    "step_id": 3,
+    "action": "Wait for the page to load",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 5
+  }
+]

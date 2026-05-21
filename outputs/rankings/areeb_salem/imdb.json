@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 15,
+    "action": "Verify filmography section visible.",
+    "network_score": 0.7,
+    "console_score": 1.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.58,
+    "rank": 1
+  },
+  {
+    "step_id": 20,
+    "action": "Scroll back to movie header.",
+    "network_score": 0.7,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.55,
+    "rank": 2
+  },
+  {
+    "step_id": 5,
+    "action": "Open the Inception movie page.",
+    "network_score": 0.5,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.47,
+    "rank": 3
+  },
+  {
+    "step_id": 12,
+    "action": "Open the lead actor profile page.",
+    "network_score": 0.3,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.39,
+    "rank": 4
+  },
+  {
+    "step_id": 6,
+    "action": "Verify movie title page loaded.",
+    "network_score": 0.7,
+    "console_score": 0.1,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.31,
+    "rank": 5
+  }
+]

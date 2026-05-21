@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 2,
+    "action": "Visit depression page directly",
+    "network_score": 0.9,
+    "console_score": 0.5,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.5867,
+    "rank": 1
+  },
+  {
+    "step_id": 5,
+    "action": "Wait for the page to load",
+    "network_score": 0.7,
+    "console_score": 0.5,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.4933,
+    "rank": 2
+  },
+  {
+    "step_id": 6,
+    "action": "Click on the author of the article",
+    "network_score": 0.7,
+    "console_score": 0.5,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.4933,
+    "rank": 3
+  },
+  {
+    "step_id": 7,
+    "action": "Wait for the page to load",
+    "network_score": 0.7,
+    "console_score": 0.5,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.4933,
+    "rank": 4
+  },
+  {
+    "step_id": 8,
+    "action": "Click on Who we are to see other authors",
+    "network_score": 0.7,
+    "console_score": 0.5,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.4933,
+    "rank": 5
+  }
+]

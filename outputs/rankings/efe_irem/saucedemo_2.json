@@ -1,0 +1,52 @@
+[
+  {
+    "step_id": 1,
+    "action": "Wait for the page to load",
+    "network_score": 0.56,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.2613,
+    "rank": 1
+  },
+  {
+    "step_id": 2,
+    "action": "Verify that the login screen is visible",
+    "network_score": 0.7,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.3267,
+    "rank": 2
+  },
+  {
+    "step_id": 6,
+    "action": "Type the password: secret_sauce",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.3,
+    "intent_score": 0.0,
+    "combined_score": 0.06,
+    "rank": 3
+  },
+  {
+    "step_id": 0,
+    "action": "Visit saucedemo.com",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 4
+  },
+  {
+    "step_id": 3,
+    "action": "Click on the username field",
+    "network_score": 0.0,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.0,
+    "rank": 5
+  }
+]
