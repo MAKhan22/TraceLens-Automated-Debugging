@@ -1,0 +1,64 @@
+# TraceLens configuration
+
+data:
+  raw_base: "data/relative debugging-20260518T094544Z-3-001/relative debugging"
+  processed_dir: "data/processed"
+  ground_truth: "data/evaluation/ground_truth.json"
+
+  # Paths relative to raw_base
+  sources:
+    efe_irem:
+      base: "efe- irem traces"
+      traces:
+        - { id: "saucedemo_1",  pass: "saucedemo_1/saucedemo_1_correct.json",   fail: "saucedemo_1/saucedemo_1_incorrect.json" }
+        - { id: "saucedemo_2",  pass: "saucedemo_2/saucedemo_2_correct.json",   fail: "saucedemo_2/saucedemo_2_incorrect.json" }
+        - { id: "gutenberg",    pass: "gutenberg/gutenberg_correct.json",        fail: "gutenberg/gutenberg_incorrect.json" }
+        - { id: "dictionary",   pass: "dictionary/dictionary-correct.json",      fail: "dictionary/dictionary-incorrect.json" }
+        - { id: "webmd",        pass: "webmd/webmd-correct.json",                fail: "webmd/webmd-incorrect.json" }
+        - { id: "wolfram",      pass: "wolfram mathworld/wolfram-correct.json",  fail: "wolfram mathworld/wolfram-incorrect.json" }
+        - { id: "elinguistics", pass: "elinguistics/elinguistics_correct.json",  fail: "elinguistics/elinguistics_incorrect.json" }
+        - { id: "wikipedia",    pass: "wikipedia/wikipedia_correct.json",        fail: "wikipedia/wikipedia_incorrect.json" }
+
+    areeb_salem:
+      base: "areeb & salem traces"
+      traces:
+        - { id: "amazon",      pass: "amazon/pass/trace_pass.json",       fail: "amazon/fail/trace_fail.json" }
+        - { id: "bbc",         pass: "bbc/pass/trace_pass.json",          fail: "bbc/fail/trace_fail.json" }
+        - { id: "github",      pass: "github/pass/trace_pass.json",       fail: "github/fail/trace_fail.json" }
+        - { id: "hackernews",  pass: "hackernews/pass/trace_pass.json",   fail: "hackernews/fail/trace_fail.json" }
+        - { id: "imdb",        pass: "imdb/pass/trace_pass.json",         fail: "imdb/fail/trace_fail.json" }
+        - { id: "npm",         pass: "npm/pass/trace_pass.json",          fail: "npm/fail/trace_fail.json" }
+        - { id: "producthunt", pass: "producthunt/pass/trace_pass.json",  fail: "producthunt/fail/trace_fail.json" }
+        - { id: "pypi",        pass: "pypi/pass/trace_pass.json",         fail: "pypi/fail/trace_fail.json" }
+        - { id: "wikipedia",   pass: "wikipedia/pass/trace_pass.json",    fail: "wikipedia/fail/trace_fail.json" }
+        - { id: "youtube",     pass: "youtube/pass/trace_pass.json",      fail: "youtube/fail/trace_fail.json" }
+
+    ersel:
+      base: "ersel-ikra-merve traces"
+      traces:
+        - { id: "opencart_purchase_40",         pass: "opencart_purchase_40/passing",         fail: "opencart_purchase_40/failing" }
+        - { id: "opencart_wishlist_35",         pass: "opencart_wishlist_35/passing",         fail: "opencart_wishlist_35/failing" }
+        - { id: "opencart_manufacturer_404_35", pass: "opencart_manufacturer_404_35/passing", fail: "opencart_manufacturer_404_35/failing" }
+        - { id: "opencart_contact_35",          pass: "opencart_contact_35/passing",          fail: "opencart_contact_35/failing" }
+
+model:
+  provider: "groq"
+  base_url: "https://api.groq.com/openai/v1"
+  llm_model: "llama-3.3-70b-versatile"
+  temperature: 0.1
+  # API key: set GROQ_API_KEY environment variable (do not hardcode here)
+
+ranking:
+  top_k: 5          # final output size
+  pre_llm_k: 10     # candidates sent to LLM for re-ranking
+
+weights:
+  network: 0.35
+  console: 0.25
+  action:  0.15
+  intent:  0.25
+
+outputs:
+  rankings: "outputs/rankings"
+  reports:  "outputs/reports"
+  metrics:  "outputs/metrics"
