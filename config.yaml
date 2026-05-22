@@ -42,15 +42,41 @@ data:
         - { id: "opencart_contact_35",          pass: "opencart_contact_35/passing",          fail: "opencart_contact_35/failing" }
 
 model:
-  provider: "groq"
-  base_url: "https://api.groq.com/openai/v1"
-  llm_model: "llama-3.3-70b-versatile"
+  # --- Active provider ---
+  base_url:    "https://openrouter.ai/api/v1"
+  llm_model:   "nvidia/nemotron-3-super-120b-a12b:free"
+  api_key_env: "OPENROUTER_API_KEY"
   temperature: 0.1
-  # API key: set GROQ_API_KEY environment variable (do not hardcode here)
+
+  # --- OpenRouter: Qwen3 Coder (1M ctx — Venice backend, congested) ---
+  # llm_model:   "qwen/qwen3-coder:free"
+
+  # --- OpenRouter: Qwen3 Next 80B (strong reasoning — Venice backend, congested) ---
+  # llm_model:   "qwen/qwen3-next-80b-a3b-instruct:free"
+
+  # --- OpenRouter: Gemma 4 31B (strong JSON adherence) ---
+  # llm_model:   "google/gemma-4-31b-it:free"
+
+  # --- OpenRouter: Llama 3.3 70B (reliable fallback, 200 req/day) ---
+  # llm_model:   "meta-llama/llama-3.3-70b-instruct:free"
+
+  # --- OpenRouter: Nemotron Super 120B (1M ctx, good reasoning) ---
+  # llm_model:   "nvidia/nemotron-3-super-120b-a12b:free"
+
+  # --- Groq 70B (higher quality, lower TPM limit) ---
+  # base_url:    "https://api.groq.com/openai/v1"
+  # llm_model:   "llama-3.3-70b-versatile"
+  # api_key_env: "GROQ_API_KEY"
+  # NOTE: 100k tokens/day — runs out after ~1.5 full 22-trace runs
+
+  # --- Gemini Flash (best quota but trains on free-tier data) ---
+  # base_url:    "https://generativelanguage.googleapis.com/v1beta/openai/"
+  # llm_model:   "gemini-2.0-flash"
+  # api_key_env: "GEMINI_API_KEY"
 
 ranking:
   top_k: 5          # final output size
-  pre_llm_k: 10     # candidates sent to LLM for re-ranking
+  pre_llm_k: 0      # candidates sent to LLM for re-ranking (0 = all steps, no heuristic bottleneck)
 
 weights:
   network: 0.35

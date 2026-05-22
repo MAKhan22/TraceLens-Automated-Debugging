@@ -36,66 +36,115 @@ def _load_prompt(filename: str) -> str:
 
 
 def _slim_step_for_llm(step: dict) -> dict:
-    """Strip heavy fields, keep only what the LLM needs."""
-    fail = step.get("fail_step") or {}
+    """Strip heavy fields, keep only what the LLM needs for diagnosis."""
+    fail  = step.get("fail_step") or {}
     pass_ = step.get("pass_step") or {}
 
-    # Network diff: only show entries that changed or are new errors
-    def net_summary(logs: list) -> list:
+    def error_entries(logs: list) -> list:
         return [
             {"url": e.get("url", ""), "status": e.get("status"), "error": e.get("error")}
             for e in logs
             if e.get("status") and (str(e["status"]).startswith(("4", "5")) or e.get("error"))
         ]
 
-    def con_summary(logs: list) -> list:
+    def con_errors(logs: list) -> list:
         return [
             {"type": e.get("type"), "text": e.get("text", "")[:200]}
             for e in logs
             if e.get("type") in ("error", "severe", "warning")
         ]
 
+    pass_net_logs  = pass_.get("network_logs", [])
+    fail_net_logs  = fail.get("network_logs", [])
+    pass_errors    = error_entries(pass_net_logs)
+    fail_errors    = error_entries(fail_net_logs)
+
+    pass_error_urls = {e["url"] for e in pass_errors}
+    fail_error_urls = {e["url"] for e in fail_errors}
+
+    # Errors new in fail only (genuine signal)
+    new_net_errors   = [e for e in fail_errors if e["url"] not in pass_error_urls]
+    # Errors in BOTH pass and fail (background noise — LLM should discount these)
+    shared_net_noise = [e for e in fail_errors if e["url"] in pass_error_urls]
+
+    # URLs fetched in pass but absent in fail → "absence of activity"
+    pass_all_urls = {e.get("url", "") for e in pass_net_logs if e.get("url")}
+    fail_all_urls = {e.get("url", "") for e in fail_net_logs if e.get("url")}
+    missing_urls  = list(pass_all_urls - fail_all_urls)[:5]  # cap at 5 for token budget
+
+    pass_con_errors = con_errors(pass_.get("console_logs", []))
+    fail_con_errors = con_errors(fail.get("console_logs", []))
+    pass_con_texts  = {e["text"] for e in pass_con_errors}
+    new_con_errors   = [e for e in fail_con_errors if e["text"] not in pass_con_texts]
+    shared_con_noise = [e for e in fail_con_errors if e["text"] in pass_con_texts]
+
+    pass_action = pass_.get("action", "")
+    fail_action = fail.get("action", "")
+
     return {
-        "step_id":        step.get("step_id"),
-        "rank":           step.get("rank"),
-        "heuristic_score": step.get("combined_score"),
-        "action":         fail.get("action") or pass_.get("action", ""),
-        "action_type":    fail.get("action_type") or pass_.get("action_type", ""),
-        "intent":         fail.get("intent"),
-        "pass_network":   net_summary(pass_.get("network_logs", [])),
-        "fail_network":   net_summary(fail.get("network_logs", [])),
-        "pass_console":   con_summary(pass_.get("console_logs", [])),
-        "fail_console":   con_summary(fail.get("console_logs", [])),
-        "network_score":  step.get("network_score"),
-        "console_score":  step.get("console_score"),
-        "action_score":   step.get("action_score"),
-        "intent_score":   step.get("intent_score"),
+        "step_id":              step.get("step_id"),
+        "heuristic_score":      step.get("combined_score"),
+        # Action diff — key for detecting wrong input / navigation / element clicked
+        "pass_action":          pass_action,
+        "fail_action":          fail_action,
+        "action_changed":       pass_action != fail_action,
+        "action_type":          fail.get("action_type") or pass_.get("action_type", ""),
+        "intent":               fail.get("intent"),
+        # Network signals — separated by whether errors are NEW or pre-existing noise
+        "new_network_errors":   new_net_errors,    # ONLY in fail → real fault signal
+        "shared_network_noise": shared_net_noise,  # in BOTH pass+fail → background noise
+        "missing_requests":     missing_urls,       # in pass but gone in fail → absence of activity
+        "pass_request_count":   len(pass_net_logs),
+        "fail_request_count":   len(fail_net_logs),
+        # Console signals — same split
+        "new_console_errors":   new_con_errors,    # ONLY in fail → real fault signal
+        "shared_console_noise": shared_con_noise,  # in BOTH → background noise
+        # Raw scores (for context only — LLM should reason from content above)
+        "network_score":        step.get("network_score"),
+        "console_score":        step.get("console_score"),
+        "action_score":         step.get("action_score"),
+        "intent_score":         step.get("intent_score"),
     }
 
 
 class LlmReasoner:
-    def __init__(self, api_key: str | None = None, model: str = "llama-3.3-70b-versatile",
-                 temperature: float = 0.1, base_url: str = "https://api.groq.com/openai/v1"):
-        key = api_key or os.environ.get("GROQ_API_KEY", "")
-        self.client = OpenAI(api_key=key, base_url=base_url)
+    def __init__(self, api_key: str | None = None, model: str = "meta-llama/llama-3.3-70b-instruct:free",
+                 temperature: float = 0.1, base_url: str = "https://openrouter.ai/api/v1"):
+        key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
+        # OpenRouter requires HTTP-Referer + X-Title; other providers ignore unknown headers
+        self.client = OpenAI(
+            api_key=key,
+            base_url=base_url,
+            default_headers={
+                "HTTP-Referer": "https://github.com/tracelens",
+                "X-Title": "TraceLens",
+            },
+        )
         self.model = model
         self.temperature = temperature
 
-    def _call(self, prompt: str, max_retries: int = 5) -> str:
-        """Call LLM with exponential backoff on 429 rate limit errors."""
-        for attempt in range(max_retries):
+    def _call(self, prompt: str) -> str:
+        """Call LLM; retry indefinitely on 429/empty-response, give up on other errors."""
+        attempt = 0
+        while True:
             try:
                 response = self.client.chat.completions.create(
                     model=self.model,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=self.temperature,
                 )
-                return response.choices[0].message.content.strip()
+                choices = response.choices if response else None
+                if not choices or choices[0].message.content is None:
+                    # Provider returned 200 but empty body — treat like a soft rate limit
+                    raise ValueError("empty-response")
+                return choices[0].message.content.strip()
             except Exception as e:
                 err = str(e)
-                if "429" in err and attempt < max_retries - 1:
-                    wait = 2 ** attempt * 10  # 10s, 20s, 40s, 80s
-                    print(f"  [Groq 429 rate limit] waiting {wait}s before retry {attempt + 1}/{max_retries - 1}...")
+                retriable = "429" in err or "empty-response" in err or "rate" in err.lower()
+                if retriable:
+                    wait = min(2 ** attempt * 10, 120)  # 10 → 20 → 40 → 80 → 120s cap
+                    attempt += 1
+                    print(f"  [rate limit] waiting {wait}s before retry {attempt}...")
                     time.sleep(wait)
                 else:
                     raise
@@ -172,21 +221,21 @@ class LlmReasoner:
 
     # ── Full pipeline ─────────────────────────────────────────────────────────
 
-    def run(self, candidates: list[dict], top_steps: list[dict]) -> dict:
+    def run(self, top_steps: list[dict], reranked_ids: list[int]) -> dict:
         """
-        Run the full two-stage LLM pipeline.
+        Run stages 2 and 3 of the LLM pipeline (re-ranking is done externally).
 
-        Stage 1: Re-rank candidates
         Stage 2: Diagnose root cause from re-ranked top steps
         Stage 3: Stakeholder summary
 
-        Returns dict with all LLM outputs plus the final adjusted ranking.
-        """
-        reranked_ids = self.rerank(candidates)
-        time.sleep(2)  # avoid back-to-back 429s on free tier
+        Args:
+            top_steps:    Top-k re-ranked steps (with rank metadata) for diagnosis.
+            reranked_ids: The step_id ordering returned by stage-1 rerank (stored in output).
 
+        Returns dict with all LLM outputs.
+        """
         diagnosis = self.diagnose(top_steps)
-        time.sleep(2)
+        time.sleep(2)  # avoid back-to-back 429s on free tier
 
         summary = self.stakeholder_summary(diagnosis)
 

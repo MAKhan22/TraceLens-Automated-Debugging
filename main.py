@@ -100,7 +100,7 @@ def run_trace(
             llm_ranked = ranker.add_rank_metadata(llm_ranked)
 
             print(f"  Running LLM diagnosis...")
-            llm_output = llm.run(candidates, llm_ranked)
+            llm_output = llm.run(llm_ranked, reranked_ids)
 
             # If LLM diagnosis identifies a root cause step, promote it to #1
             # This ensures the ranking is consistent with the diagnosis
@@ -177,10 +177,15 @@ def main():
     parser = argparse.ArgumentParser(description="TraceLens pipeline")
     parser.add_argument("--source", default=None, help="Filter by source (efe_irem/areeb_salem/ersel)")
     parser.add_argument("--trace",  default=None, help="Filter by trace id")
+    parser.add_argument("--skip",   default=None, help="Comma-separated trace IDs to skip (e.g. saucedemo_1,gutenberg)")
+    parser.add_argument("--from",   default=None, dest="from_trace",
+                        help="Start from this trace ID (skip everything before it in config order)")
     parser.add_argument("--no-llm", action="store_true", help="Skip LLM calls (heuristic only)")
     parser.add_argument("--no-eval", action="store_true", help="Skip evaluation")
     parser.add_argument("--config", default="config.yaml")
     args = parser.parse_args()
+
+    skip_ids = set(args.skip.split(",")) if args.skip else set()
 
     cfg = load_config(args.config)
     raw_base = cfg["data"]["raw_base"]
@@ -196,9 +201,10 @@ def main():
 
     llm = None
     if not args.no_llm:
-        api_key = os.environ.get("GROQ_API_KEY")
+        key_env  = cfg["model"].get("api_key_env", "GROQ_API_KEY")
+        api_key  = os.environ.get(key_env)
         if not api_key:
-            print("WARNING: GROQ_API_KEY not set. Running heuristic-only mode.")
+            print(f"WARNING: {key_env} not set in .env. Running heuristic-only mode.")
         else:
             llm = LlmReasoner(
                 api_key=api_key,
@@ -209,14 +215,26 @@ def main():
 
     all_results = []
     trace_count = 0
+    reached_from = (args.from_trace is None)  # if no --from, start immediately
 
     for source, source_cfg in cfg["data"]["sources"].items():
         if args.source and source != args.source:
             continue
         for trace_cfg in source_cfg["traces"]:
-            if args.trace and trace_cfg["id"] != args.trace:
+            tid = trace_cfg["id"]
+            # --from: skip everything until we reach the named trace
+            if not reached_from:
+                if tid == args.from_trace:
+                    reached_from = True
+                else:
+                    print(f"  Skipping {source}/{tid} (before --from {args.from_trace})")
+                    continue
+            if args.trace and tid != args.trace:
                 continue
-            # Inter-trace delay when using LLM to avoid Groq rate limits
+            if tid in skip_ids:
+                print(f"  Skipping {source}/{tid} (--skip)")
+                continue
+            # Inter-trace delay when using LLM to avoid rate limits
             if llm and trace_count > 0:
                 time.sleep(5)
             trace_count += 1
@@ -239,6 +257,8 @@ def main():
     # Aggregate evaluation + run report
     run_ts   = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     run_mode = "heuristic" if args.no_llm else f"llm ({cfg['model']['llm_model']})"
+    # prefix used in filename: heuristic / llm / llm+vlm
+    run_prefix = "heuristic" if args.no_llm else "llm"
 
     if not args.no_eval:
         eval_results = [r["eval"] for r in all_results if r.get("eval")]
@@ -271,7 +291,7 @@ def main():
 
             runs_dir = Path(cfg["outputs"]["metrics"]) / "runs"
             runs_dir.mkdir(parents=True, exist_ok=True)
-            run_path = runs_dir / f"run_{run_ts}.json"
+            run_path = runs_dir / f"{run_prefix}_run_{run_ts}.json"
             with open(run_path, "w", encoding="utf-8") as f:
                 json.dump(run_report, f, indent=2)
             print(f"\n  Run report saved → {run_path}")

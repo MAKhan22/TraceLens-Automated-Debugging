@@ -5,7 +5,7 @@ Takes scored steps from anomaly_detector and produces a ranked list.
 
 Two ranking modes:
   "heuristic"  – pure score sort (fast, no LLM needed)
-  "llm"        – heuristic top-K goes to LLM for re-ranking (more accurate)
+  "llm"        – all steps (or heuristic top-K if pre_llm_k > 0) go to LLM for re-ranking
 
 The heuristic rank is always computed first.
 LLM re-ranking is done in llm_reasoner.py and passed back here for final output.
@@ -26,8 +26,13 @@ class Ranker:
         return ranked[:self.top_k]
 
     def candidates_for_llm(self, scored_steps: list[dict]) -> list[dict]:
-        """Return pre_llm_k top candidates to send to the LLM for re-ranking."""
+        """Return candidates to send to the LLM for re-ranking.
+        If pre_llm_k is 0, returns all steps so the LLM is not bottlenecked
+        by the heuristic ranking (i.e. can discover faults ranked low by heuristic).
+        """
         ranked = sorted(scored_steps, key=lambda x: x["combined_score"], reverse=True)
+        if self.pre_llm_k == 0:
+            return ranked  # all steps
         return ranked[:self.pre_llm_k]
 
     def apply_llm_reranking(self, llm_order: list[int],
