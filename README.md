@@ -1,6 +1,6 @@
 # TraceLens — Automated Regression Failure Diagnosis
 
-TraceLens is a two-stage automated debugging system that takes a **passing trace** and a **failing trace** of the same test case, identifies the most suspicious steps, ranks them, and produces a natural-language explanation of the root cause for both engineers and non-technical stakeholders.
+TraceLens is a multimodal automated debugging system that takes a **passing trace** and a **failing trace** of the same test case, identifies the most suspicious steps, ranks them, and produces a natural-language explanation of the root cause for both engineers and non-technical stakeholders.
 
 ---
 
@@ -11,12 +11,15 @@ TraceLens is a two-stage automated debugging system that takes a **passing trace
 3. [Pipeline Stages](#3-pipeline-stages)
 4. [Scoring System](#4-scoring-system)
 5. [LLM Re-ranking & Diagnosis](#5-llm-re-ranking--diagnosis)
-6. [Evaluation Metrics](#6-evaluation-metrics)
-7. [Data Sources](#7-data-sources)
-8. [Project Structure](#8-project-structure)
-9. [Setup & Running](#9-setup--running)
-10. [Configuration](#10-configuration)
-11. [Output Files](#11-output-files)
+6. [VLM Visual Analysis (Phase 2)](#6-vlm-visual-analysis-phase-2)
+7. [Evaluation Metrics](#7-evaluation-metrics)
+8. [Data Sources](#8-data-sources)
+9. [Project Structure](#9-project-structure)
+10. [Setup & Running](#10-setup--running)
+11. [Configuration](#11-configuration)
+12. [Output Files](#12-output-files)
+
+> **Additional guides**: [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`data/evaluation/TRACE_SELECTION.md`](data/evaluation/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
 
 ---
 
@@ -38,20 +41,31 @@ TraceLens solves this by diffing the pass and fail traces step-by-step, scoring 
  Pass trace ─┐
               ├─► TraceParser ─► TraceAligner ─► AnomalyDetector ─► Ranker
  Fail trace ─┘                                        │                │
-                                                       │           heuristic top-10
+                                                       │         all steps (slimmed)
                                                        │                │
-                                                       └──────────► LlmReasoner ──► ReportGenerator
-                                                                   (re-rank + diagnose)      │
-                                                                         │              ┌────┴────┐
-                                                                    Evaluation     JSON report  Text report
+                                                       └──────────► LlmReasoner
+                                                                   (re-rank + diagnose)
+                                                                         │
+                                                    ┌────────────────────┘
+                                                    │  (--vlm flag)
+                                                    ▼
+                                          ScreenshotResolver ──► VlmReasoner
+                                          (pass/fail paths)     (visual scores)
+                                                    │
+                                                    ▼
+                                          Ensemble merge ──► ReportGenerator
+                                                    │              │
+                                               Evaluation    JSON + text report
 ```
 
-There are two execution paths:
+There are four execution paths:
 
-| Mode | What runs |
-|------|-----------|
-| `--no-llm` | Heuristic scoring + ranking only. Fast, no API needed. |
-| Default (with LLM) | Heuristic scoring → LLM re-ranking → LLM diagnosis + stakeholder summary. |
+| Mode | Command | What runs |
+|------|---------|-----------|
+| Heuristic only | `--no-llm` | Score + rank by heuristics. No API needed. |
+| LLM only (default) | `python main.py` | Heuristic → LLM re-rank → LLM diagnosis + stakeholder summary. |
+| **LLM + VLM (recommended)** | `--vlm` | LLM pipeline → VLM screenshot comparison → ensemble merge. |
+| VLM only | `--no-llm --vlm` | Heuristic ranking → VLM visual analysis only. |
 
 ---
 
@@ -69,11 +83,11 @@ Converts each raw trace format into a unified list of step dictionaries:
   "intent":       str | None,  # ersel only: "Verification passed/failed: ..."
   "network_logs": [ {"url": ..., "status": ..., "error": ...}, ... ],
   "console_logs": [ {"type": "error"|"warning"|"info", "text": ...}, ... ],
-  "screenshot":   str | None,  # relative path (Phase 2 / VLM, not yet active)
+  "screenshot":   str | None,  # relative path; resolved at runtime by ScreenshotResolver
 }
 ```
 
-Three source formats are supported — see [Data Sources](#7-data-sources).
+Three source formats are supported — see [Data Sources](#8-data-sources).
 
 ### Stage 2 — Trace Alignment (`src/trace_aligner.py`)
 
@@ -88,17 +102,21 @@ Each aligned step pair receives four component scores (all in `[0, 1]`) and one 
 
 ### Stage 4 — Heuristic Ranking (`src/ranker.py`)
 
-Steps are sorted descending by `combined_score`. The top-10 are passed to the LLM as **candidates**; the top-5 are kept as the **heuristic ranking** (fallback if LLM is disabled).
+Steps are sorted descending by `combined_score`. By default (`pre_llm_k: 0` in config) **all steps** are passed to the LLM as candidates so it is not bottlenecked by heuristic score. The top-5 by score are kept as the **heuristic ranking** (used as fallback if LLM is disabled or fails).
 
 ### Stage 5 — LLM Re-ranking & Diagnosis (`src/llm_reasoner.py`)
 
 See [LLM Re-ranking & Diagnosis](#5-llm-re-ranking--diagnosis).
 
-### Stage 6 — Evaluation (`src/evaluation.py`)
+### Stage 6 — VLM Visual Analysis (`src/vlm_reasoner.py`, optional)
 
-Compares predicted rankings against ground truth (`data/evaluation/ground_truth.json`). See [Evaluation Metrics](#6-evaluation-metrics).
+When `--vlm` is passed, the pipeline compares pass/fail screenshot pairs for the top-K ranked steps and merges visual evidence with the LLM ranking. See [VLM Visual Analysis](#6-vlm-visual-analysis-phase-2).
 
-### Stage 7 — Report Generation (`src/report_generator.py`)
+### Stage 7 — Evaluation (`src/evaluation.py`)
+
+Compares predicted rankings against ground truth (`data/evaluation/ground_truth.json`). See [Evaluation Metrics](#7-evaluation-metrics).
+
+### Stage 8 — Report Generation (`src/report_generator.py`)
 
 Assembles and saves the final structured report (JSON + plain text).
 
@@ -194,11 +212,11 @@ Weights can be overridden in `config.yaml`.
 
 ## 5. LLM Re-ranking & Diagnosis
 
-The LLM pipeline runs three sequential calls, all via the [Groq](https://groq.com) API (free tier, fast inference):
+The LLM pipeline runs three sequential calls via an OpenAI-compatible API (currently [OpenRouter](https://openrouter.ai) free tier). The active model and provider are set in `config.yaml` — see [`docs/CONFIG.md`](docs/CONFIG.md) for all options.
 
 ### Call 1 — Re-ranking
 
-**Input**: Top-10 heuristic candidates, each with action text, network error diff, and console error diff (raw content, not scores).
+**Input**: All steps in the trace (or heuristic top-K if `pre_llm_k > 0`), each with action text, network error diff, and console error diff (raw content, not scores).
 
 **Prompt** (`prompts/rerank_steps.txt`): Instructs the LLM to reason about which steps are root causes vs downstream symptoms, and return a JSON-ordered list of step IDs.
 
@@ -226,14 +244,58 @@ Because the re-ranking call and the diagnosis call are independent, they can dis
 
 ### Rate limiting
 
-The Groq free tier enforces request-per-minute limits. TraceLens handles this with:
-- Exponential backoff on 429 errors: 10s → 20s → 40s → 80s (up to 5 retries)
+Free-tier providers enforce request and token rate limits. TraceLens handles this with:
+- **Indefinite exponential backoff** on 429 errors and empty responses: 10s → 20s → 40s → 80s → 120s (capped), retrying until the call succeeds
+- Empty-response (200 OK but no `choices`) treated identically to a 429 — retried, not crashed
 - 2-second pause between the three calls within a trace
 - 5-second inter-trace pause when running all traces
+- Only non-retriable errors (auth failure, bad request) cause fallback to heuristic mode
 
 ---
 
-## 6. Evaluation Metrics
+## 6. VLM Visual Analysis (Phase 2)
+
+The LLM reads **text signals** (actions, network errors, console logs). The VLM reads **visual signals** (what the browser actually displayed). Some faults — wrong page loaded, missing UI element, stale CDN cache, scroll position unchanged — produce no text signal at all. These are only detectable by comparing screenshots.
+
+All 22 evaluation traces include one screenshot per step for both pass and fail runs. Screenshots are resolved at runtime by `src/screenshot_resolver.py`, which handles three different folder layouts across the data sources.
+
+### How LLM + VLM combine
+
+The two models run **sequentially**, not in parallel:
+
+1. **LLM** re-ranks all steps and diagnoses a root cause from text data (same as Phase 1).
+2. **ScreenshotResolver** attaches pass/fail image paths to the current top-5 ranked steps.
+3. **VLM** receives all screenshot pairs in one API call and returns a `visual_score` (0–1) per step plus a `visual_root_cause_step_id`.
+4. **Ensemble merge** recomputes the final ranking:
+
+```
+combined = (1 - w) × llm_rank_score + w × visual_score
+```
+
+Default `w = 0.4` (60% LLM, 40% VLM). If the VLM's root cause scores ≥ 0.7 and is not already at rank #1, it is promoted — same logic as the LLM diagnosis promotion.
+
+### When to use `--vlm`
+
+| Scenario | Recommended mode |
+|----------|-----------------|
+| Full 22-trace evaluation (paper/benchmark) | `--vlm` |
+| Quick text-only debugging | default (no flag) |
+| Known screenshot-only fault (`saucedemo_2`, `pypi`, `bbc`) | `--vlm` |
+| No API / offline testing | `--no-llm` |
+
+```bash
+# Recommended final evaluation run
+python main.py --vlm
+
+# Single visual-heavy trace
+python main.py --source efe_irem --trace saucedemo_2 --vlm
+```
+
+For screenshot path layouts, tuning `ensemble_vlm_weight`, and rate-limit guidance, see [`docs/VLM.md`](docs/VLM.md).
+
+---
+
+## 7. Evaluation Metrics
 
 Ground truth is stored in `data/evaluation/ground_truth.json` as a 0-indexed `fault_step` per trace.
 
@@ -266,7 +328,7 @@ Every report includes a table showing both metrics for each of the top-5 predict
 
 ---
 
-## 7. Data Sources
+## 8. Data Sources
 
 Three data formats are supported, sourced from three prior projects provided by the course instructor (each collected with different tooling):
 
@@ -290,7 +352,7 @@ Three data formats are supported, sourced from three prior projects provided by 
 
 ---
 
-## 8. Project Structure
+## 9. Project Structure
 
 ```
 TraceLens-Automated-Debugging/
@@ -304,15 +366,17 @@ TraceLens-Automated-Debugging/
 │   ├── trace_aligner.py         # Align pass/fail steps
 │   ├── anomaly_detector.py      # Per-step scoring (4 signals)
 │   ├── ranker.py                # Heuristic ranking + LLM re-ranking apply
-│   ├── llm_reasoner.py          # Groq API calls (re-rank, diagnose, summarise)
+│   ├── llm_reasoner.py          # LLM API calls (re-rank, diagnose, summarise)
+│   ├── vlm_reasoner.py          # VLM screenshot comparison + ensemble merge
+│   ├── screenshot_resolver.py   # Pass/fail screenshot path resolution per source
 │   ├── evaluation.py            # Metrics computation
-│   ├── report_generator.py      # Build + save JSON/text reports
-│   └── vlm_reasoner.py          # Placeholder for Phase 2 screenshot analysis
+│   └── report_generator.py      # Build + save JSON/text reports
 │
 ├── prompts/
 │   ├── rerank_steps.txt         # LLM prompt: re-rank candidates
 │   ├── root_cause.txt           # LLM prompt: technical diagnosis
-│   └── stakeholder_summary.txt  # LLM prompt: plain-language summary
+│   ├── stakeholder_summary.txt  # LLM prompt: plain-language summary
+│   └── vlm_visual_rank.txt      # VLM prompt: screenshot pair comparison
 │
 ├── data/
 │   ├── efe_irem/                # Raw traces (correct.json / incorrect.json)
@@ -332,7 +396,7 @@ TraceLens-Automated-Debugging/
 
 ---
 
-## 9. Setup & Running
+## 10. Setup & Running
 
 ### Install dependencies
 
@@ -345,10 +409,10 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```
-GROQ_API_KEY=your_key_here
+OPENROUTER_API_KEY=your_key_here
 ```
 
-Get a free key at [console.groq.com](https://console.groq.com).
+Get a free key at [openrouter.ai/keys](https://openrouter.ai/keys). The active provider and which env variable to read are set via `api_key_env` in `config.yaml`. See [`docs/CONFIG.md`](docs/CONFIG.md) for switching to Groq or Gemini.
 
 ### Run a single trace (with LLM)
 
@@ -362,13 +426,19 @@ python main.py --source efe_irem --trace gutenberg
 python main.py --source efe_irem --trace gutenberg --no-llm
 ```
 
-### Run all 22 traces
+### Run all 22 traces (LLM + VLM — recommended)
+
+```bash
+python main.py --vlm
+```
+
+### Run all 22 traces (LLM only)
 
 ```bash
 python main.py
 ```
 
-> **Note on rate limits**: Running all 22 traces with the LLM makes ~66 API calls (3 per trace). The free Groq tier may throttle these. TraceLens handles this automatically with retry + inter-trace delays, but the full run takes ~10–15 minutes.
+> **Note on rate limits**: LLM-only makes ~66 API calls (3 per trace). LLM+VLM adds 1 VLM call per trace (~88 total). VLM calls are image-heavy and slower. TraceLens retries indefinitely with exponential backoff. Split long runs with `--skip` or `--from` if needed. See [`docs/VLM.md`](docs/VLM.md) for details.
 
 ### Run all traces for one source
 
@@ -384,35 +454,38 @@ python main.py --source efe_irem --trace gutenberg --no-eval
 
 ---
 
-## 10. Configuration
+## 11. Configuration
 
-`config.yaml` controls all pipeline parameters:
+`config.yaml` controls all pipeline parameters. For a full explanation of every field, valid values, and provider-switching instructions, see [`docs/CONFIG.md`](docs/CONFIG.md).
+
+Key fields:
 
 ```yaml
 model:
-  llm_model:   "llama3-8b-8192"   # Groq model name
+  base_url:    "https://openrouter.ai/api/v1"   # provider endpoint
+  llm_model:   "openai/gpt-oss-120b:free"       # model ID
+  api_key_env: "OPENROUTER_API_KEY"             # env var name to read from .env
   temperature: 0.1
-  base_url:    "https://api.groq.com/openai/v1"
+
+vlm:                              # only used with --vlm flag
+  vlm_model: "nvidia/nemotron-nano-12b-v2-vl:free"
+  ensemble_vlm_weight: 0.4        # 60% LLM + 40% VLM in final ranking
+  top_k_for_vlm: 5                # screenshot pairs sent to VLM per trace
 
 ranking:
-  top_k:            5    # final ranked steps shown
-  llm_candidates:   10   # steps sent to LLM for re-ranking
+  top_k:     5    # final ranked steps shown
+  pre_llm_k: 0    # steps sent to LLM (0 = all steps, no heuristic bottleneck)
 
 weights:
   network: 0.35
   console: 0.25
   action:  0.15
-  intent:  0.25          # auto-redistributed when no intent data present
-
-outputs:
-  reports:  "outputs/reports"
-  rankings: "outputs/rankings"
-  metrics:  "outputs/metrics"
+  intent:  0.25   # auto-redistributed when no intent data present
 ```
 
 ---
 
-## 11. Output Files
+## 12. Output Files
 
 After running, the following files are created:
 
@@ -423,6 +496,10 @@ After running, the following files are created:
 | `outputs/rankings/{source}/{trace_id}.json` | Top-5 ranked steps only |
 | `outputs/metrics/aggregate.json` | Mean metrics across all evaluated traces |
 | `outputs/metrics/per_trace.json` | Per-trace metrics for all evaluated traces |
+| `outputs/metrics/runs/llm_run_TIMESTAMP.json` | Full run report (LLM mode) |
+| `outputs/metrics/runs/llm+vlm_run_TIMESTAMP.json` | Full run report (LLM + VLM mode) |
+| `outputs/metrics/runs/vlm_run_TIMESTAMP.json` | Full run report (VLM only, `--no-llm --vlm`) |
+| `outputs/metrics/runs/heuristic_run_TIMESTAMP.json` | Full run report (heuristic-only mode) |
 
 ### Report JSON structure
 
@@ -441,6 +518,14 @@ After running, the following files are created:
     "downstream_steps": []
   },
   "stakeholder_summary": "When our system tried to access a specific book...",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 8,
+    "visual_summary": "Fail screenshot shows 403 error page instead of book content.",
+    "visual_scores": [
+      { "step_id": 8, "visual_score": 0.9, "visual_note": "Error page visible in fail, book page in pass" }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
     "actual_fault_step": 8,
     "hit@1": 1, "hit@3": 1, "hit@5": 1,
