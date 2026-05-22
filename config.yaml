@@ -74,6 +74,21 @@ model:
   # llm_model:   "gemini-2.0-flash"
   # api_key_env: "GEMINI_API_KEY"
 
+vlm:
+  # --- Active VLM provider ---
+  base_url:    "https://openrouter.ai/api/v1"
+  vlm_model:   "nvidia/nemotron-nano-12b-v2-vl:free"
+  api_key_env: "OPENROUTER_API_KEY"   # same key as LLM
+  temperature: 0.1
+
+  # How much VLM visual scores influence the final combined ranking (0.0–1.0)
+  # 0.4 = 60% LLM text + 40% VLM visual
+  ensemble_vlm_weight: 0.4
+
+  # How many top-ranked steps (from LLM) to send to VLM for visual analysis
+  # Keeps the VLM prompt smaller; use 5 for a focused check or 10 for broader coverage
+  top_k_for_vlm: 5
+
 ranking:
   top_k: 5          # final output size
   pre_llm_k: 0      # candidates sent to LLM for re-ranking (0 = all steps, no heuristic bottleneck)

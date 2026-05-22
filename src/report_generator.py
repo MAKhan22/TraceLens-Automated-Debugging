@@ -17,10 +17,12 @@ class ReportGenerator:
         heuristic_steps: list[dict] | None = None,
         ranking_mode: str = "heuristic",
         llm_output: dict | None = None,
+        vlm_output: dict | None = None,
         eval_result: dict | None = None,
         metadata: dict | None = None,
     ) -> dict:
         llm_output = llm_output or {}
+        vlm_output = vlm_output or {}
         diagnosis = llm_output.get("diagnosis", {})
 
         report = {
@@ -40,6 +42,14 @@ class ReportGenerator:
             },
 
             "stakeholder_summary": llm_output.get("stakeholder_summary", ""),
+
+            "visual_analysis": {
+                "visual_root_cause_step_id": vlm_output.get("visual_root_cause_step_id"),
+                "visual_summary":            vlm_output.get("visual_summary"),
+                "visual_scores":             vlm_output.get("visual_scores", []),
+                "steps_with_screenshots":    vlm_output.get("steps_with_screenshots", 0),
+            } if vlm_output else None,
+
             "evaluation": eval_result or {},
 
             "_text_report": self._format_text(
@@ -47,6 +57,7 @@ class ReportGenerator:
                 ranking_mode, diagnosis,
                 llm_output.get("stakeholder_summary", ""),
                 eval_result,
+                vlm_output,
             ),
         }
         return report
@@ -79,7 +90,7 @@ class ReportGenerator:
         return lines
 
     def _format_text(self, trace_id, ranked, heuristic, ranking_mode,
-                     diagnosis, summary, eval_result) -> str:
+                     diagnosis, summary, eval_result, vlm_output=None) -> str:
         actual = eval_result.get("actual_fault_step") if eval_result else None
 
         lines = [
@@ -114,6 +125,23 @@ class ReportGenerator:
             ]
         else:
             lines.append("(LLM diagnosis not run — heuristic mode)")
+
+        # VLM visual analysis block (only shown when VLM ran)
+        if vlm_output and vlm_output.get("steps_with_screenshots", 0) > 0:
+            lines += [
+                "",
+                "VISUAL ANALYSIS (VLM)",
+                "-" * 40,
+                f"Visual root cause: Step {vlm_output.get('visual_root_cause_step_id')}",
+                f"Summary:           {vlm_output.get('visual_summary', '')}",
+                "",
+                "  Per-step visual scores:",
+            ]
+            for vs in vlm_output.get("visual_scores", []):
+                lines.append(
+                    f"    Step {vs['step_id']:>3}  score={vs.get('visual_score', 0):.2f}  "
+                    f"{vs.get('visual_note', '')[:80]}"
+                )
 
         lines += [
             "",
