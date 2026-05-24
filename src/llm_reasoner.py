@@ -27,6 +27,9 @@ from pathlib import Path
 
 from openai import OpenAI
 
+from src.navigation_signals import compute_navigation_signals
+from src.causal_signals import is_observer_step, is_noise_console
+
 
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
@@ -76,12 +79,20 @@ def _slim_step_for_llm(step: dict) -> dict:
     fail_con_errors = con_errors(fail.get("console_logs", []))
     pass_con_texts  = {e["text"] for e in pass_con_errors}
     new_con_errors   = [e for e in fail_con_errors if e["text"] not in pass_con_texts]
+    new_con_errors   = [e for e in new_con_errors if not is_noise_console(e.get("text", ""))]
     shared_con_noise = [e for e in fail_con_errors if e["text"] in pass_con_texts]
 
     pass_action = pass_.get("action", "")
     fail_action = fail.get("action", "")
+    action_for_nav = fail_action or pass_action
 
-    return {
+    nav = compute_navigation_signals(pass_net_logs, fail_net_logs, action_for_nav)
+
+    # Asset-only missing URLs (telemetry/fonts) — less diagnostic than page URLs
+    missing_pages = [u for u in missing_urls if u.endswith(".html") or "/topics/" in u]
+    missing_assets = [u for u in missing_urls if u not in missing_pages]
+
+    slim = {
         "step_id":              step.get("step_id"),
         "heuristic_score":      step.get("combined_score"),
         # Action diff — key for detecting wrong input / navigation / element clicked
@@ -90,10 +101,15 @@ def _slim_step_for_llm(step: dict) -> dict:
         "action_changed":       pass_action != fail_action,
         "action_type":          fail.get("action_type") or pass_.get("action_type", ""),
         "intent":               fail.get("intent"),
+        # Navigation — strongest signal for wrong-element-click faults
+        "missing_expected_pages": nav["missing_expected_pages"],
+        "wrong_pages_loaded":     nav["wrong_pages_loaded"],
+        "wrong_navigation":       nav["wrong_navigation"],
         # Network signals — separated by whether errors are NEW or pre-existing noise
         "new_network_errors":   new_net_errors,    # ONLY in fail → real fault signal
         "shared_network_noise": shared_net_noise,  # in BOTH pass+fail → background noise
-        "missing_requests":     missing_urls,       # in pass but gone in fail → absence of activity
+        "missing_requests":     missing_urls,       # in pass but gone in fail
+        "missing_asset_requests": missing_assets[:3],
         "pass_request_count":   len(pass_net_logs),
         "fail_request_count":   len(fail_net_logs),
         # Console signals — same split
@@ -105,6 +121,68 @@ def _slim_step_for_llm(step: dict) -> dict:
         "action_score":         step.get("action_score"),
         "intent_score":         step.get("intent_score"),
     }
+    if float(step.get("visual_causal_score") or 0) > 0:
+        slim["visual_causal_score"] = step["visual_causal_score"]
+        if step.get("visual_causal_next_step") is not None:
+            slim["visual_causal_next_step"] = step["visual_causal_next_step"]
+        if step.get("visual_causal_reason"):
+            slim["visual_causal_reason"] = step["visual_causal_reason"]
+    return slim
+
+
+def _compact_slim(step: dict) -> dict:
+    """Drop empty/low-value fields to reduce rerank token usage on long traces."""
+    drop_if_empty = (
+        "shared_network_noise", "shared_console_noise", "missing_asset_requests",
+        "missing_requests", "new_network_errors", "new_console_errors",
+        "missing_expected_pages", "wrong_pages_loaded", "intent",
+    )
+    out = {}
+    for k, v in step.items():
+        if k in drop_if_empty and not v:
+            continue
+        if k.endswith("_score") or k == "heuristic_score":
+            if k == "visual_causal_score" and v:
+                out[k] = v
+            continue
+        if v is False and k in ("action_changed", "wrong_navigation"):
+            continue
+        if k == "pass_action" and v == step.get("fail_action"):
+            continue
+        out[k] = v
+    return out
+
+
+def _enrich_slim_causal_links(slims: list[dict]) -> list[dict]:
+    """
+    Link errors logged on step N+1 back to step N when N+1 is a verify/wait step.
+    Fixes silent root causes (e.g. scroll/click at 14, API 500 logged at verify step 15).
+    """
+    by_id = {s["step_id"]: s for s in slims}
+    enriched = []
+    for sl in slims:
+        copy = dict(sl)
+        nxt = by_id.get(sl["step_id"] + 1)
+        if nxt and is_observer_step(nxt.get("fail_action", ""), nxt.get("action_type", "")):
+            con = nxt.get("new_console_errors") or []
+            net = nxt.get("new_network_errors") or []
+            if con or net:
+                copy["errors_observed_on_next_step"] = {
+                    "next_step_id":   sl["step_id"] + 1,
+                    "next_action":    nxt.get("fail_action"),
+                    "console_errors": con,
+                    "network_errors": net,
+                }
+        enriched.append(copy)
+    return enriched
+
+
+def slim_steps_for_llm(candidates: list[dict], *, compact: bool = False) -> list[dict]:
+    """Slim steps and add causal cross-step links for LLM consumption."""
+    slims = _enrich_slim_causal_links([_slim_step_for_llm(s) for s in candidates])
+    if compact:
+        return [_compact_slim(s) for s in slims]
+    return slims
 
 
 class LlmReasoner:
@@ -173,12 +251,19 @@ class LlmReasoner:
 
         Returns: list of step_ids in preferred order.
         """
-        slim = [_slim_step_for_llm(s) for s in candidates]
+        slim = slim_steps_for_llm(candidates, compact=True)
         prompt_template = _load_prompt("rerank_steps.txt")
-        prompt = prompt_template.replace("{steps_json}", json.dumps(slim, indent=2))
+        prompt = prompt_template.replace("{steps_json}", json.dumps(slim, separators=(",", ":")))
 
         raw = self._call(prompt)
         parsed = self._extract_json(raw)
+
+        if not parsed:
+            # Truncated/malformed JSON on long traces — retry once with compact payload
+            print("  [json parse] malformed rerank response, retrying...")
+            time.sleep(2)
+            raw = self._call(prompt)
+            parsed = self._extract_json(raw)
 
         if isinstance(parsed, dict) and "ranked_step_ids" in parsed:
             return [int(x) for x in parsed["ranked_step_ids"]]
@@ -197,7 +282,7 @@ class LlmReasoner:
         Returns dict with keys: root_cause_step_id, root_cause_summary,
                                 downstream_steps, failure_chain
         """
-        slim = [_slim_step_for_llm(s) for s in top_steps]
+        slim = slim_steps_for_llm(top_steps)
         prompt_template = _load_prompt("root_cause.txt")
         prompt = prompt_template.replace("{steps_json}", json.dumps(slim, indent=2))
 

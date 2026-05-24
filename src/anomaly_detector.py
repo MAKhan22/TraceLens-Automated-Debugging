@@ -40,6 +40,9 @@ Intent scoring (ersel):
 import re
 from difflib import SequenceMatcher
 
+from src.navigation_signals import compute_navigation_signals
+from src.causal_signals import errors_on_next_observer_step
+
 
 # ── constants ─────────────────────────────────────────────────────────────────
 
@@ -218,7 +221,15 @@ class AnomalyDetector:
         p = pair.get("pass_step") or {}
         f = pair.get("fail_step") or {}
 
+        step_id = (f or p).get("step_id", -1)
+        action  = (f or p).get("action", "")
+
         net_score    = _score_network(p.get("network_logs", []), f.get("network_logs", []))
+        nav          = compute_navigation_signals(
+            p.get("network_logs", []), f.get("network_logs", []), action
+        )
+        if nav["wrong_navigation"]:
+            net_score = max(net_score, 0.95)
         con_score    = _score_console(p.get("console_logs", []), f.get("console_logs", []))
         act_score    = _score_action(pair.get("pass_step"), pair.get("fail_step"))
         intent_score = _score_intent(pair.get("fail_step"))
@@ -229,9 +240,6 @@ class AnomalyDetector:
             weights["action"]  * act_score +
             weights["intent"]  * intent_score
         )
-
-        step_id = (f or p).get("step_id", -1)
-        action  = (f or p).get("action", "")
 
         return {
             "step_id":        step_id,
@@ -251,4 +259,10 @@ class AnomalyDetector:
             for pair in aligned_pairs
         )
         weights = self._effective_weights(has_intent)
-        return [self.score_pair(pair, weights) for pair in aligned_pairs]
+        results = [self.score_pair(pair, weights) for pair in aligned_pairs]
+        # Boost action steps whose next verify/wait step logged substantive errors
+        for i, res in enumerate(results):
+            if i + 1 < len(results) and errors_on_next_observer_step(res, results[i + 1]):
+                res["combined_score"] = max(res["combined_score"], 0.72)
+                res["network_score"]  = max(res["network_score"], 0.85)
+        return results

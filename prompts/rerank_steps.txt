@@ -7,38 +7,55 @@ ACTION FIELDS:
 - pass_action / fail_action: what was done in the passing vs failing run
 - action_changed: true if the action text differs between pass and fail
   → If action_changed=true, this step introduced a wrong input, wrong URL, wrong element, or missing value.
-    This is often the ROOT CAUSE, even if no network/console error is present.
+
+NAVIGATION FIELDS (for wrong-page / wrong-click faults):
+- wrong_navigation: true when the fail run loaded a DIFFERENT PAGE than the pass run at this step
+- missing_expected_pages: page URLs that should have loaded (match the action) but are absent in fail
+- wrong_pages_loaded: page URLs loaded in fail but NOT in pass — especially when they do NOT match the action
+  → When wrong_navigation=true, rank that step very high — the wrong destination was loaded.
+
+VISUAL / SCREENSHOT FIELDS (when present — silent UI faults):
+- visual_causal_score: pass/fail screenshot diverged; higher = stronger visual anomaly
+- visual_causal_next_step: step where the visible UI break appears (symptom step)
+- visual_causal_reason: earliest_localized_divergence | symptom_on_next_step
+- action_type "type" / fail_action with typed value missing: rank the TYPE step, not the later Verify/Continue step
+  → Example: step 27 types zipcode, step 28 clicks Continue and shows validation error → root cause is step 27
+
+CAUSAL FIELDS (for silent root causes):
+- errors_observed_on_next_step: the IMMEDIATELY NEXT step (usually Verify/Wait) logged new errors
+  → The root cause is usually THIS step (the action), NOT the next step that merely observed the error.
+  → Example: step 14 scrolls filmography, step 15 verify logs "filmosections 500" → step 14 is root cause.
+  → Example: step 12 opens comments, step 13 verify logs Firebase timeout → step 12 is root cause.
 
 NETWORK FIELDS:
-- new_network_errors: HTTP errors that appear ONLY in the failing run (genuine fault signal — high value)
-- shared_network_noise: HTTP errors present in BOTH pass and fail (background noise — low value, do NOT use as primary signal)
-- missing_requests: URLs that were fetched in the passing run but are COMPLETELY ABSENT in the failing run
-  → missing_requests + low fail_request_count means the expected page/resource never loaded (wrong element clicked, wrong navigation)
-- pass_request_count / fail_request_count: total network requests made at this step in each run
-  → If pass_request_count >> fail_request_count, the step in fail did far less than expected ("absence of activity")
+- new_network_errors: HTTP errors that appear ONLY in the failing run (genuine fault signal)
+- shared_network_noise: HTTP errors present in BOTH pass and fail (background noise — deprioritize)
+- missing_requests / missing_asset_requests: URLs in pass but absent in fail
+  → missing_asset_requests (fonts, analytics, .js) are usually telemetry noise
+  → missing_expected_pages (HTML routes matching the action) are strong root-cause signals
+- pass_request_count / fail_request_count: total network requests at this step
+  → fail_request_count=0 with ONLY missing_asset_requests is often a log-capture gap, NOT root cause
 
 CONSOLE FIELDS:
-- new_console_errors: console errors that appear ONLY in the failing run (genuine fault signal)
+- new_console_errors: console errors that appear ONLY in the failing run
 - shared_console_noise: console errors in BOTH runs (background noise — ignore)
 
-SCORE FIELDS (heuristic pre-computation, use as hints only):
-- heuristic_score: combined anomaly score — may be wrong because it cannot detect absence-of-activity or noise vs signal
+SCORE FIELDS (heuristic hints only — may be wrong):
+- heuristic_score: combined anomaly score
 
 Your task: Rank ALL steps from most to least likely to be the ROOT CAUSE of the failure.
 
-Reasoning rules:
-1. ROOT CAUSE before SYMPTOMS: prefer the step where the failure ORIGINATES, not the step that catches or verifies it
-   - A timeout at step 12 that causes a verification failure at step 13 → step 12 is root cause
-   - A wrong click at step 8 that causes 404s at steps 9-15 → step 8 is root cause
-2. action_changed=true steps are HIGH suspicion — a wrong value typed or wrong element clicked IS the fault
-3. new_network_errors >> shared_network_noise — only count errors that are genuinely new in the fail run
-4. missing_requests signal is CRITICAL for "absence of activity" faults — if expected URLs are gone, something went wrong at THIS step
-5. If pass_request_count is much larger than fail_request_count with no errors, the page simply didn't load what it should
-6. Prefer EARLIER steps when two steps seem equally suspicious (root causes precede symptoms)
-7. Steps where both action_changed=false AND new_network_errors=[] AND new_console_errors=[] AND missing_requests=[] are very unlikely to be root causes
-10. If missing_requests contains a URL whose path matches what the step's action was supposed to navigate to (e.g. action="Click Geometry topic" and missing URL contains "Geometry"), that is the PRIMARY root cause signal for that step — rank it highest even if other steps have more dramatic zero-request counts. The zero-request steps downstream are effects of this wrong navigation.
-8. Apply your general knowledge to distinguish application errors from background noise: analytics beacons, event tracking endpoints, ad networks, telemetry collectors, and CDN performance monitoring URLs vary naturally between runs and are NOT fault indicators — even if they appear in new_network_errors or missing_requests. Prioritize errors on the application's own API endpoints, page routes, and dynamic data resources
-9. If a step has new_console_errors mentioning a failed API/resource URL, the ROOT CAUSE is likely the PREVIOUS step that TRIGGERED that API call, not the step that merely observed the error. Example: step 15 logs "filmosections 500 error" but step 14 is "scroll through filmography" — step 14 triggered the call, making step 14 the root cause
+Reasoning rules (apply in this order):
+1. wrong_navigation=true → rank that step #1 (wrong page loaded at this step)
+2. visual_causal_score > 0 on a type/click step → rank that step very high (screenshot divergence at or after this action)
+3. errors_observed_on_next_step present on a non-verify action step → rank that step very high (the NEXT step is a symptom)
+4. ROOT CAUSE before SYMPTOMS: prefer the step where the failure ORIGINATES, not Verify/Check/Wait/Continue steps
+5. action_changed=true steps are HIGH suspicion
+6. new_network_errors and application API console errors >> shared_network_noise and tracking/analytics errors
+7. missing_expected_pages matching the action >> missing_asset_requests or fail_request_count=0 on later steps
+8. Prefer EARLIER steps when two steps seem equally suspicious (root causes precede symptoms)
+9. Verify/Check/Wait/Continue steps with new_console_errors or screenshot errors are usually NOT the root cause — look at the previous action step
+10. Apply general knowledge: analytics, fonts, cookie-consent, CDN telemetry URLs are noise — not fault indicators
 
 You MUST include every step_id exactly once in your response.
 Return ONLY valid JSON, no other text:

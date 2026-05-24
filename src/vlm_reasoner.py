@@ -31,6 +31,30 @@ from openai import OpenAI
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
 
+class VlmAnalysisError(Exception):
+    """Raised when VLM analysis fails or returns unusable output."""
+
+SINGLE_STEP_PROMPT = """You compare PASS vs FAIL browser screenshots for ONE test step.
+
+Return ONLY valid JSON:
+{{
+  "visual_scores": [
+    {{"step_id": <int>, "visual_score": <0.0-1.0>, "visual_note": "<short reason>"}}
+  ],
+  "visual_root_cause_step_id": <int or null>,
+  "visual_summary": "<one sentence>"
+}}
+
+Rules:
+- visual_score 0.0 = identical, 1.0 = completely different UI state
+- Score layout, visible text, buttons, page content — not minor anti-aliasing
+- If FAIL shows wrong page, missing element, error dialog, or different content → score >= 0.7
+- visual_root_cause_step_id = step_id with highest meaningful difference, or null if none
+
+Step {step_id}: {action}
+"""
+
+
 def _load_prompt(filename: str) -> str:
     return (PROMPTS_DIR / filename).read_text(encoding="utf-8")
 
@@ -63,9 +87,10 @@ class VlmReasoner:
     def __init__(
         self,
         api_key: str | None = None,
-        model: str = "nvidia/nemotron-nano-12b-v2-vl:free",
+        model: str = "google/gemma-4-31b-it:free",
         temperature: float = 0.1,
         base_url: str = "https://openrouter.ai/api/v1",
+        per_step: bool = True,
     ):
         key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
         self.client = OpenAI(
@@ -78,11 +103,12 @@ class VlmReasoner:
         )
         self.model = model
         self.temperature = temperature
+        self.per_step = per_step
 
     # ── Internal call ──────────────────────────────────────────────────────────
 
     def _call(self, content: list[dict]) -> str:
-        """Call VLM with a mixed text+image content list. Retries on 429."""
+        """Call VLM; retry indefinitely on 429/empty-response, give up on other errors."""
         attempt = 0
         while True:
             try:
@@ -101,7 +127,7 @@ class VlmReasoner:
                 if retriable:
                     wait = min(2 ** attempt * 10, 120)
                     attempt += 1
-                    print(f"  [VLM rate limit] waiting {wait}s before retry {attempt}...")
+                    print(f"  [rate limit] waiting {wait}s before retry {attempt}...")
                     time.sleep(wait)
                 else:
                     raise
@@ -118,6 +144,54 @@ class VlmReasoner:
                 except Exception:
                     pass
         return {}
+
+    def _validate_result(self, steps_ready: list[dict], result: dict) -> dict:
+        """Ensure every step got a usable VLM response."""
+        scores = result.get("visual_scores") or []
+        if not scores:
+            raise VlmAnalysisError(f"VLM returned no visual_scores ({self.model})")
+
+        by_id = {s["step_id"]: s for s in scores if "step_id" in s}
+        expected = {s["step_id"] for s in steps_ready}
+        missing = expected - set(by_id.keys())
+        if missing:
+            raise VlmAnalysisError(
+                f"VLM missing scores for step(s) {sorted(missing)} ({self.model})"
+            )
+
+        for sid, entry in by_id.items():
+            note = str(entry.get("visual_note") or "")
+            if "VLM error" in note:
+                raise VlmAnalysisError(note)
+
+        max_score = max(float(s.get("visual_score") or 0) for s in scores)
+        if max_score < 0.01:
+            raise VlmAnalysisError(
+                f"VLM returned all-zero visual scores — {self.model} did not detect any differences"
+            )
+
+        return result
+
+    def _analyze_one_step(self, step: dict) -> dict:
+        sid = step.get("step_id")
+        action = step.get("fail_action") or step.get("action", f"Step {sid}")
+        pass_b64 = _encode_image(step.get("pass_screenshot") or "")
+        fail_b64 = _encode_image(step.get("fail_screenshot") or "")
+        if pass_b64 is None or fail_b64 is None:
+            raise VlmAnalysisError(f"Step {sid}: missing pass or fail screenshot")
+
+        content: list[dict] = [
+            {"type": "text", "text": SINGLE_STEP_PROMPT.format(step_id=sid, action=action[:120])},
+            {"type": "text", "text": "Pass screenshot:"},
+            _image_content(pass_b64),
+            {"type": "text", "text": "Fail screenshot:"},
+            _image_content(fail_b64),
+        ]
+        raw = self._call(content)
+        parsed = self._extract_json(raw)
+        if not parsed.get("visual_scores"):
+            raise VlmAnalysisError(f"Step {sid}: VLM returned empty or unparseable JSON")
+        return parsed
 
     # ── Main VLM analysis ─────────────────────────────────────────────────────
 
@@ -139,50 +213,76 @@ class VlmReasoner:
               "steps_with_screenshots": int,   # how many steps had usable screenshots
             }
         """
-        prompt_text = _load_prompt("vlm_visual_rank.txt")
-        content: list[dict] = [{"type": "text", "text": prompt_text}]
-
-        steps_sent = []
+        steps_ready = []
         for step in steps_with_screenshots:
-            sid = step.get("step_id")
-            action = step.get("fail_action") or step.get("action", f"Step {sid}")
             pass_b64 = _encode_image(step.get("pass_screenshot") or "")
             fail_b64 = _encode_image(step.get("fail_screenshot") or "")
+            if pass_b64 is not None and fail_b64 is not None:
+                steps_ready.append(step)
 
-            if pass_b64 is None or fail_b64 is None:
-                continue  # skip steps without screenshots
+        if not steps_ready:
+            raise VlmAnalysisError("No screenshots available for VLM analysis")
 
-            steps_sent.append(sid)
-            content.append({
-                "type": "text",
-                "text": f"\n--- Step {sid}: {action[:80]} ---\nPass screenshot:"
-            })
-            content.append(_image_content(pass_b64))
-            content.append({"type": "text", "text": "Fail screenshot:"})
-            content.append(_image_content(fail_b64))
+        try:
+            if self.per_step:
+                all_scores: list[dict] = []
+                summary_parts: list[str] = []
+                root_id = None
+                root_score = -1.0
+                for step in steps_ready:
+                    parsed = self._analyze_one_step(step)
+                    for vs in parsed.get("visual_scores") or []:
+                        all_scores.append(vs)
+                        sc = float(vs.get("visual_score") or 0)
+                        if sc > root_score:
+                            root_score, root_id = sc, vs.get("step_id")
+                    if parsed.get("visual_summary"):
+                        summary_parts.append(parsed["visual_summary"])
 
-        if not steps_sent:
-            return {
-                "visual_scores": [],
-                "visual_root_cause_step_id": None,
-                "visual_summary": "No screenshots available for this trace.",
-                "steps_with_screenshots": 0,
-            }
+                result = {
+                    "visual_scores": all_scores,
+                    "visual_root_cause_step_id": root_id,
+                    "visual_summary": "; ".join(summary_parts) if summary_parts else "",
+                    "steps_with_screenshots": len(steps_ready),
+                }
+            else:
+                prompt_text = _load_prompt("vlm_visual_rank.txt")
+                content: list[dict] = [{"type": "text", "text": prompt_text}]
+                steps_sent = []
+                for step in steps_ready:
+                    sid = step.get("step_id")
+                    action = step.get("fail_action") or step.get("action", f"Step {sid}")
+                    pass_b64 = _encode_image(step.get("pass_screenshot") or "")
+                    fail_b64 = _encode_image(step.get("fail_screenshot") or "")
+                    steps_sent.append(sid)
+                    content.append({
+                        "type": "text",
+                        "text": f"\n--- Step {sid}: {action[:80]} ---\nPass screenshot:"
+                    })
+                    content.append(_image_content(pass_b64))
+                    content.append({"type": "text", "text": "Fail screenshot:"})
+                    content.append(_image_content(fail_b64))
 
-        content.append({
-            "type": "text",
-            "text": f"\nAnalyze the {len(steps_sent)} step(s) shown above and return the JSON."
-        })
+                content.append({
+                    "type": "text",
+                    "text": f"\nAnalyze the {len(steps_sent)} step(s) shown above and return the JSON."
+                })
+                raw = self._call(content)
+                parsed = self._extract_json(raw)
+                if not parsed.get("visual_scores"):
+                    raise VlmAnalysisError("VLM batch call returned empty or unparseable JSON")
+                result = {
+                    "visual_scores": parsed.get("visual_scores", []),
+                    "visual_root_cause_step_id": parsed.get("visual_root_cause_step_id"),
+                    "visual_summary": parsed.get("visual_summary", raw[:200]),
+                    "steps_with_screenshots": len(steps_sent),
+                }
+        except VlmAnalysisError:
+            raise
+        except Exception as e:
+            raise VlmAnalysisError(str(e)) from e
 
-        raw = self._call(content)
-        parsed = self._extract_json(raw)
-
-        return {
-            "visual_scores":              parsed.get("visual_scores", []),
-            "visual_root_cause_step_id":  parsed.get("visual_root_cause_step_id"),
-            "visual_summary":             parsed.get("visual_summary", raw[:200]),
-            "steps_with_screenshots":     len(steps_sent),
-        }
+        return self._validate_result(steps_ready, result)
 
     # ── Ensemble with LLM output ───────────────────────────────────────────────
 
@@ -191,62 +291,163 @@ class VlmReasoner:
         llm_ranked: list[dict],
         vlm_output: dict,
         vlm_weight: float = 0.4,
+        vlm_only: bool = False,
+        scored_steps: list[dict] | None = None,
+        top_k: int = 5,
     ) -> tuple[list[dict], str]:
         """
-        Merge LLM ranking with VLM visual scores to produce a final ranking.
+        Merge text ranking with VLM visual scores to produce a final ranking.
 
-        Strategy:
-          - Each step gets a combined_visual_score = (1 - vlm_weight) * llm_rank_score
-            + vlm_weight * visual_score
-          - llm_rank_score is derived from position: rank 1 → 1.0, rank 5 → 0.2
-          - If VLM identifies a visual root cause step not in LLM top-5, it is
-            inserted at rank 1 if visual_score >= 0.7
-
-        Returns:
-            (final_ranked_list, ranking_mode_label)
+        vlm_only: rank all VLM-analyzed steps by visual score (consequence steps
+                  rank below their attributed cause when scores tie).
+        llm+vlm:  blend position-based text score with VLM score for the candidate
+                  pool; high-scoring analyzed steps outside the text top-k can enter.
         """
         visual_map: dict[int, float] = {}
         for vs in vlm_output.get("visual_scores", []):
             visual_map[vs["step_id"]] = vs.get("visual_score", 0.0)
 
-        n = len(llm_ranked)
-        if n == 0:
-            return llm_ranked, "vlm"
+        if not visual_map:
+            return llm_ranked[:top_k], "vlm" if vlm_only else "llm"
 
-        scored = []
-        for i, step in enumerate(llm_ranked):
+        step_map = {s["step_id"]: s for s in (scored_steps or llm_ranked)}
+        consequence_of = {
+            s["visual_causal_next_step"]: s["step_id"]
+            for s in (scored_steps or [])
+            if s.get("visual_causal_next_step") is not None
+        }
+
+        if vlm_only:
+            return self._vlm_only_ranking(
+                llm_ranked, visual_map, step_map, consequence_of, top_k
+            )
+
+        return self._hybrid_vlm_ranking(
+            llm_ranked, visual_map, step_map, consequence_of,
+            vlm_output, vlm_weight, top_k,
+        )
+
+    def _vlm_only_ranking(
+        self,
+        llm_ranked: list[dict],
+        visual_map: dict[int, float],
+        step_map: dict[int, dict],
+        consequence_of: dict[int, int],
+        top_k: int,
+    ) -> tuple[list[dict], str]:
+        """Rank by max(visual-causal/heuristic, VLM); root beats downstream symptoms."""
+        visual_roots = {
+            s["step_id"]: float(s.get("visual_causal_score") or 0)
+            for s in step_map.values()
+            if float(s.get("visual_causal_score") or 0) > 0
+        }
+        primary_root = (
+            max(visual_roots, key=lambda k: (visual_roots[k], -k))
+            if visual_roots else None
+        )
+        root_floor = 0.0
+        if primary_root is not None:
+            root_step = step_map.get(primary_root, {})
+            root_floor = max(
+                visual_roots[primary_root],
+                float(root_step.get("rank_score") or 0),
+                float(root_step.get("combined_score") or 0),
+            )
+
+        pool: list[dict] = list(llm_ranked)
+        in_pool = {s["step_id"] for s in pool}
+        for sid in visual_map:
+            if sid not in in_pool and sid in step_map:
+                pool.append(step_map[sid])
+                in_pool.add(sid)
+
+        scored: list[tuple[float, int, dict]] = []
+        for step in pool:
             sid = step["step_id"]
-            llm_score = 1.0 - (i / n)                 # 1.0 → 0.2 based on rank
-            vis_score  = visual_map.get(sid, 0.0)
-            combined   = (1 - vlm_weight) * llm_score + vlm_weight * vis_score
-            scored.append((combined, step))
+            base = max(
+                float(step.get("visual_causal_score") or 0),
+                float(step.get("rank_score") or 0),
+                float(step.get("combined_score") or 0),
+            )
+            vis = float(visual_map.get(sid, 0))
+            combined = max(base, vis)
+            if (
+                primary_root is not None
+                and sid > primary_root
+                and sid not in visual_roots
+            ):
+                combined = min(combined, root_floor)
+            scored.append((
+                combined,
+                sid,
+                {**step, "vlm_visual_score": round(vis, 3)},
+            ))
 
-        # Check if VLM identified a high-confidence root cause not in LLM top-5
+        def sort_key(item: tuple[float, int, dict]) -> tuple:
+            combined, sid, _ = item
+            is_consequence = sid in consequence_of or (
+                primary_root is not None
+                and sid > primary_root
+                and sid not in visual_roots
+            )
+            return (-combined, 1 if is_consequence else 0, sid)
+
+        scored.sort(key=sort_key)
+        return [step for _, _, step in scored[:top_k]], "vlm"
+
+    def _hybrid_vlm_ranking(
+        self,
+        llm_ranked: list[dict],
+        visual_map: dict[int, float],
+        step_map: dict[int, dict],
+        consequence_of: dict[int, int],
+        vlm_output: dict,
+        vlm_weight: float,
+        top_k: int,
+    ) -> tuple[list[dict], str]:
+        """Blend text rank position with VLM scores; include strong VLM-only steps."""
+        pool: list[dict] = list(llm_ranked)
+        in_pool = {s["step_id"] for s in pool}
+
+        for sid, vis in visual_map.items():
+            if sid in in_pool or sid not in step_map:
+                continue
+            if float(vis) >= 0.5:
+                pool.append({**step_map[sid], "vlm_visual_score": round(float(vis), 3)})
+                in_pool.add(sid)
+
+        n = len(llm_ranked) or 1
+        rank_pos = {s["step_id"]: i for i, s in enumerate(llm_ranked)}
+
+        scored: list[tuple[float, int, dict]] = []
+        for step in pool:
+            sid = step["step_id"]
+            pos = rank_pos.get(sid)
+            text_score = (1.0 - (pos / n)) if pos is not None else 0.0
+            vis_score = float(visual_map.get(sid, 0.0))
+            combined = (1 - vlm_weight) * text_score + vlm_weight * vis_score
+            scored.append((
+                combined,
+                sid,
+                {**step, "vlm_visual_score": round(vis_score, 3)},
+            ))
+
+        def sort_key(item: tuple[float, int, dict]) -> tuple:
+            combined, sid, _ = item
+            is_consequence = sid in consequence_of
+            return (-combined, 1 if is_consequence else 0, sid)
+
+        scored.sort(key=sort_key)
+        final = [step for _, _, step in scored[:top_k]]
+
         vlm_rc = vlm_output.get("visual_root_cause_step_id")
-        inserted = False
-        if vlm_rc is not None:
-            in_llm = any(s["step_id"] == vlm_rc for s in llm_ranked)
-            vlm_rc_score = visual_map.get(vlm_rc, 0.0)
-            if not in_llm and vlm_rc_score >= 0.7:
-                # Find the full step dict from scored list or use a placeholder
-                # (step must be in the full scored set, not just top-5)
-                pass  # handled below via step_id promotion note
+        base_mode = "llm+vlm"
+        if vlm_rc is not None and final and final[0]["step_id"] != vlm_rc:
+            vlm_rc_visual = float(visual_map.get(vlm_rc, 0.0))
+            if vlm_rc_visual >= 0.7 and any(s["step_id"] == vlm_rc for s in final):
+                final = [s for s in final if s["step_id"] != vlm_rc]
+                promoted = next(s for _, _, s in scored if s["step_id"] == vlm_rc)
+                final = [promoted] + final[: top_k - 1]
+                return final, f"{base_mode}+visual_promoted"
 
-        scored.sort(key=lambda x: x[0], reverse=True)
-        final = [s for _, s in scored]
-
-        if vlm_rc is not None and vlm_rc != (final[0]["step_id"] if final else None):
-            in_final = any(s["step_id"] == vlm_rc for s in final)
-            if in_final:
-                # VLM root cause is in the list but not #1 — check if it should be promoted
-                vlm_rc_visual = visual_map.get(vlm_rc, 0.0)
-                if vlm_rc_visual >= 0.7:
-                    # Promote VLM root cause to #1
-                    final = [s for s in final if s["step_id"] != vlm_rc]
-                    vlm_step = next(s for s in scored if s[1]["step_id"] == vlm_rc)[1]
-                    final = [vlm_step] + final
-                    return final, "llm+vlm+visual_promoted"
-
-            return final, "llm+vlm"
-
-        return final, "llm+vlm" if vlm_output.get("steps_with_screenshots", 0) > 0 else "llm"
+        return final, base_mode

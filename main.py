@@ -4,23 +4,13 @@ main.py
 TraceLens pipeline orchestrator.
 
 Usage:
-    # Run all traces
-    python main.py
-
-    # Run a single trace
-    python main.py --source efe_irem --trace wikipedia
-
-    # Heuristic-only (no LLM calls)
-    python main.py --no-llm
-
-    # LLM + VLM combined (Phase 2)
-    python main.py --vlm
-
-    # VLM only (visual analysis, no text LLM)
-    python main.py --no-llm --vlm
-
-    # Skip evaluation (if no ground truth)
-    python main.py --no-eval
+    python main.py                          # heuristic only (default, pixel boost on)
+    python main.py --no-pixel               # heuristic only, text signals only
+    python main.py --llm                    # LLM re-rank + diagnosis (text only)
+    python main.py --vlm                    # VLM + screenshot/visual pipeline
+    python main.py --llm --vlm              # hybrid (LLM text + VLM visual ensemble)
+    python main.py --source efe_irem --trace wikipedia --llm
+    python main.py --no-eval                # skip evaluation
 """
 
 import argparse
@@ -40,10 +30,15 @@ from src.trace_aligner import align
 from src.anomaly_detector import AnomalyDetector
 from src.ranker import Ranker
 from src.llm_reasoner import LlmReasoner
-from src.vlm_reasoner import VlmReasoner
+from src.vlm_reasoner import VlmReasoner, VlmAnalysisError
 from src.screenshot_resolver import ScreenshotResolver
 from src.report_generator import ReportGenerator
 from src.evaluation import Evaluator
+from src.visual_signals import (
+    annotate_visual_causal_scores,
+    summarize_screenshot_analysis,
+    vlm_inject_step_ids,
+)
 
 
 def load_config(path: str = "config.yaml") -> dict:
@@ -64,8 +59,9 @@ def run_trace(
     reporter: ReportGenerator,
     evaluator: Evaluator,
     ground_truth: dict,
-    use_llm: bool = True,
+    use_llm: bool = False,
     use_vlm: bool = False,
+    use_pixel: bool = True,
     use_eval: bool = True,
 ) -> dict:
     trace_id = f"{source}/{trace_cfg['id']}"
@@ -90,18 +86,103 @@ def run_trace(
     aligned = align(passing, failing)
     print(f"  Aligned: {len(aligned)} pairs")
 
-    # 3. Score
+    # 3. Score (text signals — always)
     scored = detector.compute_scores(aligned)
 
-    # 4. Rank (heuristic)
-    candidates = ranker.candidates_for_llm(scored)   # top-10 for LLM
-    heuristic_top = ranker.rank_heuristic(scored)    # top-5 heuristic
+    # Visual pipeline: screenshot scan, visual-causal, pixel boost — only with --vlm
+    source_cfg_base = cfg["data"]["sources"][source]["base"]
+    visual_causal_cfg = cfg.get("ranking", {}).get("visual_causal", {})
+    pixel_scores: dict[int, dict] = {}
+    has_visual_causal = False
+    ran_screenshot_scan = False
+    screenshot_analysis: dict = {}
+    scored_visual = scored
+
+    if use_vlm and resolver and visual_causal_cfg.get("enabled", True):
+        pixel_scores = ranker.pixel_scores_for_trace(
+            scored, resolver, source, source_cfg_base, trace_cfg
+        )
+        ran_screenshot_scan = bool(pixel_scores)
+        scored_visual = annotate_visual_causal_scores(scored, pixel_scores, visual_causal_cfg)
+        screenshot_analysis = summarize_screenshot_analysis(
+            scored_visual, pixel_scores, visual_causal_cfg
+        )
+        for step in scored_visual:
+            vc = float(step.get("visual_causal_score") or 0)
+            if vc > 0:
+                has_visual_causal = True
+                root = step["step_id"]
+                div = step.get("visual_divergence_step")
+                nxt = step.get("visual_causal_next_step")
+                reason = step.get("visual_causal_reason", "")
+                loc = step.get("pixel_localized", 0)
+                print(
+                    f"  Visual divergence: first persistent at step {div} "
+                    f"(localized={loc:.2f}) → root step {root} "
+                    f"score={vc:.2f}"
+                    + (f", visible at step {nxt}" if nxt is not None else "")
+                    + (f" [{reason}]" if reason else "")
+                )
+                break
+        if ran_screenshot_scan and not has_visual_causal:
+            print(
+                f"  Screenshot scan: {screenshot_analysis['steps_scanned']} steps — "
+                "no persistent pass/fail divergence above threshold"
+            )
+
+    # 4. Rank (heuristic baseline — text-only for LLM; visual layer when --vlm)
+    candidates = ranker.candidates_for_llm(scored)   # text-only candidates for LLM
+    heuristic_text_only = ranker.add_rank_metadata(
+        ranker.rank_heuristic(scored, include_visual_causal=False)
+    )
+    heuristic_rank_input = scored_visual if use_vlm else scored
+    heuristic_top = ranker.rank_heuristic(
+        heuristic_rank_input, include_visual_causal=(use_vlm and has_visual_causal)
+    )
+    heuristic_visual = (
+        ranker.add_rank_metadata([{**s} for s in heuristic_top])
+        if use_vlm and has_visual_causal else None
+    )
+
+    # Pixel-diff boost: default heuristic mode, or report table when --vlm.
+    # Under --vlm, do not dilute visual-causal rank_score used for VLM ensemble.
+    used_pixel_boost = False
+    heuristic_pixel_boosted = None
+    run_pixel = use_pixel and resolver and (
+        (not use_llm and not use_vlm) or use_vlm
+    )
+    if run_pixel and cfg.get("ranking", {}).get("heuristic_pixel_fallback", True):
+        top_with_shots = resolver.attach_screenshots(
+            heuristic_top, source, source_cfg_base, trace_cfg
+        )
+        if any(
+            s.get("pass_screenshot") and s.get("fail_screenshot")
+            for s in top_with_shots
+        ):
+            px_weight = cfg.get("ranking", {}).get("heuristic_pixel_weight", 0.35)
+            boosted = ranker.apply_pixel_boost(
+                [{**s} for s in heuristic_top], top_with_shots, weight=px_weight
+            )
+            used_pixel_boost = True
+            if use_vlm:
+                heuristic_pixel_boosted = boosted
+            else:
+                heuristic_top = boosted
+            print(f"  Heuristic pixel-diff boost applied (weight={px_weight})")
 
     heuristic_top = ranker.add_rank_metadata(heuristic_top)
     final_ranked = heuristic_top  # default: heuristic
-    ranking_mode = "heuristic"
+    if used_pixel_boost:
+        ranking_mode = "heuristic+pixel"
+        if use_vlm and has_visual_causal:
+            ranking_mode += "+visual_causal"
+    elif use_vlm and has_visual_causal:
+        ranking_mode = "heuristic+visual_causal"
+    else:
+        ranking_mode = "heuristic"
+    llm_ranked_steps = None
 
-    # 5. LLM re-ranking + diagnosis
+    # 5. LLM re-ranking + diagnosis (--llm only; text signals, no screenshot layer)
     llm_output = {}
     if use_llm and llm:
         try:
@@ -110,69 +191,103 @@ def run_trace(
             llm_ranked = ranker.apply_llm_reranking(reranked_ids, scored)
             llm_ranked = ranker.add_rank_metadata(llm_ranked)
 
-            print(f"  Running LLM diagnosis...")
-            llm_output = llm.run(llm_ranked, reranked_ids)
+            det_root = ranker.find_deterministic_root(scored)
 
-            # If LLM diagnosis identifies a root cause step, promote it to #1
-            rc_step = llm_output.get("diagnosis", {}).get("root_cause_step_id")
-            if rc_step is not None:
-                try:
-                    rc_id = int(rc_step)
-                    step_map = {s["step_id"]: s for s in scored}
-                    if rc_id in step_map:
-                        promoted = [step_map[rc_id]]
-                        rest = [s for s in llm_ranked if s["step_id"] != rc_id]
-                        final_ranked = ranker.add_rank_metadata(promoted + rest[:ranker.top_k - 1])
-                        ranking_mode = "llm+diagnosis"
-                    else:
+            print(f"  Running LLM diagnosis...")
+            diag_steps = ranker.diagnosis_candidates(llm_ranked, scored)
+            llm_output = llm.run(diag_steps, reranked_ids)
+
+            if det_root is not None:
+                final_ranked = ranker.promote_step(llm_ranked, scored, det_root)
+                ranking_mode = "llm+deterministic"
+            else:
+                # If LLM diagnosis identifies a root cause step, promote it to #1
+                rc_step = llm_output.get("diagnosis", {}).get("root_cause_step_id")
+                if rc_step is not None:
+                    try:
+                        rc_id = int(rc_step)
+                        step_map = {s["step_id"]: s for s in scored}
+                        if rc_id in step_map:
+                            promoted = [step_map[rc_id]]
+                            rest = [s for s in llm_ranked if s["step_id"] != rc_id]
+                            final_ranked = ranker.add_rank_metadata(promoted + rest[:ranker.top_k - 1])
+                            ranking_mode = "llm+diagnosis"
+                        else:
+                            final_ranked = llm_ranked
+                            ranking_mode = "llm"
+                    except (ValueError, TypeError):
                         final_ranked = llm_ranked
                         ranking_mode = "llm"
-                except (ValueError, TypeError):
+                else:
                     final_ranked = llm_ranked
                     ranking_mode = "llm"
-            else:
-                final_ranked = llm_ranked
-                ranking_mode = "llm"
+
+            llm_ranked_steps = final_ranked
 
         except Exception as e:
             print(f"  LLM failed ({e}), falling back to heuristic ranking")
-            final_ranked = heuristic_top
-            ranking_mode = "heuristic (llm failed)"
-
-    # 5b. VLM visual analysis
-    vlm_output = {}
-    source_cfg_base = cfg["data"]["sources"][source]["base"]
-    if use_vlm and vlm and resolver:
-        try:
-            vlm_k = cfg.get("vlm", {}).get("top_k_for_vlm", 5)
-            vlm_weight = cfg.get("vlm", {}).get("ensemble_vlm_weight", 0.4)
-
-            # Attach screenshot paths to top-K steps from current ranking
-            top_for_vlm = final_ranked[:vlm_k]
-            top_with_shots = resolver.attach_screenshots(
-                top_for_vlm, source, source_cfg_base, trace_cfg
-            )
-
-            has_shots = any(
-                s.get("pass_screenshot") and s.get("fail_screenshot")
-                for s in top_with_shots
-            )
-            if has_shots:
-                print(f"  Running VLM visual analysis ({sum(1 for s in top_with_shots if s.get('pass_screenshot'))} screenshot pairs)...")
-                vlm_output = vlm.analyze_steps(top_with_shots)
-
-                if vlm_output.get("steps_with_screenshots", 0) > 0:
-                    final_ranked_vlm, vlm_mode = vlm.ensemble_rankings(
-                        final_ranked, vlm_output, vlm_weight=vlm_weight
-                    )
-                    final_ranked = ranker.add_rank_metadata(final_ranked_vlm)
-                    ranking_mode = vlm_mode
-                    print(f"  VLM visual root cause: step {vlm_output.get('visual_root_cause_step_id')}")
-                    print(f"  VLM summary: {vlm_output.get('visual_summary', '')[:100]}")
+            det_root = ranker.find_deterministic_root(scored)
+            if det_root is not None:
+                final_ranked = ranker.promote_step(heuristic_top, scored, det_root)
+                ranking_mode = "heuristic+deterministic"
             else:
-                print(f"  VLM skipped: no screenshots found for this trace")
-        except Exception as e:
-            print(f"  VLM failed ({e}), keeping LLM/heuristic ranking")
+                final_ranked = heuristic_top
+                ranking_mode = "heuristic (llm failed)"
+
+    # 5b. VLM visual analysis (required when --vlm; no fallback on failure)
+    vlm_output = {}
+    ran_vlm = False
+    if use_vlm and vlm and resolver:
+        vlm_k = cfg.get("vlm", {}).get("top_k_for_vlm", 5)
+        vlm_weight = cfg.get("vlm", {}).get("ensemble_vlm_weight", 0.4)
+
+        inject_vlm = (
+            vlm_inject_step_ids(scored_visual, pixel_scores, visual_causal_cfg)
+            if pixel_scores else []
+        )
+
+        top_for_vlm = ranker.vlm_candidate_steps(
+            final_ranked, scored_visual, vlm_k, inject_step_ids=inject_vlm or None
+        )
+        top_with_shots = resolver.attach_screenshots(
+            top_for_vlm, source, source_cfg_base, trace_cfg
+        )
+
+        has_shots = any(
+            s.get("pass_screenshot") and s.get("fail_screenshot")
+            for s in top_with_shots
+        )
+        if not has_shots:
+            print(f"  VLM failed: no screenshots found for {trace_id}")
+            return {"trace_id": trace_id, "eval": {}, "error": "no screenshots", "skipped": True}
+
+        print(f"  Running VLM visual analysis ({sum(1 for s in top_with_shots if s.get('pass_screenshot'))} screenshot pairs)...")
+        try:
+            vlm_output = vlm.analyze_steps(top_with_shots)
+        except VlmAnalysisError as e:
+            err = str(e)
+            print(f"  VLM failed: {e}")
+            if "402" in err or "Insufficient credits" in err:
+                print("  Hint: add OpenRouter credits, or switch vlm_model to a :free model in config.yaml")
+            elif "429" in err or "Rate limit" in err:
+                print("  Hint: free-model daily quota exhausted — add credits at openrouter.ai/settings/credits")
+                print("        or wait for quota reset, then retry")
+            return {"trace_id": trace_id, "eval": {}, "error": err, "skipped": True}
+
+        if has_visual_causal:
+            vlm_output = ranker.backfill_visual_causal_vlm_scores(vlm_output, scored_visual)
+
+        final_ranked_vlm, vlm_mode = vlm.ensemble_rankings(
+            final_ranked, vlm_output, vlm_weight=vlm_weight,
+            vlm_only=(not use_llm),
+            scored_steps=scored_visual,
+            top_k=ranker.top_k,
+        )
+        final_ranked = ranker.add_rank_metadata(final_ranked_vlm)
+        ranking_mode = vlm_mode
+        ran_vlm = True
+        print(f"  VLM visual root cause: step {vlm_output.get('visual_root_cause_step_id')}")
+        print(f"  VLM summary: {vlm_output.get('visual_summary', '')[:100]}")
 
     # 6. Evaluate
     eval_result = {}
@@ -188,15 +303,36 @@ def run_trace(
             print(f"  No ground truth for {trace_id}, skipping evaluation")
 
     # 7. Report
-    slim_ranked = [{k: v for k, v in s.items() if k not in ("pass_step", "fail_step")}
-                   for s in final_ranked]
-    slim_heuristic = [{k: v for k, v in s.items() if k not in ("pass_step", "fail_step")}
-                      for s in heuristic_top]
+    def _slim(steps: list[dict]) -> list[dict]:
+        return [{k: v for k, v in s.items() if k not in ("pass_step", "fail_step")} for s in steps]
+
+    slim_ranked = _slim(final_ranked)
+    slim_heuristic = _slim(
+        heuristic_text_only
+        if (used_pixel_boost or (use_vlm and has_visual_causal))
+        else heuristic_top
+    )
+    slim_heuristic_pixel = _slim(
+        ranker.add_rank_metadata(heuristic_pixel_boosted)
+        if heuristic_pixel_boosted is not None
+        else (heuristic_top if used_pixel_boost else None)
+    ) if used_pixel_boost else None
+    slim_heuristic_visual = _slim(heuristic_visual) if heuristic_visual else None
+    slim_llm = _slim(llm_ranked_steps) if llm_ranked_steps else None
 
     report = reporter.build(
         trace_id=trace_id,
         ranked_steps=slim_ranked,
         heuristic_steps=slim_heuristic,
+        heuristic_pixel_steps=slim_heuristic_pixel,
+        heuristic_visual_steps=slim_heuristic_visual,
+        used_pixel_boost=used_pixel_boost,
+        has_visual_causal=(use_vlm and has_visual_causal),
+        ran_screenshot_scan=ran_screenshot_scan,
+        screenshot_analysis=screenshot_analysis if ran_screenshot_scan else None,
+        llm_ranked_steps=slim_llm,
+        ran_vlm=ran_vlm,
+        vlm_only=(ran_vlm and not use_llm),
         ranking_mode=ranking_mode,
         llm_output=llm_output,
         vlm_output=vlm_output if vlm_output else None,
@@ -226,8 +362,10 @@ def main():
     parser.add_argument("--skip",   default=None, help="Comma-separated trace IDs to skip (e.g. saucedemo_1,gutenberg)")
     parser.add_argument("--from",   default=None, dest="from_trace",
                         help="Start from this trace ID (skip everything before it in config order)")
-    parser.add_argument("--no-llm", action="store_true", help="Skip LLM calls (heuristic only)")
-    parser.add_argument("--vlm",    action="store_true", help="Enable VLM visual analysis (Phase 2)")
+    parser.add_argument("--llm",     action="store_true", help="Enable LLM re-ranking and diagnosis")
+    parser.add_argument("--vlm",     action="store_true", help="Enable VLM visual analysis")
+    parser.add_argument("--no-pixel", action="store_true",
+                        help="Disable pixel-diff boost in heuristic-only mode (text signals only)")
     parser.add_argument("--no-eval", action="store_true", help="Skip evaluation")
     parser.add_argument("--config", default="config.yaml")
     args = parser.parse_args()
@@ -247,36 +385,48 @@ def main():
     evaluator = Evaluator(top_k=cfg["ranking"]["top_k"])
 
     llm = None
-    if not args.no_llm:
-        key_env  = cfg["model"].get("api_key_env", "GROQ_API_KEY")
-        api_key  = os.environ.get(key_env)
+    if args.llm:
+        key_env = cfg["model"].get("api_key_env", "OPENROUTER_API_KEY")
+        api_key = os.environ.get(key_env)
         if not api_key:
-            print(f"WARNING: {key_env} not set in .env. Running heuristic-only mode.")
-        else:
-            llm = LlmReasoner(
-                api_key=api_key,
-                model=cfg["model"]["llm_model"],
-                temperature=cfg["model"]["temperature"],
-                base_url=cfg["model"]["base_url"],
-            )
+            print(f"ERROR: --llm requires {key_env} in .env")
+            raise SystemExit(1)
+        llm = LlmReasoner(
+            api_key=api_key,
+            model=cfg["model"]["llm_model"],
+            temperature=cfg["model"]["temperature"],
+            base_url=cfg["model"]["base_url"],
+        )
+        print(f"LLM enabled: {llm.model}")
 
     vlm = None
-    resolver = None
+    resolver = ScreenshotResolver(raw_base=raw_base)
     if args.vlm:
         vlm_cfg = cfg.get("vlm", {})
         vlm_key_env = vlm_cfg.get("api_key_env", "OPENROUTER_API_KEY")
         vlm_api_key = os.environ.get(vlm_key_env)
         if not vlm_api_key:
-            print(f"WARNING: {vlm_key_env} not set. VLM disabled.")
-        else:
-            vlm = VlmReasoner(
-                api_key=vlm_api_key,
-                model=vlm_cfg.get("vlm_model", "nvidia/nemotron-nano-12b-v2-vl:free"),
-                temperature=vlm_cfg.get("temperature", 0.1),
-                base_url=vlm_cfg.get("base_url", "https://openrouter.ai/api/v1"),
-            )
-            resolver = ScreenshotResolver(raw_base=raw_base)
-            print(f"VLM enabled: {vlm.model}")
+            print(f"ERROR: --vlm requires {vlm_key_env} in .env")
+            raise SystemExit(1)
+        vlm = VlmReasoner(
+            api_key=vlm_api_key,
+            model=vlm_cfg.get("vlm_model", "google/gemma-4-31b-it:free"),
+            temperature=vlm_cfg.get("temperature", 0.1),
+            base_url=vlm_cfg.get("base_url", "https://openrouter.ai/api/v1"),
+            per_step=vlm_cfg.get("per_step", True),
+        )
+        print(f"VLM enabled: {vlm.model}")
+
+    if args.llm and args.vlm:
+        w = cfg.get("vlm", {}).get("ensemble_vlm_weight", 0.4)
+        print(f"Mode: llm+vlm hybrid ({int((1 - w) * 100)}% LLM / {int(w * 100)}% VLM)")
+    elif args.llm:
+        print("Mode: llm")
+    elif args.vlm:
+        print("Mode: vlm")
+    else:
+        label = "heuristic (text only)" if args.no_pixel else "heuristic + pixel boost"
+        print(f"Mode: {label}")
 
     all_results = []
     trace_count = 0
@@ -316,26 +466,29 @@ def main():
                 reporter=reporter,
                 evaluator=evaluator,
                 ground_truth=ground_truth,
-                use_llm=(llm is not None),
-                use_vlm=(vlm is not None),
+                use_llm=args.llm,
+                use_vlm=args.vlm,
+                use_pixel=(not args.no_pixel),
                 use_eval=(not args.no_eval),
             )
             all_results.append(result)
+            if result.get("skipped"):
+                print(f"  Skipped report output for {result['trace_id']}")
 
     # Aggregate evaluation + run report
     run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    if args.no_llm and args.vlm:
-        run_mode   = f"vlm ({cfg.get('vlm', {}).get('vlm_model', 'unknown')})"
-        run_prefix = "vlm"
-    elif args.no_llm:
-        run_mode   = "heuristic"
-        run_prefix = "heuristic"
-    elif args.vlm:
+    if args.llm and args.vlm:
         run_mode   = f"llm+vlm ({cfg['model']['llm_model']} + {cfg.get('vlm', {}).get('vlm_model', 'vlm')})"
         run_prefix = "llm+vlm"
-    else:
+    elif args.vlm:
+        run_mode   = f"vlm ({cfg.get('vlm', {}).get('vlm_model', 'unknown')})"
+        run_prefix = "vlm"
+    elif args.llm:
         run_mode   = f"llm ({cfg['model']['llm_model']})"
         run_prefix = "llm"
+    else:
+        run_mode   = "heuristic"
+        run_prefix = "heuristic"
 
     if not args.no_eval:
         eval_results = [r["eval"] for r in all_results if r.get("eval")]

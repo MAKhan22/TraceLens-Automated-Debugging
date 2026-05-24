@@ -15,6 +15,15 @@ class ReportGenerator:
         trace_id: str,
         ranked_steps: list[dict],
         heuristic_steps: list[dict] | None = None,
+        heuristic_pixel_steps: list[dict] | None = None,
+        heuristic_visual_steps: list[dict] | None = None,
+        used_pixel_boost: bool = False,
+        has_visual_causal: bool = False,
+        ran_screenshot_scan: bool = False,
+        screenshot_analysis: dict | None = None,
+        llm_ranked_steps: list[dict] | None = None,
+        ran_vlm: bool = False,
+        vlm_only: bool = False,
         ranking_mode: str = "heuristic",
         llm_output: dict | None = None,
         vlm_output: dict | None = None,
@@ -33,6 +42,10 @@ class ReportGenerator:
 
             "ranked_suspicious_steps": ranked_steps,
             "heuristic_steps":         heuristic_steps or ranked_steps,
+            "heuristic_pixel_steps":   heuristic_pixel_steps,
+            "heuristic_visual_steps":  heuristic_visual_steps,
+            "llm_ranked_steps":        llm_ranked_steps,
+            "screenshot_analysis":     screenshot_analysis,
 
             "technical_diagnosis": {
                 "root_cause_step_id": diagnosis.get("root_cause_step_id"),
@@ -54,6 +67,10 @@ class ReportGenerator:
 
             "_text_report": self._format_text(
                 trace_id, ranked_steps, heuristic_steps or ranked_steps,
+                heuristic_pixel_steps, heuristic_visual_steps,
+                used_pixel_boost, has_visual_causal, ran_screenshot_scan,
+                screenshot_analysis,
+                llm_ranked_steps, ran_vlm, vlm_only,
                 ranking_mode, diagnosis,
                 llm_output.get("stakeholder_summary", ""),
                 eval_result,
@@ -74,22 +91,79 @@ class ReportGenerator:
             flags.append("verification failed")
         if s.get("action_score", 0) >= 0.5:
             flags.append("action divergence")
+        vc = float(s.get("visual_causal_score") or 0)
+        if vc > 0:
+            nxt = s.get("visual_causal_next_step")
+            reason = s.get("visual_causal_reason") or "visual causal"
+            if nxt is not None:
+                flags.append(f"visual causal ({reason}, visible@{nxt}, score={vc:.2f})")
+            else:
+                flags.append(f"visual causal ({reason}, score={vc:.2f})")
         return f"  [{', '.join(flags)}]" if flags else ""
 
     def _format_ranked_list(self, steps: list[dict], label: str,
-                             actual_fault: int | None = None) -> list[str]:
+                             actual_fault: int | None = None,
+                             show_pixel: bool = False,
+                             show_visual_causal: bool = False,
+                             show_vlm_score: bool = False) -> list[str]:
         lines = [label, "-" * 40]
         for s in steps:
             rank  = s.get("rank", "?")
             sid   = s.get("step_id", "?")
             act   = s.get("action", "")[:70]
-            score = s.get("combined_score", 0)
+            score = s.get("rank_score", s.get("combined_score", 0))
             flags = self._step_flags(s)
             marker = " ← ACTUAL FAULT" if (actual_fault is not None and sid == actual_fault) else ""
-            lines.append(f"  #{rank}  Step {sid}: {act}{flags}  (score={score:.3f}){marker}")
+            px = s.get("pixel_score")
+            vc = float(s.get("visual_causal_score") or 0)
+            vlm = s.get("vlm_visual_score")
+            parts = []
+            if show_vlm_score and vlm is not None:
+                parts.append(f"vlm={vlm:.3f}")
+            else:
+                parts.append(f"score={score:.3f}")
+            if show_visual_causal and vc > 0:
+                parts.append(f"visual_causal={vc:.3f}")
+            if show_pixel and px is not None:
+                parts.append(f"pixel={px:.3f}")
+            score_str = ", ".join(parts)
+            lines.append(f"  #{rank}  Step {sid}: {act}{flags}  ({score_str}){marker}")
         return lines
 
-    def _format_text(self, trace_id, ranked, heuristic, ranking_mode,
+    def _format_screenshot_analysis(self, analysis: dict | None) -> list[str]:
+        if not analysis:
+            return []
+        lines = [
+            "SCREENSHOT ANALYSIS (pass/fail after images)",
+            "-" * 40,
+            f"Steps scanned:              {analysis.get('steps_scanned', 0)}",
+        ]
+        if analysis.get("has_signal"):
+            lines += [
+                f"First persistent divergence: step {analysis.get('first_persistent_divergence')} "
+                f"(score={analysis.get('divergence_score', 0):.3f})",
+                f"Attributed root step:        step {analysis.get('attributed_root_step')} "
+                f"(visual_causal={analysis.get('visual_causal_score', 0):.3f})",
+            ]
+            if analysis.get("visible_at_step") is not None:
+                lines.append(
+                    f"Visible symptom step:        step {analysis.get('visible_at_step')}"
+                )
+            if analysis.get("reason"):
+                lines.append(f"Reason:                      {analysis.get('reason')}")
+        else:
+            lines.append(
+                "No persistent pass/fail screenshot divergence above threshold."
+            )
+        lines.append(
+            "  (Runs with --vlm or --llm --vlm on traces that have screenshots.)"
+        )
+        return lines
+
+    def _format_text(self, trace_id, ranked, heuristic, heuristic_pixel,
+                     heuristic_visual, used_pixel_boost, has_visual_causal,
+                     ran_screenshot_scan, screenshot_analysis,
+                     llm_ranked, ran_vlm, vlm_only, ranking_mode,
                      diagnosis, summary, eval_result, vlm_output=None) -> str:
         actual = eval_result.get("actual_fault_step") if eval_result else None
 
@@ -101,15 +175,55 @@ class ReportGenerator:
             "",
         ]
 
-        # Final ranking
-        lines += self._format_ranked_list(ranked, "FINAL RANKED SUSPICIOUS STEPS", actual)
-
-        # Heuristic ranking if LLM changed it
-        heuristic_ids = [s.get("step_id") for s in heuristic]
-        final_ids     = [s.get("step_id") for s in ranked]
-        if heuristic_ids != final_ids:
+        # 1. Heuristic tables (text → visual causal → pixel when applicable)
+        if has_visual_causal and heuristic_visual:
+            lines += self._format_ranked_list(
+                heuristic, "HEURISTIC TOP 5 (text signals only)", actual
+            )
             lines += [""]
-            lines += self._format_ranked_list(heuristic, "HEURISTIC RANKING (before LLM)", actual)
+            lines += self._format_ranked_list(
+                heuristic_visual,
+                "HEURISTIC TOP 5 (text + visual causal)",
+                actual,
+                show_visual_causal=True,
+            )
+            if used_pixel_boost and heuristic_pixel and (ran_vlm or not llm_ranked):
+                lines += [""]
+                lines += self._format_ranked_list(
+                    heuristic_pixel, "HEURISTIC TOP 5 (text + pixel)", actual, show_pixel=True
+                )
+        elif used_pixel_boost and heuristic_pixel and (ran_vlm or not llm_ranked):
+            lines += self._format_ranked_list(
+                heuristic, "HEURISTIC TOP 5 (text signals only)", actual
+            )
+            lines += [""]
+            lines += self._format_ranked_list(
+                heuristic_pixel, "HEURISTIC TOP 5 (text + pixel)", actual, show_pixel=True
+            )
+        else:
+            lines += self._format_ranked_list(
+                heuristic, "HEURISTIC TOP 5", actual, show_visual_causal=has_visual_causal
+            )
+
+        # 2. LLM top 5 (when LLM ran)
+        if llm_ranked:
+            lines += [""]
+            lines += self._format_ranked_list(llm_ranked, "LLM TOP 5", actual)
+
+        # 3. VLM top 5 (when --vlm ran; final ensemble ranking)
+        if ran_vlm:
+            vlm_label = "VLM TOP 5" if vlm_only else "VLM + LLM TOP 5"
+            lines += [""]
+            lines += self._format_ranked_list(
+                ranked, vlm_label, actual, show_vlm_score=True
+            )
+        elif not llm_ranked and not used_pixel_boost:
+            pass  # heuristic-only, single table already shown
+        elif llm_ranked:
+            pass  # LLM-only: final == llm_ranked, already shown
+
+        if ran_screenshot_scan and screenshot_analysis:
+            lines += [""] + self._format_screenshot_analysis(screenshot_analysis)
 
         lines += [
             "",
@@ -126,7 +240,7 @@ class ReportGenerator:
         else:
             lines.append("(LLM diagnosis not run — heuristic mode)")
 
-        # VLM visual analysis block (only shown when VLM ran)
+        # VLM per-step visual scores (when VLM ran)
         if vlm_output and vlm_output.get("steps_with_screenshots", 0) > 0:
             lines += [
                 "",
@@ -137,11 +251,26 @@ class ReportGenerator:
                 "",
                 "  Per-step visual scores:",
             ]
-            for vs in vlm_output.get("visual_scores", []):
+            analyzed = sorted(
+                vlm_output.get("visual_scores", []),
+                key=lambda vs: (-float(vs.get("visual_score") or 0), vs.get("step_id", 0)),
+            )
+            final_ids = {s.get("step_id") for s in ranked}
+            for vs in analyzed:
+                sid = vs["step_id"]
+                vis = vs.get("visual_score", 0)
+                note = vs.get("visual_note", "")[:80]
+                tag = "  [in final top-5]" if sid in final_ids else "  [analyzed only]"
                 lines.append(
-                    f"    Step {vs['step_id']:>3}  score={vs.get('visual_score', 0):.2f}  "
-                    f"{vs.get('visual_note', '')[:80]}"
+                    f"    Step {sid:>3}  score={vis:.2f}  {note}{tag}"
                 )
+            lines += [
+                "",
+                "  Note: 'analyzed only' steps were sent to the VLM but ranked outside",
+                "  the final top-5. In --vlm mode the final list is sorted by VLM score;",
+                "  consequence steps (where the screenshot diff is visible) rank below",
+                "  their attributed cause when scores tie.",
+            ]
 
         lines += [
             "",

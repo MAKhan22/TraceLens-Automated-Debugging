@@ -75,23 +75,56 @@ model:
   # api_key_env: "GEMINI_API_KEY"
 
 vlm:
-  # --- Active VLM provider ---
-  base_url:    "https://openrouter.ai/api/v1"
-  vlm_model:   "nvidia/nemotron-nano-12b-v2-vl:free"
-  api_key_env: "OPENROUTER_API_KEY"   # same key as LLM
+  # --- Active VLM provider (OpenRouter) ---
+  base_url:    "https://api.groq.com/openai/v1"
+  vlm_model:   "meta-llama/llama-4-scout-17b-16e-instruct"
+  api_key_env: "GROQ_API_KEY"   # same key as LLM
   temperature: 0.1
+
+  # One API call per screenshot pair (more reliable than batching 5 pairs)
+  per_step: true
+
+  # --- Groq (fast VLM — free tier, separate from OpenRouter) ---
+  # base_url:    "https://api.groq.com/openai/v1"
+  # vlm_model:   "meta-llama/llama-4-scout-17b-16e-instruct"
+  # api_key_env: "GROQ_API_KEY"
+  # Test: python scripts/test_vlm_models.py --provider groq
+
+  # --- Google AI Studio (Gemini direct — separate quota from OpenRouter) ---
+  # base_url:    "https://generativelanguage.googleapis.com/v1beta/openai/"
+  # vlm_model:   "gemini-2.0-flash"
+  # api_key_env: "GEMINI_API_KEY"
+  # Get key: https://aistudio.google.com/apikey
+  # Test: python scripts/test_vlm_models.py --provider gemini --models gemini-2.0-flash
+
+  # --- OpenRouter VLM alternatives (uncomment to switch) ---
+  # Paid (requires OpenRouter credits):
+  # vlm_model:   "qwen/qwen2.5-vl-72b-instruct"   # no 7B free tier on OpenRouter
+  # vlm_model:   "qwen/qwen3-vl-8b-instruct"
+  # Free (daily rate limit — test with scripts/test_vlm_models.py):
+  # vlm_model:   "google/gemma-4-31b-it:free"
+  # vlm_model:   "google/gemma-4-26b-a4b-it:free"
+  # vlm_model:   "nvidia/nemotron-nano-12b-v2-vl:free"
 
   # How much VLM visual scores influence the final combined ranking (0.0–1.0)
   # 0.4 = 60% LLM text + 40% VLM visual
   ensemble_vlm_weight: 0.4
 
-  # How many top-ranked steps (from LLM) to send to VLM for visual analysis
-  # Keeps the VLM prompt smaller; use 5 for a focused check or 10 for broader coverage
+  # How many top-ranked steps to send to VLM (API cost control — one call per pair
+  # when per_step: true). Visual-causal steps are injected on top of this limit.
   top_k_for_vlm: 5
 
 ranking:
   top_k: 5          # final output size
   pre_llm_k: 0      # candidates sent to LLM for re-ranking (0 = all steps, no heuristic bottleneck)
+  heuristic_pixel_fallback: true   # heuristic-only mode: boost ranking with local pixel diff
+  heuristic_pixel_weight: 0.35     # blend weight for pixel diff in heuristic-only mode
+  visual_causal:
+    enabled: true
+    min_divergence: 0.05      # earliest persistent pass/fail screenshot diff (localized form band)
+    max_self_pixel: 0.15       # previous step must still look similar for symptom attribution
+    max_action_score: 0.1      # step must have weak text signals
+    divergent_window: 2        # steps ±N around first divergence sent to VLM
 
 weights:
   network: 0.35
