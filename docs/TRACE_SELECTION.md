@@ -88,7 +88,7 @@ The ersel dataset contained additional traces beyond the 4 selected. Exclusion c
 This is the full set of available traces that met all inclusion criteria: (1) both a pass and a fail trace exist, (2) at least one of the four scored signals (network, console, action, intent) theoretically captures the fault, and (3) no duplicate fault-type overrepresentation.
 
 **Why keep screenshot-only faults?**  
-Traces like `saucedemo_2`, `bbc`, `pypi`, and `youtube` have faults invisible to the text-only Phase 1 pipeline. They are included deliberately to establish a lower-bound on heuristic/LLM performance and to motivate Phase 2 (VLM screenshot analysis). They are expected to score poorly and are documented as such.
+Traces like `saucedemo_2`, `bbc`, `pypi`, and `youtube` have faults invisible to the text-only pipeline. They are included deliberately to establish a lower-bound on heuristic/LLM performance and to motivate Phase 2 (VLM screenshot analysis). Run with `python main.py --llm --vlm` for these traces.
 
 **How was `fault_step` determined?**  
 Ground truth was assigned manually by inspecting the trace diff: the first step where the injected fault (wrong password, wrong URL, missing input, etc.) becomes observable. It is the **root cause step**, not the last step that errored.

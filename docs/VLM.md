@@ -2,6 +2,8 @@
 
 This document explains how TraceLens uses **Vision-Language Models (VLMs)** to compare pass/fail screenshots, how that integrates with the text-based LLM pipeline, and how to run and tune it.
 
+For a full breakdown of CLI flags, what runs in each mode, and pixel boost vs visual causal vs VLM, see [`MODES.md`](MODES.md).
+
 ---
 
 ## Why VLM exists
@@ -44,17 +46,17 @@ Report + evaluation
 
 ### Step-by-step
 
-**1. Heuristic + LLM (unchanged from Phase 1)**
+**1. Heuristic (+ optional LLM with `--llm`)**
 
-The LLM re-ranks all steps using slimmed text data and diagnoses a root cause. The diagnosed step is promoted to rank #1 if needed (`llm+diagnosis` mode).
+When `--llm` is passed, the LLM re-ranks all steps using slimmed text data and diagnoses a root cause. The diagnosed step is promoted to rank #1 if needed (`llm+diagnosis` mode). Without `--llm`, the heuristic top-5 is the input to VLM.
 
 **2. Screenshot resolution**
 
 For the current top-K ranked steps (default: top 5), `ScreenshotResolver` finds the matching pass and fail screenshot paths. Each data source uses a different folder layout — the resolver handles all three automatically (see [Screenshot paths](#screenshot-paths-by-source) below).
 
-**3. VLM visual analysis (1 API call per trace)**
+**3. VLM visual analysis (1 API call per screenshot pair when `per_step: true`)**
 
-The VLM receives all K screenshot pairs in a **single API call**. For each step it sees:
+The VLM receives pass/fail screenshot pairs for each step in the current top-K. With `per_step: true` (default), each pair is a separate API call for reliability.
 
 ```
 --- Step 7: Click "Add to cart" ---
@@ -76,13 +78,15 @@ It returns:
 }
 ```
 
-**4. Ensemble merge**
+**4. Ensemble merge (when both `--llm` and `--vlm`)**
 
 `VlmReasoner.ensemble_rankings()` combines the LLM ranking with VLM visual scores:
 
 ```
 combined_score = (1 - w) × llm_rank_score + w × visual_score
 ```
+
+When only `--vlm` is passed (no `--llm`), the ensemble blends VLM visual scores with the heuristic ranking using the same weight formula.
 
 Where:
 - `w` = `ensemble_vlm_weight` (default **0.4** → 60% LLM, 40% VLM)
@@ -101,12 +105,14 @@ This is analogous to the LLM's diagnosis promotion — the model that has the st
 
 ## Execution modes
 
+Two independent flags: `--llm` and `--vlm`. No flags = heuristic only.
+
 | Command | Mode | API calls per trace | Best for |
 |---------|------|---------------------|----------|
-| `python main.py` | LLM only | 3 (re-rank, diagnose, summary) | Text-visible faults, fastest |
-| `python main.py --vlm` | **LLM + VLM** | 4 (+ 1 VLM call) | **Recommended** — best overall accuracy |
-| `python main.py --no-llm --vlm` | VLM only | 1 | Debugging visual-only faults |
-| `python main.py --no-llm` | Heuristic only | 0 | No API needed |
+| `python main.py` | Heuristic only | 0 | Offline testing, no API |
+| `python main.py --llm` | LLM only | 3 (re-rank, diagnose, summary) | Text-visible faults |
+| `python main.py --vlm` | VLM only | ~5 (one per screenshot pair) | Visual-only debugging |
+| `python main.py --llm --vlm` | **LLM + VLM hybrid** | 3 LLM + ~5 VLM | **Recommended** — best overall accuracy |
 
 Run reports are saved with mode-prefixed filenames:
 
@@ -127,25 +133,27 @@ All VLM settings are in the `vlm:` section of `config.yaml`:
 ```yaml
 vlm:
   base_url:    "https://openrouter.ai/api/v1"
-  vlm_model:   "nvidia/nemotron-nano-12b-v2-vl:free"
+  vlm_model:   "google/gemma-4-31b-it:free"
   api_key_env: "OPENROUTER_API_KEY"   # same key as LLM
   temperature: 0.1
+  per_step: true
 
-  ensemble_vlm_weight: 0.4   # 0.0 = ignore VLM scores, 1.0 = VLM only
+  ensemble_vlm_weight: 0.4   # blend weight when both --llm and --vlm (60% LLM + 40% VLM)
   top_k_for_vlm: 5           # how many top-ranked steps get screenshot pairs
 ```
 
 | Field | Default | Effect |
 |-------|---------|--------|
-| `vlm_model` | `nvidia/nemotron-nano-12b-v2-vl:free` | OpenRouter free VLM. Must support image input. |
-| `ensemble_vlm_weight` | `0.4` | How much VLM influences the final ranking. Increase toward `0.6` if visual faults dominate your dataset. |
+| `vlm_model` | `google/gemma-4-31b-it:free` | OpenRouter VLM. Paid alternative: `qwen/qwen2.5-vl-72b-instruct`. |
+| `per_step` | `true` | One API call per screenshot pair (more reliable than batching). |
+| `ensemble_vlm_weight` | `0.4` | Used when both `--llm` and `--vlm`. How much VLM influences the final ranking. |
 | `top_k_for_vlm` | `5` | Screenshot pairs sent per trace. Higher = broader visual coverage but more tokens/images per call. |
 
 ### Tuning tips
 
 - **Visual faults still missed**: Increase `top_k_for_vlm` to `8` or `10` so the VLM sees more steps beyond the LLM's top-5.
 - **VLM overriding good LLM rankings**: Lower `ensemble_vlm_weight` to `0.25`–`0.3`.
-- **Screenshot-only traces** (`saucedemo_2`, `pypi`, `bbc`): Run with `--vlm`; text-only LLM will not find these.
+- **Screenshot-only traces** (`saucedemo_2`, `pypi`, `bbc`): Run with `--llm --vlm`.
 
 ---
 
@@ -179,13 +187,19 @@ Screenshots live in the original raw data folder (`data/raw_base`), not in `data
 {trace}/failing/step_5_post.png   ← fail
 ```
 
-If a screenshot file is missing for a step, that step is skipped silently — the VLM runs on whatever pairs are available.
+If a screenshot file is missing for a step, that step is skipped — the VLM fails the trace (no fallback).
 
 ---
 
 ## What appears in the report
 
-When VLM runs, the JSON and text reports include a `visual_analysis` block:
+Text reports show rankings in pipeline order:
+
+1. **HEURISTIC TOP 5** — always shown
+2. **LLM TOP 5** — when `--llm` ran
+3. **VLM TOP 5** or **VLM + LLM TOP 5** — when `--vlm` ran (final ranking used for evaluation)
+
+When VLM runs, the JSON and text reports also include a `visual_analysis` block:
 
 ```json
 "visual_analysis": {
@@ -198,7 +212,9 @@ When VLM runs, the JSON and text reports include a `visual_analysis` block:
 }
 ```
 
-The text report adds a **VISUAL ANALYSIS (VLM)** section with per-step visual scores and notes, below the technical root cause block.
+The text report adds a **VISUAL ANALYSIS (VLM)** section with per-step visual scores and notes, after the ranking tables.
+
+**Important:** VLM does not fall back to pixel diff or heuristic ranking on failure. If the VLM API fails or returns unusable scores, the trace is skipped (no report written).
 
 ---
 
@@ -213,20 +229,76 @@ From [`docs/FAILURE_ANALYSIS.md`](FAILURE_ANALYSIS.md), several traces that scor
 | `areeb_salem/bbc` | Stale CDN — no HTTP error | Old UI version vs fresh pass |
 | `efe_irem/wikipedia` | Zero text signal for fault | Visual scroll/render difference |
 
-Running `python main.py --vlm` on the full 22-trace set is the intended final evaluation mode for the project.
+Running `python main.py --llm --vlm` on the full 22-trace set is the intended final evaluation mode for the project.
 
 ---
 
 ## Rate limits and cost
 
 - VLM calls send **base64-encoded PNG images** — much heavier than text-only calls.
-- One VLM call per trace (all top-K pairs in one request) keeps total calls at 22 for a full run vs potentially 110 if done per-step.
-- The same exponential backoff used for LLM applies to VLM (429 → wait → retry indefinitely).
+- With `per_step: true`, expect ~5 VLM calls per trace (one per screenshot pair in top-K).
+- OpenRouter **free** VLMs share a daily quota (`429 free-models-per-day`). Add credits or wait for reset.
+- **Gemini direct** (Google AI Studio) uses a separate quota via `GEMINI_API_KEY` — configure in `config.yaml` `vlm:` section.
+- VLM failures skip the trace entirely — no partial report.
 - Use `--source` / `--trace` / `--skip` / `--from` to split a full run across sessions if rate limits are hit.
 
+### Testing VLM models before a full run
+
+Use `scripts/test_vlm_models.py` to probe models with **one screenshot pair** (single API call each, no retry loop):
+
 ```bash
-# Run visual-heavy traces only
-python main.py --source efe_irem --trace saucedemo_2 --vlm
-python main.py --source areeb_salem --trace pypi --vlm
-python main.py --source areeb_salem --trace bbc --vlm
+# List free vision models on OpenRouter
+python scripts/test_vlm_models.py --list-free
+
+# Test default free OpenRouter VLMs on wolfram step 12
+python scripts/test_vlm_models.py
+
+# Test Gemini 2.0 Flash via Google AI Studio
+python scripts/test_vlm_models.py --provider gemini --models gemini-2.0-flash
+
+# Test Groq Llama 4 Scout (fast, free tier — recommended if OpenRouter is rate-limited)
+python scripts/test_vlm_models.py --provider groq
+python scripts/test_vlm_models.py --list-groq
+
+# Test a specific model
+python scripts/test_vlm_models.py --models google/gemma-4-26b-a4b-it:free
+```
+
+**Model availability notes (OpenRouter, May 2026):**
+- `qwen/qwen2.5-vl-7b-instruct` — **not listed** (only `qwen/qwen2.5-vl-72b-instruct`, paid)
+- `qwen/qwen3-next-80b-a3b-instruct:free` — **text-only** (no image input; cannot be used as VLM)
+- Free VLMs: `google/gemma-4-26b-a4b-it:free`, `google/gemma-4-31b-it:free`, `nvidia/nemotron-nano-12b-v2-vl:free`, `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`
+
+**Groq (separate free tier, often faster when OpenRouter is rate-limited):**
+- `meta-llama/llama-4-scout-17b-16e-instruct` — multimodal, works with `GROQ_API_KEY`
+- Legacy LLaVA models on Groq are decommissioned
+
+```yaml
+# config.yaml vlm section for Groq:
+base_url:    "https://api.groq.com/openai/v1"
+vlm_model:   "meta-llama/llama-4-scout-17b-16e-instruct"
+api_key_env: "GROQ_API_KEY"
+```
+
+### Gemini direct setup (Google AI Studio)
+
+1. Create an API key at [Google AI Studio](https://aistudio.google.com/apikey)
+2. Add to `.env`: `GEMINI_API_KEY=your_key`
+3. In `config.yaml` under `vlm:`:
+
+```yaml
+base_url:    "https://generativelanguage.googleapis.com/v1beta/openai/"
+vlm_model:   "gemini-2.0-flash"
+api_key_env: "GEMINI_API_KEY"
+```
+
+4. Verify: `python scripts/test_vlm_models.py --provider gemini --models gemini-2.0-flash`
+
+If you get `429 quota exceeded`, the free tier daily limit is used up — check [ai.dev/rate-limit](https://ai.dev/rate-limit) or enable billing.
+
+```bash
+# Run visual-heavy traces with full pipeline
+python main.py --source efe_irem --trace saucedemo_2 --llm --vlm
+python main.py --source areeb_salem --trace pypi --llm --vlm
+python main.py --source areeb_salem --trace bbc --llm --vlm
 ```

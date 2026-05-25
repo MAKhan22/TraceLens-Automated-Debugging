@@ -2,6 +2,8 @@
 
 This document categorizes the 7 traces that scored Hit@5=0 in the heuristic-only baseline run, explains why each fails, and documents the fixes applied (or limitations acknowledged).
 
+**Recommended commands:** Text fixes → `python main.py --llm`. VLM-dependent traces → `python main.py --llm --vlm`. Heuristic baseline → `python main.py` (no flags).
+
 ---
 
 ## Summary Table
@@ -35,11 +37,13 @@ This document categorizes the 7 traces that scored Hit@5=0 in the heuristic-only
 
 **Fault**: The wrong math element was clicked at step 12, causing navigation to the wrong page. The correct page never loaded.  
 **Why heuristic fails**: Step 12 has `action_score > 0` (action divergence) but scores `network_score = 0` and `console_score = 0`. Steps 4, 14, 15, 16, 17 have moderate network scores because they all made requests to wolfram CDN resources. Step 12 gets buried.  
-**Root problem**: The heuristic only rewards steps that *generate* errors. Step 12 fails *silently* — the expected network requests from the correct page simply **don't appear**. This "absence of activity" is invisible to the score formula.  
-**Fix applied**: `_slim_step_for_llm` now includes:
-- `missing_requests`: URLs that were fetched in the pass trace at this step but completely absent in the fail trace
-- `pass_request_count` vs `fail_request_count`: tells the LLM "pass had 8 requests, fail had 0"
-- The rerank prompt instructs the LLM to treat missing requests as high-suspicion
+**Root problem**: The fail run loaded a **different page** (`RecreationalMathematics.html`) instead of the expected `Geometry.html`. The old pipeline only surfaced `missing_requests` (expected page absent) but not `wrong_pages_loaded` (wrong page present). The LLM then misread step 4's `fail_request_count=0` + missing font/analytics URLs as the root cause.  
+**Fix applied**:
+- `navigation_signals.py` detects `wrong_navigation=true` when expected page missing AND wrong page loaded
+- `_slim_step_for_llm` exposes `missing_expected_pages`, `wrong_pages_loaded`, `wrong_navigation`
+- Heuristic network score boosted to 0.95 for wrong-navigation steps
+- `diagnosis_candidates()` injects wrong-navigation steps into LLM diagnosis even if reranker missed them
+- Prompts prioritize `wrong_navigation` over `fail_request_count=0` asset gaps
 
 ---
 
@@ -136,8 +140,8 @@ After these fixes are applied and a full LLM run completes:
 | `imdb` | Hit@5=0, RankDist=5 | LLM should promote step 14 — fewer steps have `new_network_errors` now |
 | `npm` | Hit@5=0, RankDist=5 | LLM should promote step 16 over step 17 (cause vs symptom) |
 | `efe_irem/wikipedia` | Hit@5=0 | No change — step 13 has zero text signal; early steps have synthetic off-domain noise |
-| `saucedemo_2` | Hit@5=0 | No change — VLM only |
-| `pypi` | Hit@5=0 | No change — VLM only |
+| `saucedemo_2` | Hit@5=0 | No change — needs `--llm --vlm` |
+| `pypi` | Hit@5=0 | No change — needs `--llm --vlm` |
 
 If the 4 fixable cases improve to Hit@5=1, the overall Hit@5 rate would rise from **68.2% → 86.4%** (19/22 traces).  
 The remaining 3 text-invisible failures (`efe_irem/wikipedia`, `saucedemo_2`, `pypi`) require Phase 2 VLM or sequence-context reasoning to address.

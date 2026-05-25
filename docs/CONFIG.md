@@ -30,6 +30,8 @@ data:
 
 ## `model` section
 
+Used when `--llm` is passed. Requires `OPENROUTER_API_KEY` (or the provider set in `api_key_env`) in `.env`.
+
 ```yaml
 model:
   base_url:    "https://openrouter.ai/api/v1"
@@ -85,9 +87,10 @@ Used only when `--vlm` is passed on the command line. See [`docs/VLM.md`](VLM.md
 ```yaml
 vlm:
   base_url:    "https://openrouter.ai/api/v1"
-  vlm_model:   "nvidia/nemotron-nano-12b-v2-vl:free"
+  vlm_model:   "google/gemma-4-31b-it:free"
   api_key_env: "OPENROUTER_API_KEY"
   temperature: 0.1
+  per_step: true
   ensemble_vlm_weight: 0.4
   top_k_for_vlm: 5
 ```
@@ -95,11 +98,12 @@ vlm:
 | Field | Default | Description |
 |-------|---------|-------------|
 | `base_url` | OpenRouter | Same OpenAI-compatible endpoint as the LLM. VLM and LLM can share one API key. |
-| `vlm_model` | `nvidia/nemotron-nano-12b-v2-vl:free` | Must support image input. Free on OpenRouter. |
+| `vlm_model` | `google/gemma-4-31b-it:free` | OpenRouter vision model. Paid alternative: `qwen/qwen2.5-vl-72b-instruct`. |
 | `api_key_env` | `OPENROUTER_API_KEY` | Env var read from `.env`. |
 | `temperature` | `0.1` | Keep low for structured JSON output. |
-| `ensemble_vlm_weight` | `0.4` | Weight of VLM visual scores in the final ranking. `0.4` = 60% LLM position score + 40% VLM visual score. |
-| `top_k_for_vlm` | `5` | Top-ranked steps whose pass/fail screenshot pairs are sent to the VLM (one API call per trace). |
+| `per_step` | `true` | One API call per screenshot pair (more reliable than batching all pairs). |
+| `ensemble_vlm_weight` | `0.4` | Used when both `--llm` and `--vlm`. 60% LLM position score + 40% VLM visual score. |
+| `top_k_for_vlm` | `5` | Top-ranked steps whose pass/fail screenshot pairs are sent to the VLM. |
 
 ---
 
@@ -109,12 +113,16 @@ vlm:
 ranking:
   top_k:     5
   pre_llm_k: 0
+  heuristic_pixel_fallback: true
+  heuristic_pixel_weight: 0.35
 ```
 
 | Field | Default | Description |
 |-------|---------|-------------|
 | `top_k` | `5` | Number of steps in the final ranked output. Also the number shown in the per-rank breakdown table. |
-| `pre_llm_k` | `0` | How many heuristic-sorted steps to send to the LLM for re-ranking. **`0` means all steps** — the LLM sees the full trace and is not bottlenecked by the heuristic. |
+| `pre_llm_k` | `0` | How many heuristic-sorted steps to send to the LLM when `--llm` is passed. **`0` means all steps**. |
+| `heuristic_pixel_fallback` | `true` | In heuristic-only mode, boost ranking with pixel diff (override with `--no-pixel`). |
+| `heuristic_pixel_weight` | `0.35` | Blend weight for pixel diff in heuristic-only mode. |
 
 ### Why `pre_llm_k: 0` matters
 
@@ -196,16 +204,16 @@ Each full pipeline run saves a timestamped JSON to `outputs/metrics/runs/`:
 ```
 outputs/metrics/runs/
   llm_run_20260522_181805.json        ← LLM mode
-  llm+vlm_run_20260522_181805.json    ← LLM + VLM mode (--vlm)
-  vlm_run_20260522_181805.json        ← VLM only (--no-llm --vlm)
-  heuristic_run_20260522_145029.json  ← heuristic-only (--no-llm)
+  llm+vlm_run_20260522_181805.json    ← LLM + VLM mode (--llm --vlm)
+  vlm_run_20260522_181805.json        ← VLM only (--vlm)
+  heuristic_run_20260522_145029.json  ← heuristic-only (no flags)
 ```
 
 The filename prefix reflects the run mode:
-- `llm_run_` — LLM active, no VLM
-- `llm+vlm_run_` — both LLM and VLM active (`--vlm`)
-- `vlm_run_` — VLM only (`--no-llm --vlm`)
-- `heuristic_run_` — `--no-llm`, no VLM
+- `llm_run_` — `--llm` only
+- `llm+vlm_run_` — `--llm --vlm`
+- `vlm_run_` — `--vlm` only
+- `heuristic_run_` — no flags
 
 Each file contains `aggregate` metrics (Hit@k, rank distance, MAD@5) and a `per_trace` breakdown.
 
@@ -213,29 +221,39 @@ Each file contains `aggregate` metrics (Hit@k, rank distance, MAD@5) and a `per_
 
 ## Switching between modes (quick reference)
 
+TraceLens uses two independent opt-in flags: `--llm` and `--vlm`. No flags = heuristic only.
+
+| Command | Mode |
+|---------|------|
+| `python main.py` | Heuristic only (default) |
+| `python main.py --no-pixel` | Heuristic only, text signals only (no pixel boost) |
+| `python main.py --llm` | LLM re-rank + diagnosis |
+| `python main.py --vlm` | VLM visual analysis only |
+| `python main.py --llm --vlm` | Hybrid (60% LLM / 40% VLM) |
+
 ### Run with LLM + VLM (recommended for full evaluation)
 ```bash
-python main.py --vlm
+python main.py --llm --vlm
 ```
-Runs the LLM pipeline first, then VLM screenshot comparison, then ensemble merge. Saves `llm+vlm_run_TIMESTAMP.json`.
+Runs heuristic → LLM → VLM → ensemble merge. Saves `llm+vlm_run_TIMESTAMP.json`.
 
-### Run with LLM (default)
+### Run with LLM only
 ```bash
-python main.py
+python main.py --llm
 ```
 Uses `model.llm_model` from config. LLM re-ranks all steps and diagnoses the root cause.
 
 ### Run VLM only (no text LLM)
 ```bash
-python main.py --no-llm --vlm
+python main.py --vlm
 ```
-Heuristic ranking → VLM visual analysis. Useful for debugging screenshot-only faults.
+Heuristic ranking → VLM visual analysis on heuristic top-5. Useful for debugging visual-only faults.
 
 ### Run heuristic only (no API needed)
 ```bash
-python main.py --no-llm
+python main.py
 ```
-Skips all three LLM calls. Output is purely score-sorted. Useful for quick testing or when API is down.
+No API calls. Pixel-diff boost on top-5 screenshots is **on by default**; pass `--no-pixel` for pure text-signal ranking.
 
 ### Run a single trace
 ```bash
