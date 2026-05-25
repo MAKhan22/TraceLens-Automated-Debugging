@@ -19,7 +19,7 @@ TraceLens is a multimodal automated debugging system that takes a **passing trac
 11. [Configuration](#11-configuration)
 12. [Output Files](#12-output-files)
 
-> **Additional guides**: [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`data/evaluation/TRACE_SELECTION.md`](data/evaluation/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
+> **Additional guides**: [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/MODES.md`](docs/MODES.md) — pipeline modes, flag behavior, pixel vs visual causal vs VLM. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`docs/TRACE_SELECTION.md`](docs/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
 
 ---
 
@@ -47,7 +47,7 @@ TraceLens solves this by diffing the pass and fail traces step-by-step, scoring 
                                                                    (re-rank + diagnose)
                                                                          │
                                                     ┌────────────────────┘
-                                                    │  (--vlm flag)
+                                                    │  (--llm / --vlm flags)
                                                     ▼
                                           ScreenshotResolver ──► VlmReasoner
                                           (pass/fail paths)     (visual scores)
@@ -58,14 +58,16 @@ TraceLens solves this by diffing the pass and fail traces step-by-step, scoring 
                                                Evaluation    JSON + text report
 ```
 
-There are four execution paths:
+There are four execution paths (two independent flags):
 
 | Mode | Command | What runs |
 |------|---------|-----------|
-| Heuristic only | `--no-llm` | Score + rank by heuristics. No API needed. |
-| LLM only (default) | `python main.py` | Heuristic → LLM re-rank → LLM diagnosis + stakeholder summary. |
-| **LLM + VLM (recommended)** | `--vlm` | LLM pipeline → VLM screenshot comparison → ensemble merge. |
-| VLM only | `--no-llm --vlm` | Heuristic ranking → VLM visual analysis only. |
+| **Heuristic only (default)** | `python main.py` | Score + rank by heuristics. Optional pixel-diff boost. No API needed. |
+| LLM only | `python main.py --llm` | Heuristic → LLM re-rank → LLM diagnosis + stakeholder summary. |
+| VLM only | `python main.py --vlm` | Heuristic → VLM screenshot comparison on top-5. |
+| **LLM + VLM (recommended)** | `python main.py --llm --vlm` | Full pipeline → 60% LLM / 40% VLM ensemble merge. |
+
+Neither flag = heuristic only. Pass `--llm` and/or `--vlm` to enable each stage.
 
 ---
 
@@ -102,15 +104,15 @@ Each aligned step pair receives four component scores (all in `[0, 1]`) and one 
 
 ### Stage 4 — Heuristic Ranking (`src/ranker.py`)
 
-Steps are sorted descending by `combined_score`. By default (`pre_llm_k: 0` in config) **all steps** are passed to the LLM as candidates so it is not bottlenecked by heuristic score. The top-5 by score are kept as the **heuristic ranking** (used as fallback if LLM is disabled or fails).
+Steps are sorted descending by `combined_score`. By default (`pre_llm_k: 0` in config) **all steps** are passed to the LLM as candidates when `--llm` is enabled. The top-5 by score are kept as the **heuristic ranking** (always shown in reports; used as the base ranking when no LLM/VLM flags are passed).
 
-### Stage 5 — LLM Re-ranking & Diagnosis (`src/llm_reasoner.py`)
+### Stage 5 — LLM Re-ranking & Diagnosis (`src/llm_reasoner.py`, requires `--llm`)
 
 See [LLM Re-ranking & Diagnosis](#5-llm-re-ranking--diagnosis).
 
-### Stage 6 — VLM Visual Analysis (`src/vlm_reasoner.py`, optional)
+### Stage 6 — VLM Visual Analysis (`src/vlm_reasoner.py`, requires `--vlm`)
 
-When `--vlm` is passed, the pipeline compares pass/fail screenshot pairs for the top-K ranked steps and merges visual evidence with the LLM ranking. See [VLM Visual Analysis](#6-vlm-visual-analysis-phase-2).
+When `--vlm` is passed, the pipeline compares pass/fail screenshot pairs for the top-K ranked steps and merges visual evidence with the current ranking (LLM ranking if `--llm` was also passed, otherwise heuristic). See [VLM Visual Analysis](#6-vlm-visual-analysis-phase-2).
 
 ### Stage 7 — Evaluation (`src/evaluation.py`)
 
@@ -274,24 +276,25 @@ combined = (1 - w) × llm_rank_score + w × visual_score
 
 Default `w = 0.4` (60% LLM, 40% VLM). If the VLM's root cause scores ≥ 0.7 and is not already at rank #1, it is promoted — same logic as the LLM diagnosis promotion.
 
-### When to use `--vlm`
+### When to use each mode
 
-| Scenario | Recommended mode |
-|----------|-----------------|
-| Full 22-trace evaluation (paper/benchmark) | `--vlm` |
-| Quick text-only debugging | default (no flag) |
-| Known screenshot-only fault (`saucedemo_2`, `pypi`, `bbc`) | `--vlm` |
-| No API / offline testing | `--no-llm` |
+| Scenario | Recommended command |
+|----------|---------------------|
+| Quick/offline testing, no API | `python main.py` |
+| Text-visible faults | `python main.py --llm` |
+| Screenshot-only faults (`saucedemo_2`, `pypi`, `bbc`) | `python main.py --llm --vlm` |
+| Full 22-trace evaluation (paper/benchmark) | `python main.py --llm --vlm` |
+| Debug VLM in isolation | `python main.py --vlm` |
 
 ```bash
 # Recommended final evaluation run
-python main.py --vlm
+python main.py --llm --vlm
 
 # Single visual-heavy trace
-python main.py --source efe_irem --trace saucedemo_2 --vlm
+python main.py --source efe_irem --trace saucedemo_2 --llm --vlm
 ```
 
-For screenshot path layouts, tuning `ensemble_vlm_weight`, and rate-limit guidance, see [`docs/VLM.md`](docs/VLM.md).
+For screenshot path layouts, tuning `ensemble_vlm_weight`, and rate-limit guidance, see [`docs/VLM.md`](docs/VLM.md). For which pipeline stages run under each CLI flag, see [`docs/MODES.md`](docs/MODES.md).
 
 ---
 
@@ -417,28 +420,28 @@ Get a free key at [openrouter.ai/keys](https://openrouter.ai/keys). The active p
 ### Run a single trace (with LLM)
 
 ```bash
-python main.py --source efe_irem --trace gutenberg
+python main.py --source efe_irem --trace gutenberg --llm
 ```
 
 ### Run a single trace (heuristic only, no API needed)
 
 ```bash
-python main.py --source efe_irem --trace gutenberg --no-llm
+python main.py --source efe_irem --trace gutenberg
 ```
 
 ### Run all 22 traces (LLM + VLM — recommended)
 
 ```bash
-python main.py --vlm
+python main.py --llm --vlm
 ```
 
 ### Run all 22 traces (LLM only)
 
 ```bash
-python main.py
+python main.py --llm
 ```
 
-> **Note on rate limits**: LLM-only makes ~66 API calls (3 per trace). LLM+VLM adds 1 VLM call per trace (~88 total). VLM calls are image-heavy and slower. TraceLens retries indefinitely with exponential backoff. Split long runs with `--skip` or `--from` if needed. See [`docs/VLM.md`](docs/VLM.md) for details.
+> **Note on rate limits**: `--llm` makes ~66 API calls (3 per trace). `--llm --vlm` adds ~5 VLM calls per trace (~176 total). VLM calls are image-heavy and slower. TraceLens retries indefinitely with exponential backoff on 429. Split long runs with `--skip` or `--from` if needed. See [`docs/VLM.md`](docs/VLM.md) for details.
 
 ### Run all traces for one source
 
@@ -468,13 +471,15 @@ model:
   temperature: 0.1
 
 vlm:                              # only used with --vlm flag
-  vlm_model: "nvidia/nemotron-nano-12b-v2-vl:free"
-  ensemble_vlm_weight: 0.4        # 60% LLM + 40% VLM in final ranking
+  vlm_model: "google/gemma-4-31b-it:free"
+  ensemble_vlm_weight: 0.4        # used when both --llm and --vlm (60% LLM + 40% VLM)
   top_k_for_vlm: 5                # screenshot pairs sent to VLM per trace
+  per_step: true                   # one VLM API call per screenshot pair
 
 ranking:
   top_k:     5    # final ranked steps shown
-  pre_llm_k: 0    # steps sent to LLM (0 = all steps, no heuristic bottleneck)
+  pre_llm_k: 0    # steps sent to LLM when --llm (0 = all steps)
+  heuristic_pixel_fallback: true  # pixel-diff boost in heuristic-only mode
 
 weights:
   network: 0.35
@@ -496,10 +501,10 @@ After running, the following files are created:
 | `outputs/rankings/{source}/{trace_id}.json` | Top-5 ranked steps only |
 | `outputs/metrics/aggregate.json` | Mean metrics across all evaluated traces |
 | `outputs/metrics/per_trace.json` | Per-trace metrics for all evaluated traces |
-| `outputs/metrics/runs/llm_run_TIMESTAMP.json` | Full run report (LLM mode) |
-| `outputs/metrics/runs/llm+vlm_run_TIMESTAMP.json` | Full run report (LLM + VLM mode) |
-| `outputs/metrics/runs/vlm_run_TIMESTAMP.json` | Full run report (VLM only, `--no-llm --vlm`) |
-| `outputs/metrics/runs/heuristic_run_TIMESTAMP.json` | Full run report (heuristic-only mode) |
+| `outputs/metrics/runs/llm_run_TIMESTAMP.json` | Full run report (`--llm`) |
+| `outputs/metrics/runs/llm+vlm_run_TIMESTAMP.json` | Full run report (`--llm --vlm`) |
+| `outputs/metrics/runs/vlm_run_TIMESTAMP.json` | Full run report (`--vlm` only) |
+| `outputs/metrics/runs/heuristic_run_TIMESTAMP.json` | Full run report (no flags) |
 
 ### Report JSON structure
 
@@ -511,6 +516,7 @@ After running, the following files are created:
   "ranking_mode": "llm+diagnosis",
   "ranked_suspicious_steps": [ ... ],
   "heuristic_steps": [ ... ],
+  "llm_ranked_steps": [ ... ],
   "technical_diagnosis": {
     "root_cause_step_id": 8,
     "root_cause_summary": "403 Forbidden on ebook resource...",
