@@ -59,10 +59,12 @@ def _load_prompt(filename: str) -> str:
     return (PROMPTS_DIR / filename).read_text(encoding="utf-8")
 
 
-def _encode_image(path: str) -> str | None:
-    """Base64-encode an image file. Returns None if file doesn't exist."""
+def _encode_image(path: str | None) -> str | None:
+    """Base64-encode an image file. Returns None if path missing or not a file."""
+    if not path or not str(path).strip():
+        return None
     p = Path(path)
-    if not p.exists():
+    if not p.is_file():
         return None
     with open(p, "rb") as f:
         return base64.standard_b64encode(f.read()).decode("utf-8")
@@ -175,8 +177,8 @@ class VlmReasoner:
     def _analyze_one_step(self, step: dict) -> dict:
         sid = step.get("step_id")
         action = step.get("fail_action") or step.get("action", f"Step {sid}")
-        pass_b64 = _encode_image(step.get("pass_screenshot") or "")
-        fail_b64 = _encode_image(step.get("fail_screenshot") or "")
+        pass_b64 = _encode_image(step.get("pass_screenshot"))
+        fail_b64 = _encode_image(step.get("fail_screenshot"))
         if pass_b64 is None or fail_b64 is None:
             raise VlmAnalysisError(f"Step {sid}: missing pass or fail screenshot")
 
@@ -215,8 +217,8 @@ class VlmReasoner:
         """
         steps_ready = []
         for step in steps_with_screenshots:
-            pass_b64 = _encode_image(step.get("pass_screenshot") or "")
-            fail_b64 = _encode_image(step.get("fail_screenshot") or "")
+            pass_b64 = _encode_image(step.get("pass_screenshot"))
+            fail_b64 = _encode_image(step.get("fail_screenshot"))
             if pass_b64 is not None and fail_b64 is not None:
                 steps_ready.append(step)
 
@@ -252,8 +254,8 @@ class VlmReasoner:
                 for step in steps_ready:
                     sid = step.get("step_id")
                     action = step.get("fail_action") or step.get("action", f"Step {sid}")
-                    pass_b64 = _encode_image(step.get("pass_screenshot") or "")
-                    fail_b64 = _encode_image(step.get("fail_screenshot") or "")
+                    pass_b64 = _encode_image(step.get("pass_screenshot"))
+                    fail_b64 = _encode_image(step.get("fail_screenshot"))
                     steps_sent.append(sid)
                     content.append({
                         "type": "text",

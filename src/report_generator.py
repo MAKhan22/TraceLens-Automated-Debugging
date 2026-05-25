@@ -187,12 +187,12 @@ class ReportGenerator:
                 actual,
                 show_visual_causal=True,
             )
-            if used_pixel_boost and heuristic_pixel and (ran_vlm or not llm_ranked):
+            if used_pixel_boost and heuristic_pixel:
                 lines += [""]
                 lines += self._format_ranked_list(
                     heuristic_pixel, "HEURISTIC TOP 5 (text + pixel)", actual, show_pixel=True
                 )
-        elif used_pixel_boost and heuristic_pixel and (ran_vlm or not llm_ranked):
+        elif used_pixel_boost and heuristic_pixel:
             lines += self._format_ranked_list(
                 heuristic, "HEURISTIC TOP 5 (text signals only)", actual
             )

@@ -12,6 +12,24 @@ Each source uses a different naming convention:
 from pathlib import Path
 
 
+def valid_screenshot_pair(
+    pass_path: str | None, fail_path: str | None
+) -> bool:
+    """True when both paths refer to existing regular image files."""
+    if not pass_path or not fail_path:
+        return False
+    p, f = Path(pass_path), Path(fail_path)
+    return p.is_file() and f.is_file()
+
+
+def filter_steps_with_screenshot_pairs(steps: list[dict]) -> list[dict]:
+    """Keep only steps that have both pass and fail screenshot files on disk."""
+    return [
+        s for s in steps
+        if valid_screenshot_pair(s.get("pass_screenshot"), s.get("fail_screenshot"))
+    ]
+
+
 class ScreenshotResolver:
     """Resolves pass/fail screenshot paths for a given source, trace, and step."""
 

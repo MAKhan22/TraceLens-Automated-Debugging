@@ -6,7 +6,7 @@ TraceLens pipeline orchestrator.
 Usage:
     python main.py                          # heuristic only (default, pixel boost on)
     python main.py --no-pixel               # heuristic only, text signals only
-    python main.py --llm                    # LLM re-rank + diagnosis (text only)
+    python main.py --llm                    # LLM re-rank + diagnosis (text only; heuristic+pixel tables)
     python main.py --vlm                    # VLM + screenshot/visual pipeline
     python main.py --llm --vlm              # hybrid (LLM text + VLM visual ensemble)
     python main.py --source efe_irem --trace wikipedia --llm
@@ -31,7 +31,11 @@ from src.anomaly_detector import AnomalyDetector
 from src.ranker import Ranker
 from src.llm_reasoner import LlmReasoner
 from src.vlm_reasoner import VlmReasoner, VlmAnalysisError
-from src.screenshot_resolver import ScreenshotResolver
+from src.screenshot_resolver import (
+    ScreenshotResolver,
+    filter_steps_with_screenshot_pairs,
+    valid_screenshot_pair,
+)
 from src.report_generator import ReportGenerator
 from src.evaluation import Evaluator
 from src.visual_signals import (
@@ -144,19 +148,16 @@ def run_trace(
         if use_vlm and has_visual_causal else None
     )
 
-    # Pixel-diff boost: default heuristic mode, or report table when --vlm.
-    # Under --vlm, do not dilute visual-causal rank_score used for VLM ensemble.
+    # Pixel-diff boost: heuristic-only mutates final ranking; --llm/--vlm use report tables only.
     used_pixel_boost = False
     heuristic_pixel_boosted = None
-    run_pixel = use_pixel and resolver and (
-        (not use_llm and not use_vlm) or use_vlm
-    )
+    run_pixel = use_pixel and resolver
     if run_pixel and cfg.get("ranking", {}).get("heuristic_pixel_fallback", True):
         top_with_shots = resolver.attach_screenshots(
             heuristic_top, source, source_cfg_base, trace_cfg
         )
         if any(
-            s.get("pass_screenshot") and s.get("fail_screenshot")
+            valid_screenshot_pair(s.get("pass_screenshot"), s.get("fail_screenshot"))
             for s in top_with_shots
         ):
             px_weight = cfg.get("ranking", {}).get("heuristic_pixel_weight", 0.35)
@@ -164,7 +165,7 @@ def run_trace(
                 [{**s} for s in heuristic_top], top_with_shots, weight=px_weight
             )
             used_pixel_boost = True
-            if use_vlm:
+            if use_llm or use_vlm:
                 heuristic_pixel_boosted = boosted
             else:
                 heuristic_top = boosted
@@ -252,18 +253,21 @@ def run_trace(
         top_with_shots = resolver.attach_screenshots(
             top_for_vlm, source, source_cfg_base, trace_cfg
         )
+        vlm_steps = filter_steps_with_screenshot_pairs(top_with_shots)
+        skipped = len(top_with_shots) - len(vlm_steps)
 
-        has_shots = any(
-            s.get("pass_screenshot") and s.get("fail_screenshot")
-            for s in top_with_shots
-        )
-        if not has_shots:
-            print(f"  VLM failed: no screenshots found for {trace_id}")
+        if not vlm_steps:
+            print(f"  VLM failed: no screenshot pairs found for {trace_id}")
             return {"trace_id": trace_id, "eval": {}, "error": "no screenshots", "skipped": True}
 
-        print(f"  Running VLM visual analysis ({sum(1 for s in top_with_shots if s.get('pass_screenshot'))} screenshot pairs)...")
+        if skipped:
+            print(
+                f"  VLM: skipping {skipped} candidate step(s) without both pass/fail PNGs"
+            )
+
+        print(f"  Running VLM visual analysis ({len(vlm_steps)} screenshot pairs)...")
         try:
-            vlm_output = vlm.analyze_steps(top_with_shots)
+            vlm_output = vlm.analyze_steps(vlm_steps)
         except VlmAnalysisError as e:
             err = str(e)
             print(f"  VLM failed: {e}")
