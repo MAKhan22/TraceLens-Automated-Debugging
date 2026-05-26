@@ -41,7 +41,7 @@ import re
 from difflib import SequenceMatcher
 
 from src.navigation_signals import compute_navigation_signals
-from src.causal_signals import errors_on_next_observer_step
+from src.causal_signals import errors_on_next_observer_step, is_noise_console
 
 
 # ── constants ─────────────────────────────────────────────────────────────────
@@ -126,8 +126,11 @@ def _score_console(pass_logs: list, fail_logs: list) -> float:
     pass_texts = {_normalise_console_text(e.get("text", "")) for e in pass_logs}
     fail_texts = {_normalise_console_text(e.get("text", "")) for e in fail_logs}
 
-    new_in_fail = [e for e in fail_logs
-                   if _normalise_console_text(e.get("text", "")) not in pass_texts]
+    new_in_fail = [
+        e for e in fail_logs
+        if _normalise_console_text(e.get("text", "")) not in pass_texts
+        and not is_noise_console(e.get("text", ""))
+    ]
 
     score = 0.0
     for entry in new_in_fail:

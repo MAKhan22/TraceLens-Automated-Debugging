@@ -27,6 +27,13 @@ from pathlib import Path
 
 from openai import OpenAI
 
+from src.causal_signals import (
+    errors_on_next_observer_step,
+    find_causal_root_step,
+    is_observer_step,
+)
+from src.visual_signals import best_pixel_signal
+
 
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
@@ -197,6 +204,39 @@ class VlmReasoner:
 
     # ── Main VLM analysis ─────────────────────────────────────────────────────
 
+    def _compile_visual_summary(self, visual_scores: list[dict]) -> str:
+        """Build a readable summary from per-step VLM notes (drop identical/noise)."""
+        ranked = sorted(
+            visual_scores,
+            key=lambda vs: (-float(vs.get("visual_score") or 0), vs.get("step_id", 0)),
+        )
+        lines: list[str] = []
+        seen: set[str] = set()
+        for vs in ranked:
+            sc = float(vs.get("visual_score") or 0)
+            note = str(vs.get("visual_note") or "").strip()
+            if sc < 0.35 or not note:
+                continue
+            low = note.lower()
+            if "identical" in low and sc < 0.5:
+                continue
+            if note in seen:
+                continue
+            seen.add(note)
+            sid = vs.get("step_id", "?")
+            lines.append(f"Step {sid} (score={sc:.2f}): {note}")
+        if not lines:
+            for vs in ranked:
+                sc = float(vs.get("visual_score") or 0)
+                if sc <= 0:
+                    continue
+                sid = vs.get("step_id", "?")
+                note = str(vs.get("visual_note") or "visual difference detected").strip()
+                lines.append(f"Step {sid} (score={sc:.2f}): {note}")
+                if len(lines) >= 3:
+                    break
+        return "\n".join(lines[:5])
+
     def analyze_steps(self, steps_with_screenshots: list[dict]) -> dict:
         """
         Analyze pass/fail screenshot pairs for a list of steps.
@@ -228,7 +268,6 @@ class VlmReasoner:
         try:
             if self.per_step:
                 all_scores: list[dict] = []
-                summary_parts: list[str] = []
                 root_id = None
                 root_score = -1.0
                 for step in steps_ready:
@@ -238,13 +277,11 @@ class VlmReasoner:
                         sc = float(vs.get("visual_score") or 0)
                         if sc > root_score:
                             root_score, root_id = sc, vs.get("step_id")
-                    if parsed.get("visual_summary"):
-                        summary_parts.append(parsed["visual_summary"])
 
                 result = {
                     "visual_scores": all_scores,
                     "visual_root_cause_step_id": root_id,
-                    "visual_summary": "; ".join(summary_parts) if summary_parts else "",
+                    "visual_summary": self._compile_visual_summary(all_scores),
                     "steps_with_screenshots": len(steps_ready),
                 }
             else:
@@ -288,6 +325,11 @@ class VlmReasoner:
 
     # ── Ensemble with LLM output ───────────────────────────────────────────────
 
+    @staticmethod
+    def _pixel_signal(step: dict) -> float:
+        """Best available pass/fail pixel diff for Hit@k ranking (global boost or scan)."""
+        return best_pixel_signal(step)
+
     def ensemble_rankings(
         self,
         llm_ranked: list[dict],
@@ -296,7 +338,9 @@ class VlmReasoner:
         vlm_only: bool = False,
         scored_steps: list[dict] | None = None,
         top_k: int = 5,
-    ) -> tuple[list[dict], str]:
+        pixel_boost_ranked: list[dict] | None = None,
+        text_only_ranked: list[dict] | None = None,
+    ) -> tuple[list[dict], str, list[str]]:
         """
         Merge text ranking with VLM visual scores to produce a final ranking.
 
@@ -310,9 +354,18 @@ class VlmReasoner:
             visual_map[vs["step_id"]] = vs.get("visual_score", 0.0)
 
         if not visual_map:
-            return llm_ranked[:top_k], "vlm" if vlm_only else "llm"
+            return llm_ranked[:top_k], ("vlm" if vlm_only else "llm"), []
 
         step_map = {s["step_id"]: s for s in (scored_steps or llm_ranked)}
+        if pixel_boost_ranked:
+            for row in pixel_boost_ranked:
+                sid = row["step_id"]
+                merged = {
+                    **step_map.get(sid, row),
+                    **row,
+                }
+                step_map[sid] = merged
+
         consequence_of = {
             s["visual_causal_next_step"]: s["step_id"]
             for s in (scored_steps or [])
@@ -321,23 +374,293 @@ class VlmReasoner:
 
         if vlm_only:
             return self._vlm_only_ranking(
-                llm_ranked, visual_map, step_map, consequence_of, top_k
+                llm_ranked, visual_map, step_map, consequence_of, top_k,
+                vlm_output=vlm_output,
+                pixel_boost_ranked=pixel_boost_ranked,
+                text_only_ranked=text_only_ranked,
             )
 
         return self._hybrid_vlm_ranking(
             llm_ranked, visual_map, step_map, consequence_of,
             vlm_output, vlm_weight, top_k,
+            pixel_boost_ranked=pixel_boost_ranked,
+            text_only_ranked=text_only_ranked,
         )
 
-    def _vlm_only_ranking(
+    def _vlm_step_score(
         self,
-        llm_ranked: list[dict],
+        step: dict,
+        vis: float,
+        *,
+        dampen_text: bool = True,
+    ) -> float:
+        """
+        Hit@k-oriented blend: VLM + global pixel + text.
+        Strong pixel on the visible fault step can outrank an earlier causal root.
+        """
+        vc = float(step.get("visual_causal_score") or 0)
+        text = float(step.get("rank_score") or step.get("combined_score") or 0)
+        px = self._pixel_signal(step)
+        if vis >= 0.5:
+            score = vis + px * 0.08 + min(text, 0.6) * 0.02
+            if vc > 0:
+                score += vc * 0.05
+            return score
+        if vc > 0:
+            return vc + px * 0.05 + (text * 0.2 if dampen_text else text * 0.5)
+        return text * (0.5 if dampen_text else 1.0) + px * 0.05
+
+    def _is_vlm_consequence(
+        self,
+        sid: int,
+        consequence_of: dict[int, int],
+        visual_map: dict[int, float],
+        primary_root: int | None,
+        visual_roots: dict[int, float],
+        step_map: dict[int, dict],
+    ) -> bool:
+        """Symptom deprioritization — skip when VLM/pixel favor the visible step."""
+        if sid in consequence_of:
+            parent = consequence_of[sid]
+            if float(visual_map.get(sid, 0)) >= float(visual_map.get(parent, 0)):
+                return False
+            child_step = step_map.get(sid, {})
+            parent_step = step_map.get(parent, {})
+            if self._pixel_signal(child_step) >= self._pixel_signal(parent_step) + 0.15:
+                return False
+        if (
+            primary_root is not None
+            and sid > primary_root
+            and sid not in visual_roots
+        ):
+            if float(visual_map.get(sid, 0)) >= 0.5:
+                return False
+            return float(visual_map.get(sid, 0)) < 0.5
+        return sid in consequence_of
+
+    def _guard_hit_at_k(
+        self,
+        final: list[dict],
+        scored: list[tuple[float, int, dict]],
+        visual_map: dict[int, float],
+        vlm_output: dict,
+        top_k: int,
+        *,
+        pre_vlm_ranked: list[dict] | None = None,
+        pixel_boost_ranked: list[dict] | None = None,
+        step_map: dict[int, dict] | None = None,
+        text_only_ranked: list[dict] | None = None,
+    ) -> tuple[list[dict], list[str]]:
+        """
+        Promote steps with strong multi-signal agreement to #1 (Hit@1 focus).
+        Returns (updated ranking, human-readable rule explanations).
+        """
+        notes: list[str] = []
+        if not final or not scored:
+            return final, notes
+
+        step_by_id = {step["step_id"]: step for _, _, step in scored}
+        full_map = step_map or step_by_id
+        top_before = final[0]["step_id"] if final else None
+        scored_list = list(full_map.values())
+
+        def promote(sid: int, note: str) -> tuple[list[dict], list[str]]:
+            nonlocal final
+            if sid not in step_by_id:
+                return final, notes
+            notes.append(
+                note
+                + (f" — promoted to #1 (was step {top_before})."
+                   if final[0]["step_id"] != sid else f" (step {sid} already #1).")
+            )
+            if final[0]["step_id"] != sid:
+                rest = [s for s in final if s["step_id"] != sid]
+                final = [step_by_id[sid]] + rest[: top_k - 1]
+            return final[:top_k], notes
+
+        # 0) Causal action step when pixel-boost #1 is the verify/wait symptom step
+        if pixel_boost_ranked:
+            px_sid = pixel_boost_ranked[0]["step_id"]
+            px_step = full_map.get(px_sid, pixel_boost_ranked[0])
+            px_fail = px_step.get("fail_step") or {}
+            px_action = px_fail.get("action") or px_step.get("action", "")
+            px_type = px_fail.get("action_type") or ""
+            if is_observer_step(px_action, px_type):
+                causal_id = find_causal_root_step(scored_list)
+                if causal_id is not None and causal_id in step_by_id:
+                    by_id = {s["step_id"]: s for s in scored_list}
+                    causal = by_id[causal_id]
+                    nxt = by_id.get(causal_id + 1)
+                    obs = errors_on_next_observer_step(causal, nxt)
+                    if obs and obs["next_step_id"] == px_sid:
+                        return promote(
+                            causal_id,
+                            f"Hit@k guard: causal action step {causal_id} over "
+                            f"observer pixel leader step {px_sid}",
+                        )
+
+        # 0b) Text-only #1 with action divergence when visual-causal demoted it
+        if text_only_ranked:
+            text_top = text_only_ranked[0]
+            tid = text_top["step_id"]
+            cur = final[0]
+            if (
+                tid in step_by_id
+                and tid != cur["step_id"]
+                and float(text_top.get("action_score") or 0) > 0
+                and float(cur.get("visual_causal_score") or 0) > 0
+                and float(text_top.get("visual_causal_score") or 0) == 0
+            ):
+                return promote(
+                    tid,
+                    f"Hit@k guard: text-only #1 step {tid} (action divergence) "
+                    f"over visual-causal leader step {cur['step_id']}",
+                )
+
+        # 1) Visible symptom step when VLM sees the break there (GT often labels this step)
+        for step in full_map.values():
+            nxt = step.get("visual_causal_next_step")
+            if nxt is None:
+                continue
+            vis = float(visual_map.get(nxt, 0))
+            px_n = self._pixel_signal(full_map.get(nxt, {}))
+            if vis >= 0.5 and px_n >= 0.35 and nxt in step_by_id:
+                notes.append(
+                    f"Hit@k guard: visible symptom step {nxt} after visual-causal root "
+                    f"{step['step_id']} (vlm={vis:.2f}, pixel={px_n:.2f})"
+                    + (f" — promoted to #1 (was step {top_before})."
+                       if final[0]["step_id"] != nxt else " (already #1).")
+                )
+                if final[0]["step_id"] != nxt:
+                    rest = [s for s in final if s["step_id"] != nxt]
+                    final = [step_by_id[nxt]] + rest[: top_k - 1]
+                return final, notes
+
+        # 2) Pixel-boost leader + VLM agree (strong global pixel OR visual-causal on same step)
+        if pixel_boost_ranked:
+            px1 = pixel_boost_ranked[0]
+            sid = px1["step_id"]
+            step = full_map.get(sid, px1)
+            px = self._pixel_signal(step)
+            vis = float(visual_map.get(sid, 0))
+            vc = float(step.get("visual_causal_score") or 0)
+            if vis >= 0.5 and sid in step_by_id and (px >= 0.65 or vc > 0):
+                notes.append(
+                    f"Hit@k guard: pixel-boost #1 + VLM confirm "
+                    f"(pixel={px:.2f}, visual_causal={vc:.2f}, vlm={vis:.2f})"
+                    + (f" — promoted step {sid} to #1 (was step {top_before})."
+                       if final[0]["step_id"] != sid else f" (step {sid} already #1).")
+                )
+                if final[0]["step_id"] != sid:
+                    rest = [s for s in final if s["step_id"] != sid]
+                    final = [step_by_id[sid]] + rest[: top_k - 1]
+                return final, notes
+
+        # 3) Pre-VLM #1 with visual-causal + VLM (when no visible symptom promotion applied)
+        if pre_vlm_ranked:
+            sid = pre_vlm_ranked[0]["step_id"]
+            step = full_map.get(sid, pre_vlm_ranked[0])
+            vis = float(visual_map.get(sid, 0))
+            vc = float(step.get("visual_causal_score") or 0)
+            if vis >= 0.5 and vc > 0 and sid in step_by_id:
+                notes.append(
+                    f"Hit@k guard: pre-VLM visual-causal #1 + VLM confirm "
+                    f"(visual_causal={vc:.2f}, vlm={vis:.2f})"
+                    + (f" — promoted step {sid} to #1 (was step {top_before})."
+                       if final[0]["step_id"] != sid else f" (step {sid} already #1).")
+                )
+                if final[0]["step_id"] != sid:
+                    rest = [s for s in final if s["step_id"] != sid]
+                    final = [step_by_id[sid]] + rest[: top_k - 1]
+                return final, notes
+
+        # 4) Raw VLM root only when not downstream of an unattributed causal root
+        vlm_rc = vlm_output.get("visual_root_cause_step_id")
+        if vlm_rc is not None and vlm_rc in step_by_id:
+            vis = float(visual_map.get(vlm_rc, 0))
+            causal_roots = [
+                s["step_id"] for s in full_map.values()
+                if float(s.get("visual_causal_score") or 0) > 0
+            ]
+            is_downstream = any(vlm_rc > r for r in causal_roots)
+            if vis >= 0.65 and not is_downstream:
+                notes.append(
+                    f"Hit@k guard: VLM visual root step {vlm_rc} (vlm={vis:.2f})"
+                    + (f" — promoted to #1 (was step {top_before})."
+                       if final[0]["step_id"] != vlm_rc else " (already #1).")
+                )
+                if final[0]["step_id"] != vlm_rc:
+                    rest = [s for s in final if s["step_id"] != vlm_rc]
+                    final = [step_by_id[vlm_rc]] + rest[: top_k - 1]
+                return final, notes
+            if is_downstream and vis >= 0.65:
+                notes.append(
+                    f"Hit@k guard: skipped VLM root step {vlm_rc} — downstream of "
+                    f"visual-causal root(s) {causal_roots}."
+                )
+
+        return final, notes
+
+    def _guard_pre_vlm_anchor(
+        self,
+        final: list[dict],
+        scored: list[tuple[float, int, dict]],
+        pre_vlm_ranked: list[dict],
+        visual_map: dict[int, float],
+        top_k: int,
+    ) -> list[dict]:
+        """
+        Keep the pre-VLM #1 step at rank #1 when VLM confirms it visually.
+        Prevents text/causal boosts on neighbor steps from demoting a correct top-1.
+        """
+        if not pre_vlm_ranked or not final:
+            return final
+        anchor_id = pre_vlm_ranked[0]["step_id"]
+        if final[0]["step_id"] == anchor_id:
+            return final
+        anchor_vis = float(visual_map.get(anchor_id, 0))
+        if anchor_vis < 0.5:
+            return final
+        if not any(s["step_id"] == anchor_id for s in final):
+            return final
+        by_id = {s: c for c, s, _ in scored}
+        anchor_combined = by_id.get(anchor_id, 0)
+        top_combined = scored[0][0] if scored else 0
+        if anchor_combined < top_combined - 0.1:
+            return final
+        anchor_step = next(step for _, _, step in scored if step["step_id"] == anchor_id)
+        rest = [s for s in final if s["step_id"] != anchor_id]
+        return [anchor_step] + rest[: top_k - 1]
+
+    def _visual_ensemble_ranking(
+        self,
+        pre_ranked: list[dict],
         visual_map: dict[int, float],
         step_map: dict[int, dict],
         consequence_of: dict[int, int],
         top_k: int,
-    ) -> tuple[list[dict], str]:
-        """Rank by max(visual-causal/heuristic, VLM); root beats downstream symptoms."""
+        *,
+        vlm_output: dict | None = None,
+        pixel_boost_ranked: list[dict] | None = None,
+        mode_label: str = "vlm",
+        vlm_weight: float = 1.0,
+        llm_ranked: list[dict] | None = None,
+        text_only_ranked: list[dict] | None = None,
+    ) -> tuple[list[dict], str, list[str]]:
+        """Shared VLM / hybrid ranking via _vlm_step_score + Hit@k guards."""
+        if vlm_weight >= 1.0 or not llm_ranked:
+            ranking_notes: list[str] = [
+                "Final VLM score = VLM API + pixel boost + visual-causal (when present). "
+                "Downstream symptom steps rank below attributed cause when scores tie. "
+                "Steps without screenshots skip pixel (score treated as 0)."
+            ]
+        else:
+            ranking_notes = [
+                f"Hybrid final = {vlm_weight*100:.0f}% unified visual score "
+                f"(VLM + pixel + visual-causal) + {(1-vlm_weight)*100:.0f}% LLM rank position. "
+                "Steps without screenshots skip pixel (score treated as 0)."
+            ]
+
         visual_roots = {
             s["step_id"]: float(s.get("visual_causal_score") or 0)
             for s in step_map.values()
@@ -356,27 +679,50 @@ class VlmReasoner:
                 float(root_step.get("combined_score") or 0),
             )
 
-        pool: list[dict] = list(llm_ranked)
+        pool: list[dict] = list(pre_ranked)
         in_pool = {s["step_id"] for s in pool}
+        if text_only_ranked:
+            for row in text_only_ranked[:2]:
+                sid = row["step_id"]
+                if sid not in in_pool and sid in step_map:
+                    pool.append(step_map[sid])
+                    in_pool.add(sid)
+        causal_id = find_causal_root_step(list(step_map.values()))
+        if causal_id is not None and causal_id in step_map and causal_id not in in_pool:
+            pool.append(step_map[causal_id])
+            in_pool.add(causal_id)
         for sid in visual_map:
             if sid not in in_pool and sid in step_map:
                 pool.append(step_map[sid])
                 in_pool.add(sid)
 
+        position_source = llm_ranked or pre_ranked
+        n = len(position_source) or 1
+        rank_pos = {s["step_id"]: i for i, s in enumerate(position_source)}
+
         scored: list[tuple[float, int, dict]] = []
         for step in pool:
             sid = step["step_id"]
-            base = max(
-                float(step.get("visual_causal_score") or 0),
-                float(step.get("rank_score") or 0),
-                float(step.get("combined_score") or 0),
-            )
             vis = float(visual_map.get(sid, 0))
-            combined = max(base, vis)
+            visual_part = self._vlm_step_score(step, vis)
+            if llm_ranked is not None and vlm_weight < 1.0:
+                pos = rank_pos.get(sid)
+                llm_prior = (1.0 - (pos / n)) if pos is not None else 0.0
+                combined = vlm_weight * visual_part + (1 - vlm_weight) * llm_prior
+            else:
+                combined = visual_part
             if (
                 primary_root is not None
                 and sid > primary_root
                 and sid not in visual_roots
+                and float(step.get("visual_causal_score") or 0) == 0
+            ):
+                combined -= 0.04
+            if (
+                primary_root is not None
+                and sid > primary_root
+                and sid not in visual_roots
+                and vis < 0.5
             ):
                 combined = min(combined, root_floor)
             scored.append((
@@ -386,16 +732,48 @@ class VlmReasoner:
             ))
 
         def sort_key(item: tuple[float, int, dict]) -> tuple:
-            combined, sid, _ = item
-            is_consequence = sid in consequence_of or (
-                primary_root is not None
-                and sid > primary_root
-                and sid not in visual_roots
+            combined, sid, step = item
+            is_consequence = self._is_vlm_consequence(
+                sid, consequence_of, visual_map, primary_root, visual_roots, step_map
             )
-            return (-combined, 1 if is_consequence else 0, sid)
+            vc = float(step.get("visual_causal_score") or 0)
+            return (-combined, 1 if is_consequence else 0, -vc, sid)
 
         scored.sort(key=sort_key)
-        return [step for _, _, step in scored[:top_k]], "vlm"
+        final = [step for _, _, step in scored[:top_k]]
+        final = self._guard_pre_vlm_anchor(
+            final, scored, pre_ranked, visual_map, top_k
+        )
+        final, hit_notes = self._guard_hit_at_k(
+            final, scored, visual_map, vlm_output or {}, top_k,
+            pre_vlm_ranked=pre_ranked,
+            pixel_boost_ranked=pixel_boost_ranked,
+            step_map=step_map,
+            text_only_ranked=text_only_ranked,
+        )
+        ranking_notes.extend(hit_notes)
+        return final, mode_label, ranking_notes
+
+    def _vlm_only_ranking(
+        self,
+        llm_ranked: list[dict],
+        visual_map: dict[int, float],
+        step_map: dict[int, dict],
+        consequence_of: dict[int, int],
+        top_k: int,
+        *,
+        vlm_output: dict | None = None,
+        pixel_boost_ranked: list[dict] | None = None,
+        text_only_ranked: list[dict] | None = None,
+    ) -> tuple[list[dict], str, list[str]]:
+        """Rank by unified visual score (VLM + pixel + visual-causal)."""
+        return self._visual_ensemble_ranking(
+            llm_ranked, visual_map, step_map, consequence_of, top_k,
+            vlm_output=vlm_output,
+            pixel_boost_ranked=pixel_boost_ranked,
+            mode_label="vlm",
+            text_only_ranked=text_only_ranked,
+        )
 
     def _hybrid_vlm_ranking(
         self,
@@ -406,50 +784,17 @@ class VlmReasoner:
         vlm_output: dict,
         vlm_weight: float,
         top_k: int,
-    ) -> tuple[list[dict], str]:
-        """Blend text rank position with VLM scores; include strong VLM-only steps."""
-        pool: list[dict] = list(llm_ranked)
-        in_pool = {s["step_id"] for s in pool}
-
-        for sid, vis in visual_map.items():
-            if sid in in_pool or sid not in step_map:
-                continue
-            if float(vis) >= 0.5:
-                pool.append({**step_map[sid], "vlm_visual_score": round(float(vis), 3)})
-                in_pool.add(sid)
-
-        n = len(llm_ranked) or 1
-        rank_pos = {s["step_id"]: i for i, s in enumerate(llm_ranked)}
-
-        scored: list[tuple[float, int, dict]] = []
-        for step in pool:
-            sid = step["step_id"]
-            pos = rank_pos.get(sid)
-            text_score = (1.0 - (pos / n)) if pos is not None else 0.0
-            vis_score = float(visual_map.get(sid, 0.0))
-            combined = (1 - vlm_weight) * text_score + vlm_weight * vis_score
-            scored.append((
-                combined,
-                sid,
-                {**step, "vlm_visual_score": round(vis_score, 3)},
-            ))
-
-        def sort_key(item: tuple[float, int, dict]) -> tuple:
-            combined, sid, _ = item
-            is_consequence = sid in consequence_of
-            return (-combined, 1 if is_consequence else 0, sid)
-
-        scored.sort(key=sort_key)
-        final = [step for _, _, step in scored[:top_k]]
-
-        vlm_rc = vlm_output.get("visual_root_cause_step_id")
-        base_mode = "llm+vlm"
-        if vlm_rc is not None and final and final[0]["step_id"] != vlm_rc:
-            vlm_rc_visual = float(visual_map.get(vlm_rc, 0.0))
-            if vlm_rc_visual >= 0.7 and any(s["step_id"] == vlm_rc for s in final):
-                final = [s for s in final if s["step_id"] != vlm_rc]
-                promoted = next(s for _, _, s in scored if s["step_id"] == vlm_rc)
-                final = [promoted] + final[: top_k - 1]
-                return final, f"{base_mode}+visual_promoted"
-
-        return final, base_mode
+        *,
+        pixel_boost_ranked: list[dict] | None = None,
+        text_only_ranked: list[dict] | None = None,
+    ) -> tuple[list[dict], str, list[str]]:
+        """Hybrid: unified visual score blended with LLM rank position."""
+        return self._visual_ensemble_ranking(
+            llm_ranked, visual_map, step_map, consequence_of, top_k,
+            vlm_output=vlm_output,
+            pixel_boost_ranked=pixel_boost_ranked,
+            mode_label="llm+vlm",
+            vlm_weight=vlm_weight,
+            llm_ranked=llm_ranked,
+            text_only_ranked=text_only_ranked,
+        )

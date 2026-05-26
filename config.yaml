@@ -114,9 +114,12 @@ vlm:
   # when per_step: true). Visual-causal steps are injected on top of this limit.
   top_k_for_vlm: 5
 
+  # Final VLM ranking blends VLM API scores + pixel boost + text (Hit@1 oriented).
+  # See vlm_reasoner._vlm_step_score and _guard_hit_at_k.
+
 ranking:
   top_k: 5          # final output size
-  pre_llm_k: 0      # candidates sent to LLM for re-ranking (0 = all steps, no heuristic bottleneck)
+  pre_llm_k: 15     # heuristic top-K sent to LLM (+ strong-signal injects; 0 = all steps)
   heuristic_pixel_fallback: true   # heuristic-only mode: boost ranking with local pixel diff
   heuristic_pixel_weight: 0.35     # blend weight for pixel diff in heuristic-only mode
   visual_causal:

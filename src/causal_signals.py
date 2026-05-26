@@ -20,7 +20,20 @@ _SUBSTANTIVE = re.compile(
 # Console noise that should not drive root-cause selection (generic web telemetry)
 _NOISE = re.compile(
     r"Track&Report|uedata=|allow-scripts and allow-same-origin|analytics\.js|"
-    r"cookie-consent|beacon|telemetry",
+    r"cookie-consent|beacon|telemetry|Datadog Browser SDK|GSI_LOGGER|FedCM|"
+    r"doubleclick|googlesyndication|googlevideo\.com|manifest\.json|"
+    r"WebSocket connection|identity provider|AdBlockerSentinel|"
+    r"preloaded using link preload|webcontentassessor|safeframe|"
+    r"getHtml method on googletag|No storage available for session",
+    re.I,
+)
+
+# Third-party / page-load network noise (not application faults)
+_NETWORK_NOISE = re.compile(
+    r"doubleclick|googlesyndication|googlevideo\.com|googleapis\.com/gsi|"
+    r"webcontentassessor|safeframe|manifest\.json|/v4/reset|"
+    r"analytics|telemetry|beacon|datadog|AdBlockerSentinel|"
+    r"fonts\.googleapis|generate_204|videoplayback\?|accounts\.google\.com",
     re.I,
 )
 
@@ -40,6 +53,18 @@ def is_substantive_error(text: str) -> bool:
 
 def is_noise_console(text: str) -> bool:
     return bool(text and _NOISE.search(text) and not _SUBSTANTIVE.search(text))
+
+
+def is_noise_network(url: str = "", error: str = "") -> bool:
+    """True for ad/CDN/telemetry URLs that should not drive ranking."""
+    blob = f"{url} {error}"
+    if not blob.strip():
+        return False
+    if _NETWORK_NOISE.search(blob):
+        return True
+    if _NOISE.search(blob) and not _SUBSTANTIVE.search(blob):
+        return True
+    return False
 
 
 def _normalise(text: str) -> str:

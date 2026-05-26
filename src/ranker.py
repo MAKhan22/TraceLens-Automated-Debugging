@@ -17,7 +17,11 @@ from pathlib import Path
 from src.llm_reasoner import slim_steps_for_llm
 from src.causal_signals import find_causal_root_step, is_observer_step
 from src.navigation_signals import compute_navigation_signals
-from src.visual_signals import scan_pixel_scores, annotate_visual_causal_scores
+from src.visual_signals import (
+    scan_pixel_scores,
+    annotate_visual_causal_scores,
+    best_pixel_signal,
+)
 
 
 class Ranker:
@@ -50,27 +54,83 @@ class Ranker:
 
     def candidates_for_llm(self, scored_steps: list[dict]) -> list[dict]:
         """Return candidates to send to the LLM for re-ranking.
-        If pre_llm_k is 0, returns all steps so the LLM is not bottlenecked
-        by the heuristic ranking (i.e. can discover faults ranked low by heuristic).
+
+        When pre_llm_k > 0, starts from the top-K heuristic steps and injects
+        any step with strong code-detected signals (wrong_navigation,
+        action_changed, errors_observed_on_next_step, causal root) so the LLM
+        can still see important steps the score sort buried.
+        pre_llm_k == 0 returns all steps (legacy / max-recall mode).
         """
         ranked = sorted(scored_steps, key=lambda x: x["combined_score"], reverse=True)
         if self.pre_llm_k == 0:
-            return ranked  # all steps
-        return ranked[:self.pre_llm_k]
+            return ranked
 
-    def apply_llm_reranking(self, llm_order: list[int],
-                             scored_steps: list[dict]) -> list[dict]:
+        pool_ids: set[int] = set()
+        candidates: list[dict] = []
+
+        def add(step: dict) -> None:
+            sid = step["step_id"]
+            if sid not in pool_ids:
+                pool_ids.add(sid)
+                candidates.append(step)
+
+        for step in ranked[: self.pre_llm_k]:
+            add(step)
+
+        slim_by_id = {
+            s["step_id"]: s
+            for s in slim_steps_for_llm(ranked, compact=True)
+        }
+        for step in scored_steps:
+            sl = slim_by_id.get(step["step_id"], {})
+            if sl.get("wrong_navigation") or sl.get("action_changed"):
+                add(step)
+            elif sl.get("errors_observed_on_next_step"):
+                add(step)
+
+        causal_id = find_causal_root_step(scored_steps)
+        if causal_id is not None:
+            step_map = {s["step_id"]: s for s in scored_steps}
+            if causal_id in step_map:
+                add(step_map[causal_id])
+
+        step_map = {s["step_id"]: s for s in scored_steps}
+        for step in scored_steps:
+            vc = float(step.get("visual_causal_score") or 0)
+            if vc <= 0:
+                continue
+            add(step)
+            nxt = step.get("visual_causal_next_step")
+            if nxt is not None and nxt in step_map:
+                add(step_map[nxt])
+
+        # Strong global pixel (full scan or report table) — keep visible fault steps in pool
+        px_leader = max(
+            scored_steps,
+            key=lambda s: best_pixel_signal(s),
+            default=None,
+        )
+        if px_leader and best_pixel_signal(px_leader) >= 0.65:
+            add(px_leader)
+
+        return candidates
+
+    def apply_llm_reranking(
+        self,
+        llm_order: list[int],
+        scored_steps: list[dict],
+        *,
+        heuristic_top_ids: list[int] | None = None,
+        slim_steps: list[dict] | None = None,
+    ) -> tuple[list[dict], list[str]]:
         """
         Apply LLM-provided re-ranking.
 
-        Args:
-            llm_order:    list of step_ids in LLM-preferred order
-            scored_steps: original scored list
-
         Returns:
-            re-ranked list (top_k)
+            (re-ranked top_k list, anchor-guard notes)
         """
         step_map = {s["step_id"]: s for s in scored_steps}
+        slim_by_id = {s["step_id"]: s for s in (slim_steps or [])}
         reranked = []
         for step_id in llm_order:
             if step_id in step_map:
@@ -82,7 +142,167 @@ class Ranker:
             key=lambda x: x["combined_score"], reverse=True
         )
         reranked.extend(rest)
-        return reranked[:self.top_k]
+        reranked = reranked[: self.top_k]
+
+        if heuristic_top_ids and slim_steps:
+            reranked, anchor_notes = self._guard_heuristic_anchors(
+                reranked, heuristic_top_ids, step_map, slim_by_id
+            )
+        else:
+            anchor_notes = []
+        return reranked[: self.top_k], anchor_notes
+
+    def _guard_heuristic_anchors(
+        self,
+        llm_ranked: list[dict],
+        heuristic_top_ids: list[int],
+        step_map: dict[int, dict],
+        slim_by_id: dict[int, dict],
+    ) -> tuple[list[dict], list[str]]:
+        """
+        Prevent the LLM from demoting strong heuristic candidates without cause.
+        Keeps action_changed / wrong_navigation / causal steps in the top-K.
+        """
+        notes: list[str] = []
+        llm_ids = [s["step_id"] for s in llm_ranked]
+        anchors = heuristic_top_ids[: self.top_k]
+
+        def is_strong_anchor(step_id: int) -> bool:
+            slim = slim_by_id.get(step_id, {})
+            if slim.get("page_load_noise_only"):
+                return False
+            if slim.get("wrong_navigation") or slim.get("action_changed"):
+                return True
+            if slim.get("errors_observed_on_next_step"):
+                return True
+            step = step_map.get(step_id, {})
+            if float(step.get("combined_score") or 0) >= 0.55:
+                return True
+            if float(step.get("pixel_score") or 0) >= 0.65:
+                return True
+            if float(step.get("visual_causal_score") or 0) > 0:
+                return True
+            return False
+
+        protected = [sid for sid in anchors if sid in step_map and is_strong_anchor(sid)]
+        if not protected:
+            return llm_ranked, notes
+
+        notes.append(
+            "LLM anchor guard: kept strong heuristic step(s) "
+            f"{protected} in top-{self.top_k} (action change, wrong navigation, "
+            "high text score, pixel score ≥ 0.65, or visual-causal root)."
+        )
+
+        # Pull protected anchors back if LLM dropped them below top-K or demoted far
+        out_ids: list[int] = []
+        if llm_ids:
+            out_ids.append(llm_ids[0])
+        for sid in protected:
+            if sid not in out_ids:
+                out_ids.append(sid)
+        for sid in llm_ids[1:]:
+            if sid not in out_ids:
+                out_ids.append(sid)
+        for sid in anchors:
+            if sid not in out_ids:
+                out_ids.append(sid)
+
+        return [step_map[sid] for sid in out_ids[: self.top_k]], notes
+
+    def guard_llm_hit_at_k(
+        self,
+        llm_ranked: list[dict],
+        scored_steps: list[dict],
+        pixel_boost_ranked: list[dict] | None,
+        pre_heuristic_ids: list[int] | None,
+        top_k: int,
+    ) -> tuple[list[dict], list[str], str | None]:
+        """
+        Post-LLM promotion for Hit@1 using local pixel + visual-causal (no VLM API).
+        Skips pixel-based rules when screenshots are unavailable on a step.
+
+        Returns (ranked, notes, top1_lock) where top1_lock describes why #1 was
+        set by a visual guard (used to avoid LLM diagnosis overriding pixel/symptom).
+        """
+        notes: list[str] = []
+        if not llm_ranked:
+            return llm_ranked, notes, None
+
+        step_map = {s["step_id"]: s for s in scored_steps}
+        step_by_id = {s["step_id"]: s for s in llm_ranked}
+        top_before = llm_ranked[0]["step_id"]
+
+        # 1) Visible symptom step after visual-causal root
+        for step in step_map.values():
+            nxt = step.get("visual_causal_next_step")
+            if nxt is None or nxt not in step_by_id:
+                continue
+            nxt_step = step_map.get(nxt, {})
+            if nxt_step.get("screenshots_available") is False:
+                continue
+            px_n = best_pixel_signal(nxt_step)
+            if px_n >= 0.35:
+                notes.append(
+                    f"LLM Hit@k guard: visible symptom step {nxt} after visual-causal root "
+                    f"{step['step_id']} (pixel={px_n:.2f}, no VLM)"
+                    + (f" — promoted to #1 (was step {top_before})."
+                       if llm_ranked[0]["step_id"] != nxt else " (already #1).")
+                )
+                if llm_ranked[0]["step_id"] != nxt:
+                    rest = [s for s in llm_ranked if s["step_id"] != nxt]
+                    promoted = step_map.get(nxt, step_by_id[nxt])
+                    llm_ranked = [promoted] + rest[: top_k - 1]
+                return llm_ranked[:top_k], notes, "visible_symptom"
+
+        # 2) Pixel leader or visual-causal root with strong pixel
+        px_source = pixel_boost_ranked or []
+        if not px_source:
+            leader = max(scored_steps, key=best_pixel_signal, default=None)
+            if leader and best_pixel_signal(leader) >= 0.65:
+                px_source = [leader]
+        if px_source:
+            px1 = px_source[0]
+            sid = px1["step_id"]
+            step = step_map.get(sid, px1)
+            if step.get("screenshots_available") is not False and sid in step_by_id:
+                px = best_pixel_signal(step)
+                vc = float(step.get("visual_causal_score") or 0)
+                if px >= 0.65 or vc > 0:
+                    notes.append(
+                        f"LLM Hit@k guard: pixel/visual-causal leader step {sid} "
+                        f"(pixel={px:.2f}, visual_causal={vc:.2f})"
+                        + (f" — promoted to #1 (was step {top_before})."
+                           if llm_ranked[0]["step_id"] != sid else f" (step {sid} already #1).")
+                    )
+                    if llm_ranked[0]["step_id"] != sid:
+                        rest = [s for s in llm_ranked if s["step_id"] != sid]
+                        promoted = step_map.get(sid, step_by_id[sid])
+                        llm_ranked = [promoted] + rest[: top_k - 1]
+                    lock = "pixel_leader" if px >= 0.65 else "visual_causal_leader"
+                    return llm_ranked[:top_k], notes, lock
+
+        # 3) Pre-heuristic visual-causal #1
+        if pre_heuristic_ids:
+            for sid in pre_heuristic_ids:
+                step = step_map.get(sid)
+                if not step:
+                    continue
+                vc = float(step.get("visual_causal_score") or 0)
+                if vc > 0 and sid in step_by_id:
+                    notes.append(
+                        f"LLM Hit@k guard: visual-causal heuristic #1 step {sid} "
+                        f"(visual_causal={vc:.2f})"
+                        + (f" — promoted to #1 (was step {top_before})."
+                           if llm_ranked[0]["step_id"] != sid else f" (step {sid} already #1).")
+                    )
+                    if llm_ranked[0]["step_id"] != sid:
+                        rest = [s for s in llm_ranked if s["step_id"] != sid]
+                        promoted = step_map.get(sid, step_by_id[sid])
+                        llm_ranked = [promoted] + rest[: top_k - 1]
+                    return llm_ranked[:top_k], notes, "visual_causal_heuristic"
+
+        return llm_ranked[:top_k], notes, None
 
     def diagnosis_candidates(self, llm_ranked: list[dict],
                              scored_steps: list[dict]) -> list[dict]:
@@ -123,8 +343,18 @@ class Ranker:
         scored_steps: list[dict],
         pixel_scores: dict[int, dict] | None = None,
         visual_causal_cfg: dict | None = None,
-    ) -> int | None:
-        """High-confidence root cause from code signals (no LLM needed)."""
+        *,
+        include_visual_causal: bool = True,
+    ) -> tuple[int | None, str | None]:
+        """
+        High-confidence root cause from code signals (no LLM).
+
+        Returns (step_id, reason) where reason is one of:
+          wrong_navigation, text_causal, visual_causal
+
+        On the LLM path, pass include_visual_causal=False so screenshot
+        attribution stays in LLM input + post-LLM guards (no double promote).
+        """
         for step in scored_steps:
             fail = step.get("fail_step") or {}
             pass_ = step.get("pass_step") or {}
@@ -135,19 +365,20 @@ class Ranker:
                 action,
             )
             if nav["wrong_navigation"]:
-                return step["step_id"]
+                return step["step_id"], "wrong_navigation"
 
         causal = find_causal_root_step(scored_steps)
         if causal is not None:
-            return causal
+            return causal, "text_causal"
 
-        if pixel_scores:
+        if include_visual_causal and pixel_scores:
             cfg = visual_causal_cfg or {}
             annotated = annotate_visual_causal_scores(scored_steps, pixel_scores, cfg)
             hits = [s for s in annotated if float(s.get("visual_causal_score") or 0) > 0]
             if hits:
-                return min(hits, key=lambda s: s["step_id"])["step_id"]
-        return None
+                sid = min(hits, key=lambda s: s["step_id"])["step_id"]
+                return sid, "visual_causal"
+        return None, None
 
     def collect_screenshot_paths(
         self,
@@ -204,6 +435,30 @@ class Ranker:
                 break
 
         return candidates[: max(vlm_k, len(inject_step_ids or []))]
+
+    def merge_vlm_inject_ids(
+        self,
+        base_ids: list[int],
+        scored_steps: list[dict],
+        text_only_ranked: list[dict] | None = None,
+    ) -> list[int]:
+        """Extend VLM screenshot candidates with text-strong steps the visual layer may bury."""
+        seen = set(base_ids)
+        out = list(base_ids)
+
+        def add(sid: int | None) -> None:
+            if sid is not None and sid not in seen:
+                out.append(sid)
+                seen.add(sid)
+
+        if text_only_ranked:
+            for row in text_only_ranked[:2]:
+                add(row["step_id"])
+        add(find_causal_root_step(scored_steps))
+        for step in scored_steps:
+            if float(step.get("action_score") or 0) > 0:
+                add(step["step_id"])
+        return out
 
     def backfill_visual_causal_vlm_scores(
         self,
@@ -271,6 +526,54 @@ class Ranker:
                     vlm_output["visual_root_cause_step_id"] = step["step_id"]
                     break
         return vlm_output
+
+    def merge_pixel_scan(
+        self,
+        scored_steps: list[dict],
+        pixel_scores: dict[int, dict],
+    ) -> list[dict]:
+        """Attach full-trace pixel scan + screenshot availability to each step."""
+        merged = []
+        for step in scored_steps:
+            sid = step["step_id"]
+            px = pixel_scores.get(sid)
+            if px:
+                effective = float(px.get("effective") or px.get("global") or 0)
+                merged.append({
+                    **step,
+                    "screenshots_available": True,
+                    "pixel_global": px.get("global", step.get("pixel_global", 0.0)),
+                    "pixel_localized": px.get("localized", step.get("pixel_localized", 0.0)),
+                    "pixel_score": round(effective, 4),
+                })
+            else:
+                merged.append({
+                    **step,
+                    "screenshots_available": False,
+                })
+        return merged
+
+    def merge_pixel_boost(
+        self,
+        scored_steps: list[dict],
+        pixel_boosted: list[dict] | None,
+    ) -> list[dict]:
+        """Attach pixel_score / boosted rank_score from the pixel table onto scored steps."""
+        if not pixel_boosted:
+            return scored_steps
+        px_by_id = {s["step_id"]: s for s in pixel_boosted}
+        merged = []
+        for step in scored_steps:
+            px = px_by_id.get(step["step_id"])
+            if not px:
+                merged.append(step)
+                continue
+            merged.append({
+                **step,
+                "pixel_score": px.get("pixel_score", step.get("pixel_score")),
+                "pixel_global": step.get("pixel_global", px.get("pixel_score")),
+            })
+        return merged
 
     def promote_step(self, ranked: list[dict], scored_steps: list[dict],
                      step_id: int) -> list[dict]:

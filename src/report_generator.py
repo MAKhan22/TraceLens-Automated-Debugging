@@ -75,11 +75,19 @@ class ReportGenerator:
                 llm_output.get("stakeholder_summary", ""),
                 eval_result,
                 vlm_output,
+                metadata,
             ),
         }
         return report
 
     # ── formatting ────────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _layers_label(base: str, layers: list[str]) -> str:
+        """Build table title listing every signal layer that affects that ranking."""
+        if not layers:
+            return base
+        return f"{base} ({' + '.join(layers)})"
 
     def _step_flags(self, s: dict) -> str:
         flags = []
@@ -99,6 +107,8 @@ class ReportGenerator:
                 flags.append(f"visual causal ({reason}, visible@{nxt}, score={vc:.2f})")
             else:
                 flags.append(f"visual causal ({reason}, score={vc:.2f})")
+        if s.get("screenshots_available") is False:
+            flags.append("no screenshots")
         return f"  [{', '.join(flags)}]" if flags else ""
 
     def _format_ranked_list(self, steps: list[dict], label: str,
@@ -164,8 +174,15 @@ class ReportGenerator:
                      heuristic_visual, used_pixel_boost, has_visual_causal,
                      ran_screenshot_scan, screenshot_analysis,
                      llm_ranked, ran_vlm, vlm_only, ranking_mode,
-                     diagnosis, summary, eval_result, vlm_output=None) -> str:
+                     diagnosis, summary, eval_result, vlm_output=None,
+                     metadata=None) -> str:
         actual = eval_result.get("actual_fault_step") if eval_result else None
+        meta = metadata or {}
+        vlm_status = meta.get("vlm_status", "not_run")
+        vlm_error = meta.get("vlm_error")
+        vlm_error_code = meta.get("vlm_error_code")
+        ranking_fallback = meta.get("ranking_fallback")
+        exclude_from_aggregate = meta.get("exclude_from_aggregate", False)
 
         lines = [
             "=" * 62,
@@ -175,55 +192,137 @@ class ReportGenerator:
             "",
         ]
 
+        if vlm_status == "failed":
+            lines += [
+                "VLM STATUS",
+                "-" * 40,
+                f"  Status: FAILED ({vlm_error_code or 'vlm_error'})",
+                f"  Reason: {vlm_error or 'unknown'}",
+                f"  Final ranking: {ranking_fallback or ranking_mode} fallback",
+            ]
+            if exclude_from_aggregate:
+                lines.append("  Aggregate: excluded from VLM-only Hit@k metrics")
+            else:
+                lines.append("  Aggregate: included using LLM/heuristic fallback ranking")
+            lines.append("")
+
         # 1. Heuristic tables (text → visual causal → pixel when applicable)
         if has_visual_causal and heuristic_visual:
             lines += self._format_ranked_list(
-                heuristic, "HEURISTIC TOP 5 (text signals only)", actual
+                heuristic,
+                self._layers_label("HEURISTIC TOP 5", ["text signals only"]),
+                actual,
             )
             lines += [""]
             lines += self._format_ranked_list(
                 heuristic_visual,
-                "HEURISTIC TOP 5 (text + visual causal)",
+                self._layers_label("HEURISTIC TOP 5", ["text", "visual causal"]),
                 actual,
                 show_visual_causal=True,
             )
             if used_pixel_boost and heuristic_pixel:
                 lines += [""]
                 lines += self._format_ranked_list(
-                    heuristic_pixel, "HEURISTIC TOP 5 (text + pixel)", actual, show_pixel=True
+                    heuristic_pixel,
+                    self._layers_label(
+                        "HEURISTIC TOP 5",
+                        ["text", "visual causal", "pixel"],
+                    ),
+                    actual,
+                    show_pixel=True,
+                    show_visual_causal=True,
                 )
         elif used_pixel_boost and heuristic_pixel:
             lines += self._format_ranked_list(
-                heuristic, "HEURISTIC TOP 5 (text signals only)", actual
+                heuristic,
+                self._layers_label("HEURISTIC TOP 5", ["text signals only"]),
+                actual,
             )
             lines += [""]
+            pixel_layers = ["text", "pixel"]
+            if has_visual_causal:
+                pixel_layers = ["text", "visual causal", "pixel"]
             lines += self._format_ranked_list(
-                heuristic_pixel, "HEURISTIC TOP 5 (text + pixel)", actual, show_pixel=True
+                heuristic_pixel,
+                self._layers_label("HEURISTIC TOP 5", pixel_layers),
+                actual,
+                show_pixel=True,
+                show_visual_causal=has_visual_causal,
             )
         else:
+            single_layers = ["text"]
+            if has_visual_causal:
+                single_layers.append("visual causal")
+            if used_pixel_boost:
+                single_layers.append("pixel")
             lines += self._format_ranked_list(
-                heuristic, "HEURISTIC TOP 5", actual, show_visual_causal=has_visual_causal
+                heuristic,
+                self._layers_label("HEURISTIC TOP 5", single_layers),
+                actual,
+                show_visual_causal=has_visual_causal,
+                show_pixel=used_pixel_boost,
             )
 
         # 2. LLM top 5 (when LLM ran)
         if llm_ranked:
+            llm_layers = ["text"]
+            if ran_screenshot_scan:
+                if has_visual_causal:
+                    llm_layers.append("visual causal")
+                llm_layers.append("pixel")
             lines += [""]
-            lines += self._format_ranked_list(llm_ranked, "LLM TOP 5", actual)
+            lines += self._format_ranked_list(
+                llm_ranked,
+                self._layers_label("LLM TOP 5", llm_layers),
+                actual,
+                show_visual_causal=has_visual_causal and ran_screenshot_scan,
+                show_pixel=ran_screenshot_scan,
+            )
 
         # 3. VLM top 5 (when --vlm ran; final ensemble ranking)
         if ran_vlm:
-            vlm_label = "VLM TOP 5" if vlm_only else "VLM + LLM TOP 5"
+            vlm_layers = ["text", "pixel", "visual causal", "VLM"]
+            if not vlm_only:
+                vlm_layers = ["text", "pixel", "visual causal", "VLM", "LLM rank prior"]
+            vlm_base = "VLM TOP 5" if vlm_only else "VLM + LLM TOP 5"
             lines += [""]
             lines += self._format_ranked_list(
-                ranked, vlm_label, actual, show_vlm_score=True
+                ranked,
+                self._layers_label(vlm_base, vlm_layers),
+                actual,
+                show_vlm_score=True,
+                show_visual_causal=has_visual_causal,
+                show_pixel=ran_screenshot_scan,
             )
         elif not llm_ranked and not used_pixel_boost:
             pass  # heuristic-only, single table already shown
         elif llm_ranked:
             pass  # LLM-only: final == llm_ranked, already shown
+        elif vlm_status == "failed":
+            fallback_label = (
+                f"FINAL RANKING ({ranking_fallback or ranking_mode} fallback — VLM failed)"
+            )
+            lines += [""]
+            lines += self._format_ranked_list(ranked, fallback_label, actual)
 
         if ran_screenshot_scan and screenshot_analysis:
             lines += [""] + self._format_screenshot_analysis(screenshot_analysis)
+            n_avail = (metadata or {}).get("screenshots_available_count")
+            if n_avail is not None:
+                lines += [
+                    f"  Steps with pass/fail PNG pairs: {n_avail} "
+                    f"(pixel/visual-causal skipped on steps marked [no screenshots])",
+                ]
+
+        ranking_decisions = (metadata or {}).get("ranking_decisions") if metadata else None
+        if ranking_decisions:
+            lines += [
+                "",
+                "RANKING DECISIONS (rules applied)",
+                "-" * 40,
+            ]
+            for note in ranking_decisions:
+                lines.append(f"  • {note}")
 
         lines += [
             "",
@@ -240,14 +339,20 @@ class ReportGenerator:
         else:
             lines.append("(LLM diagnosis not run — heuristic mode)")
 
-        # VLM per-step visual scores (when VLM ran)
-        if vlm_output and vlm_output.get("steps_with_screenshots", 0) > 0:
+        # VLM per-step visual scores (when VLM succeeded)
+        if vlm_output and vlm_output.get("steps_with_screenshots", 0) > 0 and vlm_status != "failed":
             lines += [
                 "",
                 "VISUAL ANALYSIS (VLM)",
                 "-" * 40,
                 f"Visual root cause: Step {vlm_output.get('visual_root_cause_step_id')}",
-                f"Summary:           {vlm_output.get('visual_summary', '')}",
+                "Summary:",
+            ]
+            summary = vlm_output.get("visual_summary", "") or ""
+            for line in summary.split("\n"):
+                if line.strip():
+                    lines.append(f"  {line.strip()}")
+            lines += [
                 "",
                 "  Per-step visual scores:",
             ]
@@ -266,10 +371,17 @@ class ReportGenerator:
                 )
             lines += [
                 "",
-                "  Note: 'analyzed only' steps were sent to the VLM but ranked outside",
-                "  the final top-5. In --vlm mode the final list is sorted by VLM score;",
-                "  consequence steps (where the screenshot diff is visible) rank below",
-                "  their attributed cause when scores tie.",
+                "  Note: VLM summary lists only steps with meaningful visual differences",
+                "  (identical/noise responses from per-step API calls are filtered out).",
+                "  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.",
+            ]
+        elif vlm_status == "failed":
+            lines += [
+                "",
+                "VISUAL ANALYSIS (VLM)",
+                "-" * 40,
+                "VLM analysis did not complete — no visual scores available.",
+                f"Failure code: {vlm_error_code or 'vlm_error'}",
             ]
 
         lines += [
@@ -288,6 +400,10 @@ class ReportGenerator:
                 "",
                 "EVALUATION",
                 "-" * 40,
+            ]
+            if exclude_from_aggregate:
+                lines.append("(Per-trace eval shown; excluded from VLM-only aggregate Hit@k)")
+            lines += [
                 f"Actual fault step: {actual}",
                 f"Hit@1={eval_result.get('hit@1')}  "
                 f"Hit@3={eval_result.get('hit@3')}  "

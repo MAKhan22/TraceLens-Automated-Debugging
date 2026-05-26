@@ -27,6 +27,18 @@ def scan_pixel_scores(
     return scores
 
 
+def best_pixel_signal(step: dict) -> float:
+    """Best available pass/fail pixel diff on a step (0 when no screenshots)."""
+    if step.get("screenshots_available") is False:
+        return 0.0
+    candidates = [
+        step.get("pixel_score"),
+        step.get("pixel_global"),
+        step.get("pixel_localized"),
+    ]
+    return max(float(v or 0) for v in candidates)
+
+
 def _effective(scores: dict[int, dict], sid: int) -> float:
     return float(scores.get(sid, {}).get("effective") or 0.0)
 

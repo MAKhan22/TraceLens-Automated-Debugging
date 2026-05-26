@@ -28,7 +28,11 @@ from pathlib import Path
 from openai import OpenAI
 
 from src.navigation_signals import compute_navigation_signals
-from src.causal_signals import is_observer_step, is_noise_console
+from src.causal_signals import (
+    is_observer_step,
+    is_noise_console,
+    is_noise_network,
+)
 
 
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
@@ -66,7 +70,10 @@ def _slim_step_for_llm(step: dict) -> dict:
     fail_error_urls = {e["url"] for e in fail_errors}
 
     # Errors new in fail only (genuine signal)
-    new_net_errors   = [e for e in fail_errors if e["url"] not in pass_error_urls]
+    new_net_errors   = [
+        e for e in fail_errors
+        if e["url"] not in pass_error_urls and not is_noise_network(e.get("url", ""), e.get("error", ""))
+    ]
     # Errors in BOTH pass and fail (background noise — LLM should discount these)
     shared_net_noise = [e for e in fail_errors if e["url"] in pass_error_urls]
 
@@ -90,7 +97,10 @@ def _slim_step_for_llm(step: dict) -> dict:
 
     # Asset-only missing URLs (telemetry/fonts) — less diagnostic than page URLs
     missing_pages = [u for u in missing_urls if u.endswith(".html") or "/topics/" in u]
-    missing_assets = [u for u in missing_urls if u not in missing_pages]
+    missing_assets = [
+        u for u in missing_urls
+        if u not in missing_pages and not is_noise_network(u)
+    ]
 
     slim = {
         "step_id":              step.get("step_id"),
@@ -127,11 +137,74 @@ def _slim_step_for_llm(step: dict) -> dict:
             slim["visual_causal_next_step"] = step["visual_causal_next_step"]
         if step.get("visual_causal_reason"):
             slim["visual_causal_reason"] = step["visual_causal_reason"]
+    if "screenshots_available" in step:
+        slim["screenshots_available"] = bool(step["screenshots_available"])
+    px = step.get("pixel_score")
+    if step.get("screenshots_available") is not False and px is not None and float(px) >= 0.35:
+        slim["pixel_score"] = round(float(px), 3)
+    elif step.get("screenshots_available") is False:
+        slim["pixel_score"] = None
+    return _mark_page_load_noise(slim)
+
+
+_PAGE_LOAD_CONSOLE = re.compile(
+    r"Failed to load resource|Manifest fetch|WebSocket connection|"
+    r"identity provider|Datadog Browser SDK|GSI_LOGGER|getHtml method|"
+    r"static/chunks|frontend/graphql|\.js \d+:\d+",
+    re.I,
+)
+
+
+def _console_is_page_load_only(text: str) -> bool:
+    if is_noise_console(text):
+        return True
+    return bool(_PAGE_LOAD_CONSOLE.search(text or ""))
+
+
+def _mark_page_load_noise(slim: dict) -> dict:
+    """
+    Flag step 0 when it only carries third-party page-load noise.
+    Helps the reranker deprioritize homepage navigate steps with ad/iframe errors.
+    """
+    if slim.get("step_id") != 0:
+        return slim
+    if slim.get("wrong_navigation") or slim.get("action_changed"):
+        return slim
+    if slim.get("errors_observed_on_next_step"):
+        return slim
+    if slim.get("missing_expected_pages") or slim.get("wrong_pages_loaded"):
+        return slim
+
+    action = (slim.get("fail_action") or slim.get("pass_action") or "").lower()
+    is_initial_nav = bool(re.search(r"\b(navigate|open|visit|go to|load)\b", action))
+    if not is_initial_nav:
+        return slim
+
+    con = slim.get("new_console_errors") or []
+    if con and not all(_console_is_page_load_only(e.get("text", "")) for e in con):
+        return slim
+    net = slim.get("new_network_errors") or []
+    if net and not all(
+        is_noise_network(e.get("url", ""), e.get("error", "")) for e in net
+    ):
+        return slim
+    if con or net or slim.get("shared_console_noise"):
+        return {**slim, "page_load_noise_only": True}
     return slim
 
 
 def _compact_slim(step: dict) -> dict:
     """Drop empty/low-value fields to reduce rerank token usage on long traces."""
+    if step.get("page_load_noise_only"):
+        step = {
+            **step,
+            "new_console_errors": [],
+            "new_network_errors": [],
+            "shared_console_noise": [],
+            "shared_network_noise": [],
+            "missing_requests": [],
+            "missing_asset_requests": [],
+        }
     drop_if_empty = (
         "shared_network_noise", "shared_console_noise", "missing_asset_requests",
         "missing_requests", "new_network_errors", "new_console_errors",
@@ -142,8 +215,11 @@ def _compact_slim(step: dict) -> dict:
         if k in drop_if_empty and not v:
             continue
         if k.endswith("_score") or k == "heuristic_score":
-            if k == "visual_causal_score" and v:
+            if k in ("visual_causal_score", "pixel_score") and v:
                 out[k] = v
+            continue
+        if k in ("heuristic_rank", "page_load_noise_only"):
+            out[k] = v
             continue
         if v is False and k in ("action_changed", "wrong_navigation"):
             continue
@@ -177,9 +253,20 @@ def _enrich_slim_causal_links(slims: list[dict]) -> list[dict]:
     return enriched
 
 
-def slim_steps_for_llm(candidates: list[dict], *, compact: bool = False) -> list[dict]:
+def slim_steps_for_llm(
+    candidates: list[dict],
+    *,
+    compact: bool = False,
+    heuristic_order: list[int] | None = None,
+) -> list[dict]:
     """Slim steps and add causal cross-step links for LLM consumption."""
     slims = _enrich_slim_causal_links([_slim_step_for_llm(s) for s in candidates])
+    if heuristic_order:
+        rank_map = {sid: i + 1 for i, sid in enumerate(heuristic_order)}
+        slims = [
+            {**sl, "heuristic_rank": rank_map.get(sl["step_id"])}
+            for sl in slims
+        ]
     if compact:
         return [_compact_slim(s) for s in slims]
     return slims
@@ -245,13 +332,20 @@ class LlmReasoner:
 
     # ── Stage 1: Re-rank ──────────────────────────────────────────────────────
 
-    def rerank(self, candidates: list[dict]) -> list[int]:
+    def rerank(
+        self,
+        candidates: list[dict],
+        *,
+        heuristic_order: list[int] | None = None,
+    ) -> list[int]:
         """
-        Ask LLM to re-rank the heuristic top-10 candidates.
+        Ask LLM to re-rank heuristic candidates.
 
         Returns: list of step_ids in preferred order.
         """
-        slim = slim_steps_for_llm(candidates, compact=True)
+        slim = slim_steps_for_llm(
+            candidates, compact=True, heuristic_order=heuristic_order
+        )
         prompt_template = _load_prompt("rerank_steps.txt")
         prompt = prompt_template.replace("{steps_json}", json.dumps(slim, separators=(",", ":")))
 

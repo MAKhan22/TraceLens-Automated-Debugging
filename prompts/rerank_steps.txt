@@ -41,11 +41,13 @@ CONSOLE FIELDS:
 - shared_console_noise: console errors in BOTH runs (background noise — ignore)
 
 SCORE FIELDS (heuristic hints only — may be wrong):
-- heuristic_score: combined anomaly score
+- heuristic_rank: where the automated heuristic ranked this step (1 = most suspicious)
+- page_load_noise_only: step 0 with ONLY third-party page-load noise — deprioritize
 
 Your task: Rank ALL steps from most to least likely to be the ROOT CAUSE of the failure.
 
 Reasoning rules (apply in this order):
+0. page_load_noise_only=true → rank near the BOTTOM (ads, iframes, manifest, WebSocket telemetry on homepage load)
 1. wrong_navigation=true → rank that step #1 (wrong page loaded at this step)
 2. visual_causal_score > 0 on a type/click step → rank that step very high (screenshot divergence at or after this action)
 3. errors_observed_on_next_step present on a non-verify action step → rank that step very high (the NEXT step is a symptom)
@@ -55,7 +57,10 @@ Reasoning rules (apply in this order):
 7. missing_expected_pages matching the action >> missing_asset_requests or fail_request_count=0 on later steps
 8. Prefer EARLIER steps when two steps seem equally suspicious (root causes precede symptoms)
 9. Verify/Check/Wait/Continue steps with new_console_errors or screenshot errors are usually NOT the root cause — look at the previous action step
+   → Exception: if a verify step shows NEW application errors with no prior action step that triggered them, that verify step may be the fault
 10. Apply general knowledge: analytics, fonts, cookie-consent, CDN telemetry URLs are noise — not fault indicators
+11. Do NOT demote a step with action_changed=true or errors_observed_on_next_step below rank 5 unless another step has stronger wrong_navigation or causal evidence
+12. Respect heuristic_rank: steps ranked 1–3 by the heuristic are strong priors — only reorder them when you have clear contrary evidence (wrong_navigation, action_changed, errors_observed_on_next_step)
 
 You MUST include every step_id exactly once in your response.
 Return ONLY valid JSON, no other text:
