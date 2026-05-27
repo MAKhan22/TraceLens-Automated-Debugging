@@ -249,6 +249,7 @@ def run_trace(
                 heuristic_pixel_boosted,
                 pre_visual_ids or heuristic_order,
                 ranker.top_k,
+                text_only_ranked=heuristic_text_only,
             )
             ranking_decisions.extend(hit_notes)
             llm_ranked = ranker.add_rank_metadata(llm_ranked)
@@ -292,6 +293,7 @@ def run_trace(
                         visual_lock_blocks = hit1_lock in (
                             "visible_symptom",
                             "pixel_leader",
+                            "text_action_anchor",
                         )
                         if (
                             rc_id in step_map

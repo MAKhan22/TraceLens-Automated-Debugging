@@ -12,10 +12,14 @@ LLM re-ranking is done in llm_reasoner.py and passed back here for final output.
 """
 
 import json
+import re
 from pathlib import Path
 
 from src.llm_reasoner import slim_steps_for_llm
-from src.causal_signals import find_causal_root_step, is_observer_step
+from src.causal_signals import (
+    find_causal_root_step,
+    is_observer_step,
+)
 from src.navigation_signals import compute_navigation_signals
 from src.visual_signals import (
     scan_pixel_scores,
@@ -217,6 +221,8 @@ class Ranker:
         pixel_boost_ranked: list[dict] | None,
         pre_heuristic_ids: list[int] | None,
         top_k: int,
+        *,
+        text_only_ranked: list[dict] | None = None,
     ) -> tuple[list[dict], list[str], str | None]:
         """
         Post-LLM promotion for Hit@1 using local pixel + visual-causal (no VLM API).
@@ -232,6 +238,40 @@ class Ranker:
         step_map = {s["step_id"]: s for s in scored_steps}
         step_by_id = {s["step_id"]: s for s in llm_ranked}
         top_before = llm_ranked[0]["step_id"]
+
+        def promote(sid: int, note: str, lock: str) -> tuple[list[dict], list[str], str]:
+            nonlocal llm_ranked
+            if sid not in step_by_id:
+                return llm_ranked[:top_k], notes, lock
+            notes.append(
+                note
+                + (f" — promoted to #1 (was step {top_before})."
+                   if llm_ranked[0]["step_id"] != sid else f" (step {sid} already #1).")
+            )
+            if llm_ranked[0]["step_id"] != sid:
+                rest = [s for s in llm_ranked if s["step_id"] != sid]
+                promoted = step_map.get(sid, step_by_id[sid])
+                llm_ranked = [promoted] + rest[: top_k - 1]
+            return llm_ranked[:top_k], notes, lock
+
+        # Text-only #1 with action divergence over spurious visual-causal leader
+        if text_only_ranked:
+            text_top = text_only_ranked[0]
+            tid = text_top["step_id"]
+            if (
+                tid in step_by_id
+                and float(text_top.get("action_score") or 0) > 0
+                and float(text_top.get("visual_causal_score") or 0) == 0
+            ):
+                vc_top = llm_ranked[0]["step_id"]
+                vc_score = float(llm_ranked[0].get("visual_causal_score") or 0)
+                if vc_score > 0 and vc_top != tid:
+                    return promote(
+                        tid,
+                        f"LLM Hit@k guard: text-only #1 step {tid} (action divergence) "
+                        f"over visual-causal leader step {vc_top}",
+                        "text_action_anchor",
+                    )
 
         # 1) Visible symptom step after visual-causal root
         for step in step_map.values():
@@ -355,6 +395,11 @@ class Ranker:
         On the LLM path, pass include_visual_causal=False so screenshot
         attribution stays in LLM input + post-LLM guards (no double promote).
         """
+        strong_later = any(
+            float(s.get("combined_score") or 0) >= 0.55
+            for s in scored_steps
+            if s["step_id"] != 0
+        )
         for step in scored_steps:
             fail = step.get("fail_step") or {}
             pass_ = step.get("pass_step") or {}
@@ -365,6 +410,8 @@ class Ranker:
                 action,
             )
             if nav["wrong_navigation"]:
+                if self._is_spurious_homepage_wrong_nav(step, nav, strong_later):
+                    continue
                 return step["step_id"], "wrong_navigation"
 
         causal = find_causal_root_step(scored_steps)
@@ -379,6 +426,27 @@ class Ranker:
                 sid = min(hits, key=lambda s: s["step_id"])["step_id"]
                 return sid, "visual_causal"
         return None, None
+
+    @staticmethod
+    def _is_spurious_homepage_wrong_nav(
+        step: dict,
+        nav: dict,
+        strong_later: bool,
+    ) -> bool:
+        """Skip step-0 wrong_navigation when a later step has clearer fault signals."""
+        if step["step_id"] != 0 or not strong_later:
+            return False
+        action = (
+            (step.get("fail_step") or {}).get("action")
+            or (step.get("pass_step") or {}).get("action")
+            or step.get("action", "")
+        ).lower()
+        if not re.search(r"\b(navigate|visit|open|home|load)\b", action):
+            return False
+        missing = nav.get("missing_expected_pages") or []
+        wrong = nav.get("wrong_pages_loaded") or []
+        # Homepage telemetry drift: extra pages in fail, no action-relevant page lost
+        return bool(wrong) and not missing
 
     def collect_screenshot_paths(
         self,
