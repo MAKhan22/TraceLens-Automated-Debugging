@@ -38,6 +38,10 @@ from src.screenshot_resolver import (
 )
 from src.report_generator import ReportGenerator
 from src.evaluation import Evaluator
+from src.ranking_arbitrator import (
+    is_strong_observer_pixel_lock,
+    should_apply_deterministic_promote,
+)
 from src.visual_signals import (
     annotate_visual_causal_scores,
     summarize_screenshot_analysis,
@@ -276,11 +280,28 @@ def run_trace(
             llm_output = llm.run(diag_steps, reranked_ids)
 
             if det_root is not None:
-                final_ranked = ranker.promote_step(llm_ranked, llm_scored, det_root)
-                ranking_mode = "llm+deterministic"
-                ranking_decisions.append(
-                    f"Deterministic promote: step {det_root} ({det_reason})."
+                allow_det, det_note = should_apply_deterministic_promote(
+                    det_root,
+                    det_reason,
+                    llm_ranked,
+                    hit1_lock,
+                    llm_scored,
                 )
+                if allow_det:
+                    final_ranked = ranker.promote_step(
+                        llm_ranked, llm_scored, det_root
+                    )
+                    ranking_mode = "llm+deterministic"
+                    ranking_decisions.append(
+                        f"Deterministic promote: step {det_root} ({det_reason})."
+                    )
+                else:
+                    final_ranked = llm_ranked
+                    ranking_mode = "llm"
+                    ranking_decisions.append(
+                        f"Deterministic promote: step {det_root} ({det_reason}) "
+                        f"skipped — {det_note}."
+                    )
             else:
                 # If LLM diagnosis identifies a root cause step, promote it to #1
                 # unless a strong visual Hit@k guard already locked a different step.
@@ -290,11 +311,13 @@ def run_trace(
                         rc_id = int(rc_step)
                         step_map = {s["step_id"]: s for s in llm_scored}
                         top1_id = llm_ranked[0]["step_id"] if llm_ranked else None
+                        top1_step = step_map.get(top1_id) if top1_id is not None else None
                         visual_lock_blocks = hit1_lock in (
                             "visible_symptom",
                             "pixel_leader",
                             "text_action_anchor",
-                        )
+                            "causal_over_observer",
+                        ) or is_strong_observer_pixel_lock(hit1_lock, top1_step)
                         if (
                             rc_id in step_map
                             and visual_lock_blocks

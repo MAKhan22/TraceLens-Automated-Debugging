@@ -21,6 +21,7 @@ from src.causal_signals import (
     is_observer_step,
 )
 from src.navigation_signals import compute_navigation_signals
+from src.ranking_arbitrator import arbitrate_hit_at_k
 from src.visual_signals import (
     scan_pixel_scores,
     annotate_visual_causal_scores,
@@ -225,124 +226,18 @@ class Ranker:
         text_only_ranked: list[dict] | None = None,
     ) -> tuple[list[dict], list[str], str | None]:
         """
-        Post-LLM promotion for Hit@1 using local pixel + visual-causal (no VLM API).
-        Skips pixel-based rules when screenshots are unavailable on a step.
-
-        Returns (ranked, notes, top1_lock) where top1_lock describes why #1 was
-        set by a visual guard (used to avoid LLM diagnosis overriding pixel/symptom).
+        Post-LLM Hit@1 arbitration (shared policy with VLM — see ranking_arbitrator.py).
         """
-        notes: list[str] = []
-        if not llm_ranked:
-            return llm_ranked, notes, None
-
-        step_map = {s["step_id"]: s for s in scored_steps}
-        step_by_id = {s["step_id"]: s for s in llm_ranked}
-        top_before = llm_ranked[0]["step_id"]
-
-        def promote(sid: int, note: str, lock: str) -> tuple[list[dict], list[str], str]:
-            nonlocal llm_ranked
-            if sid not in step_by_id:
-                return llm_ranked[:top_k], notes, lock
-            notes.append(
-                note
-                + (f" — promoted to #1 (was step {top_before})."
-                   if llm_ranked[0]["step_id"] != sid else f" (step {sid} already #1).")
-            )
-            if llm_ranked[0]["step_id"] != sid:
-                rest = [s for s in llm_ranked if s["step_id"] != sid]
-                promoted = step_map.get(sid, step_by_id[sid])
-                llm_ranked = [promoted] + rest[: top_k - 1]
-            return llm_ranked[:top_k], notes, lock
-
-        # Text-only #1 with action divergence over spurious visual-causal leader
-        if text_only_ranked:
-            text_top = text_only_ranked[0]
-            tid = text_top["step_id"]
-            if (
-                tid in step_by_id
-                and float(text_top.get("action_score") or 0) > 0
-                and float(text_top.get("visual_causal_score") or 0) == 0
-            ):
-                vc_top = llm_ranked[0]["step_id"]
-                vc_score = float(llm_ranked[0].get("visual_causal_score") or 0)
-                if vc_score > 0 and vc_top != tid:
-                    return promote(
-                        tid,
-                        f"LLM Hit@k guard: text-only #1 step {tid} (action divergence) "
-                        f"over visual-causal leader step {vc_top}",
-                        "text_action_anchor",
-                    )
-
-        # 1) Visible symptom step after visual-causal root
-        for step in step_map.values():
-            nxt = step.get("visual_causal_next_step")
-            if nxt is None or nxt not in step_by_id:
-                continue
-            nxt_step = step_map.get(nxt, {})
-            if nxt_step.get("screenshots_available") is False:
-                continue
-            px_n = best_pixel_signal(nxt_step)
-            if px_n >= 0.35:
-                notes.append(
-                    f"LLM Hit@k guard: visible symptom step {nxt} after visual-causal root "
-                    f"{step['step_id']} (pixel={px_n:.2f}, no VLM)"
-                    + (f" — promoted to #1 (was step {top_before})."
-                       if llm_ranked[0]["step_id"] != nxt else " (already #1).")
-                )
-                if llm_ranked[0]["step_id"] != nxt:
-                    rest = [s for s in llm_ranked if s["step_id"] != nxt]
-                    promoted = step_map.get(nxt, step_by_id[nxt])
-                    llm_ranked = [promoted] + rest[: top_k - 1]
-                return llm_ranked[:top_k], notes, "visible_symptom"
-
-        # 2) Pixel leader or visual-causal root with strong pixel
-        px_source = pixel_boost_ranked or []
-        if not px_source:
-            leader = max(scored_steps, key=best_pixel_signal, default=None)
-            if leader and best_pixel_signal(leader) >= 0.65:
-                px_source = [leader]
-        if px_source:
-            px1 = px_source[0]
-            sid = px1["step_id"]
-            step = step_map.get(sid, px1)
-            if step.get("screenshots_available") is not False and sid in step_by_id:
-                px = best_pixel_signal(step)
-                vc = float(step.get("visual_causal_score") or 0)
-                if px >= 0.65 or vc > 0:
-                    notes.append(
-                        f"LLM Hit@k guard: pixel/visual-causal leader step {sid} "
-                        f"(pixel={px:.2f}, visual_causal={vc:.2f})"
-                        + (f" — promoted to #1 (was step {top_before})."
-                           if llm_ranked[0]["step_id"] != sid else f" (step {sid} already #1).")
-                    )
-                    if llm_ranked[0]["step_id"] != sid:
-                        rest = [s for s in llm_ranked if s["step_id"] != sid]
-                        promoted = step_map.get(sid, step_by_id[sid])
-                        llm_ranked = [promoted] + rest[: top_k - 1]
-                    lock = "pixel_leader" if px >= 0.65 else "visual_causal_leader"
-                    return llm_ranked[:top_k], notes, lock
-
-        # 3) Pre-heuristic visual-causal #1
-        if pre_heuristic_ids:
-            for sid in pre_heuristic_ids:
-                step = step_map.get(sid)
-                if not step:
-                    continue
-                vc = float(step.get("visual_causal_score") or 0)
-                if vc > 0 and sid in step_by_id:
-                    notes.append(
-                        f"LLM Hit@k guard: visual-causal heuristic #1 step {sid} "
-                        f"(visual_causal={vc:.2f})"
-                        + (f" — promoted to #1 (was step {top_before})."
-                           if llm_ranked[0]["step_id"] != sid else f" (step {sid} already #1).")
-                    )
-                    if llm_ranked[0]["step_id"] != sid:
-                        rest = [s for s in llm_ranked if s["step_id"] != sid]
-                        promoted = step_map.get(sid, step_by_id[sid])
-                        llm_ranked = [promoted] + rest[: top_k - 1]
-                    return llm_ranked[:top_k], notes, "visual_causal_heuristic"
-
-        return llm_ranked[:top_k], notes, None
+        result = arbitrate_hit_at_k(
+            llm_ranked,
+            scored_steps,
+            top_k,
+            pixel_boost_ranked=pixel_boost_ranked,
+            text_only_ranked=text_only_ranked,
+            pre_heuristic_ids=pre_heuristic_ids,
+            path_label="LLM Hit@k guard",
+        )
+        return result.ranked, result.notes, result.lock_reason
 
     def diagnosis_candidates(self, llm_ranked: list[dict],
                              scored_steps: list[dict]) -> list[dict]:
@@ -520,11 +415,13 @@ class Ranker:
                 seen.add(sid)
 
         if text_only_ranked:
-            for row in text_only_ranked[:2]:
+            for row in text_only_ranked[:3]:
                 add(row["step_id"])
         add(find_causal_root_step(scored_steps))
         for step in scored_steps:
             if float(step.get("action_score") or 0) > 0:
+                add(step["step_id"])
+            if float(step.get("console_score") or 0) >= 0.5:
                 add(step["step_id"])
         return out
 

@@ -27,11 +27,8 @@ from pathlib import Path
 
 from openai import OpenAI
 
-from src.causal_signals import (
-    errors_on_next_observer_step,
-    find_causal_root_step,
-    is_observer_step,
-)
+from src.causal_signals import find_causal_root_step
+from src.ranking_arbitrator import arbitrate_hit_at_k
 from src.visual_signals import best_pixel_signal
 
 
@@ -451,155 +448,24 @@ class VlmReasoner:
         step_map: dict[int, dict] | None = None,
         text_only_ranked: list[dict] | None = None,
     ) -> tuple[list[dict], list[str]]:
-        """
-        Promote steps with strong multi-signal agreement to #1 (Hit@1 focus).
-        Returns (updated ranking, human-readable rule explanations).
-        """
-        notes: list[str] = []
+        """Hit@1 arbitration (shared policy — see ranking_arbitrator.py)."""
         if not final or not scored:
-            return final, notes
-
-        step_by_id = {step["step_id"]: step for _, _, step in scored}
-        full_map = step_map or step_by_id
-        top_before = final[0]["step_id"] if final else None
-        scored_list = list(full_map.values())
-
-        def promote(sid: int, note: str) -> tuple[list[dict], list[str]]:
-            nonlocal final
-            if sid not in step_by_id:
-                return final, notes
-            notes.append(
-                note
-                + (f" — promoted to #1 (was step {top_before})."
-                   if final[0]["step_id"] != sid else f" (step {sid} already #1).")
-            )
-            if final[0]["step_id"] != sid:
-                rest = [s for s in final if s["step_id"] != sid]
-                final = [step_by_id[sid]] + rest[: top_k - 1]
-            return final[:top_k], notes
-
-        # 0) Causal action step when pixel-boost #1 is the verify/wait symptom step
-        if pixel_boost_ranked:
-            px_sid = pixel_boost_ranked[0]["step_id"]
-            px_step = full_map.get(px_sid, pixel_boost_ranked[0])
-            px_fail = px_step.get("fail_step") or {}
-            px_action = px_fail.get("action") or px_step.get("action", "")
-            px_type = px_fail.get("action_type") or ""
-            if is_observer_step(px_action, px_type):
-                causal_id = find_causal_root_step(scored_list)
-                if causal_id is not None and causal_id in step_by_id:
-                    by_id = {s["step_id"]: s for s in scored_list}
-                    causal = by_id[causal_id]
-                    nxt = by_id.get(causal_id + 1)
-                    obs = errors_on_next_observer_step(causal, nxt)
-                    if obs and obs["next_step_id"] == px_sid:
-                        return promote(
-                            causal_id,
-                            f"Hit@k guard: causal action step {causal_id} over "
-                            f"observer pixel leader step {px_sid}",
-                        )
-
-        # 0b) Text-only #1 with action divergence when visual-causal demoted it
-        if text_only_ranked:
-            text_top = text_only_ranked[0]
-            tid = text_top["step_id"]
-            cur = final[0]
-            if (
-                tid in step_by_id
-                and tid != cur["step_id"]
-                and float(text_top.get("action_score") or 0) > 0
-                and float(cur.get("visual_causal_score") or 0) > 0
-                and float(text_top.get("visual_causal_score") or 0) == 0
-            ):
-                return promote(
-                    tid,
-                    f"Hit@k guard: text-only #1 step {tid} (action divergence) "
-                    f"over visual-causal leader step {cur['step_id']}",
-                )
-
-        # 1) Visible symptom step when VLM sees the break there (GT often labels this step)
-        for step in full_map.values():
-            nxt = step.get("visual_causal_next_step")
-            if nxt is None:
-                continue
-            vis = float(visual_map.get(nxt, 0))
-            px_n = self._pixel_signal(full_map.get(nxt, {}))
-            if vis >= 0.5 and px_n >= 0.35 and nxt in step_by_id:
-                notes.append(
-                    f"Hit@k guard: visible symptom step {nxt} after visual-causal root "
-                    f"{step['step_id']} (vlm={vis:.2f}, pixel={px_n:.2f})"
-                    + (f" — promoted to #1 (was step {top_before})."
-                       if final[0]["step_id"] != nxt else " (already #1).")
-                )
-                if final[0]["step_id"] != nxt:
-                    rest = [s for s in final if s["step_id"] != nxt]
-                    final = [step_by_id[nxt]] + rest[: top_k - 1]
-                return final, notes
-
-        # 2) Pixel-boost leader + VLM agree (strong global pixel OR visual-causal on same step)
-        if pixel_boost_ranked:
-            px1 = pixel_boost_ranked[0]
-            sid = px1["step_id"]
-            step = full_map.get(sid, px1)
-            px = self._pixel_signal(step)
-            vis = float(visual_map.get(sid, 0))
-            vc = float(step.get("visual_causal_score") or 0)
-            if vis >= 0.5 and sid in step_by_id and (px >= 0.65 or vc > 0):
-                notes.append(
-                    f"Hit@k guard: pixel-boost #1 + VLM confirm "
-                    f"(pixel={px:.2f}, visual_causal={vc:.2f}, vlm={vis:.2f})"
-                    + (f" — promoted step {sid} to #1 (was step {top_before})."
-                       if final[0]["step_id"] != sid else f" (step {sid} already #1).")
-                )
-                if final[0]["step_id"] != sid:
-                    rest = [s for s in final if s["step_id"] != sid]
-                    final = [step_by_id[sid]] + rest[: top_k - 1]
-                return final, notes
-
-        # 3) Pre-VLM #1 with visual-causal + VLM (when no visible symptom promotion applied)
-        if pre_vlm_ranked:
-            sid = pre_vlm_ranked[0]["step_id"]
-            step = full_map.get(sid, pre_vlm_ranked[0])
-            vis = float(visual_map.get(sid, 0))
-            vc = float(step.get("visual_causal_score") or 0)
-            if vis >= 0.5 and vc > 0 and sid in step_by_id:
-                notes.append(
-                    f"Hit@k guard: pre-VLM visual-causal #1 + VLM confirm "
-                    f"(visual_causal={vc:.2f}, vlm={vis:.2f})"
-                    + (f" — promoted step {sid} to #1 (was step {top_before})."
-                       if final[0]["step_id"] != sid else f" (step {sid} already #1).")
-                )
-                if final[0]["step_id"] != sid:
-                    rest = [s for s in final if s["step_id"] != sid]
-                    final = [step_by_id[sid]] + rest[: top_k - 1]
-                return final, notes
-
-        # 4) Raw VLM root only when not downstream of an unattributed causal root
-        vlm_rc = vlm_output.get("visual_root_cause_step_id")
-        if vlm_rc is not None and vlm_rc in step_by_id:
-            vis = float(visual_map.get(vlm_rc, 0))
-            causal_roots = [
-                s["step_id"] for s in full_map.values()
-                if float(s.get("visual_causal_score") or 0) > 0
-            ]
-            is_downstream = any(vlm_rc > r for r in causal_roots)
-            if vis >= 0.65 and not is_downstream:
-                notes.append(
-                    f"Hit@k guard: VLM visual root step {vlm_rc} (vlm={vis:.2f})"
-                    + (f" — promoted to #1 (was step {top_before})."
-                       if final[0]["step_id"] != vlm_rc else " (already #1).")
-                )
-                if final[0]["step_id"] != vlm_rc:
-                    rest = [s for s in final if s["step_id"] != vlm_rc]
-                    final = [step_by_id[vlm_rc]] + rest[: top_k - 1]
-                return final, notes
-            if is_downstream and vis >= 0.65:
-                notes.append(
-                    f"Hit@k guard: skipped VLM root step {vlm_rc} — downstream of "
-                    f"visual-causal root(s) {causal_roots}."
-                )
-
-        return final, notes
+            return final, []
+        full_map = step_map or {step["step_id"]: step for _, _, step in scored}
+        scored_steps = list(full_map.values())
+        result = arbitrate_hit_at_k(
+            final,
+            scored_steps,
+            top_k,
+            pixel_boost_ranked=pixel_boost_ranked,
+            text_only_ranked=text_only_ranked,
+            pre_vlm_ranked=pre_vlm_ranked,
+            visual_map=visual_map,
+            vlm_output=vlm_output,
+            path_label="Hit@k guard",
+            vlm_path=True,
+        )
+        return result.ranked, result.notes
 
     def _guard_pre_vlm_anchor(
         self,
