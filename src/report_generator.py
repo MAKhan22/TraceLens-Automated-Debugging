@@ -140,6 +140,38 @@ class ReportGenerator:
             lines.append(f"  #{rank}  Step {sid}: {act}{flags}  ({score_str}){marker}")
         return lines
 
+    def _format_fusion_list(
+        self,
+        steps: list[dict],
+        label: str,
+        actual_fault: int | None = None,
+    ) -> list[str]:
+        """V2 final ranking table with fusion_score and active channels."""
+        lines = [label, "-" * 40]
+        for s in steps:
+            rank = s.get("rank", "?")
+            sid = s.get("step_id", "?")
+            act = s.get("action", "")[:70]
+            flags = self._step_flags(s)
+            marker = (
+                " ← ACTUAL FAULT"
+                if (actual_fault is not None and sid == actual_fault)
+                else ""
+            )
+            fs = float(s.get("fusion_score") or s.get("rank_score") or 0)
+            ch = s.get("fusion_channels") or {}
+            active = [
+                f"{k}={float(v):.2f}"
+                for k, v in sorted(ch.items())
+                if v is not None and float(v) > 0
+            ]
+            ch_str = ", ".join(active) if active else "n/a"
+            lines.append(
+                f"  #{rank}  Step {sid}: {act}{flags}  "
+                f"(fusion={fs:.3f}; {ch_str}){marker}"
+            )
+        return lines
+
     def _format_screenshot_analysis(self, analysis: dict | None) -> list[str]:
         if not analysis:
             return []
@@ -178,15 +210,17 @@ class ReportGenerator:
                      metadata=None) -> str:
         actual = eval_result.get("actual_fault_step") if eval_result else None
         meta = metadata or {}
+        is_v2 = meta.get("pipeline_version") == "v2"
         vlm_status = meta.get("vlm_status", "not_run")
         vlm_error = meta.get("vlm_error")
         vlm_error_code = meta.get("vlm_error_code")
         ranking_fallback = meta.get("ranking_fallback")
         exclude_from_aggregate = meta.get("exclude_from_aggregate", False)
 
+        title = "TraceLens v2 Diagnosis Report" if is_v2 else "TraceLens Diagnosis Report"
         lines = [
             "=" * 62,
-            f"TraceLens Diagnosis Report: {trace_id}",
+            f"{title}: {trace_id}",
             f"Ranking mode: {ranking_mode}",
             "=" * 62,
             "",
@@ -263,24 +297,41 @@ class ReportGenerator:
                 show_pixel=used_pixel_boost,
             )
 
-        # 2. LLM top 5 (when LLM ran)
+        # 2. LLM rerank table (when LLM ran)
         if llm_ranked:
             llm_layers = ["text"]
             if ran_screenshot_scan:
                 if has_visual_causal:
                     llm_layers.append("visual causal")
                 llm_layers.append("pixel")
+            llm_title = (
+                "LLM RERANK TOP 5 (prior for fusion — not final rank)"
+                if is_v2
+                else "LLM TOP 5"
+            )
             lines += [""]
             lines += self._format_ranked_list(
                 llm_ranked,
-                self._layers_label("LLM TOP 5", llm_layers),
+                self._layers_label(llm_title, llm_layers),
                 actual,
                 show_visual_causal=has_visual_causal and ran_screenshot_scan,
                 show_pixel=ran_screenshot_scan,
             )
 
-        # 3. VLM top 5 (when --vlm ran; final ensemble ranking)
-        if ran_vlm:
+        # 3. Final ranking table
+        if is_v2:
+            fusion_parts = ["text", "navigation", "causal", "symptom", "pixel", "visual causal"]
+            if llm_ranked:
+                fusion_parts.append("llm_prior")
+            if ran_vlm:
+                fusion_parts.append("vlm_prior")
+            lines += [""]
+            lines += self._format_fusion_list(
+                ranked,
+                self._layers_label("FUSION TOP 5 (final rank)", fusion_parts),
+                actual,
+            )
+        elif ran_vlm:
             vlm_layers = ["text", "pixel", "visual causal", "VLM"]
             if not vlm_only:
                 vlm_layers = ["text", "pixel", "visual causal", "VLM", "LLM rank prior"]
@@ -295,9 +346,9 @@ class ReportGenerator:
                 show_pixel=ran_screenshot_scan,
             )
         elif not llm_ranked and not used_pixel_boost:
-            pass  # heuristic-only, single table already shown
+            pass  # heuristic-only v1: single table already shown
         elif llm_ranked:
-            pass  # LLM-only: final == llm_ranked, already shown
+            pass  # LLM-only v1: final == llm_ranked, already shown
         elif vlm_status == "failed":
             fallback_label = (
                 f"FINAL RANKING ({ranking_fallback or ranking_mode} fallback — VLM failed)"
@@ -316,13 +367,22 @@ class ReportGenerator:
 
         ranking_decisions = (metadata or {}).get("ranking_decisions") if metadata else None
         if ranking_decisions:
+            decisions_title = (
+                "FUSION DECISIONS (channels and weights)"
+                if is_v2
+                else "RANKING DECISIONS (rules applied)"
+            )
             lines += [
                 "",
-                "RANKING DECISIONS (rules applied)",
+                decisions_title,
                 "-" * 40,
             ]
             for note in ranking_decisions:
                 lines.append(f"  • {note}")
+            if is_v2 and meta.get("fusion_weights"):
+                fw = meta["fusion_weights"]
+                w_str = ", ".join(f"{k}={v}" for k, v in sorted(fw.items()))
+                lines.append(f"  • Fusion weights: {w_str}")
 
         lines += [
             "",

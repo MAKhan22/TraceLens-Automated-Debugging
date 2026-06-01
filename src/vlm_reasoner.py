@@ -27,7 +27,6 @@ from pathlib import Path
 
 from openai import OpenAI
 
-from src.causal_signals import find_causal_root_step
 from src.ranking_arbitrator import arbitrate_hit_at_k
 from src.visual_signals import best_pixel_signal
 
@@ -607,9 +606,11 @@ class VlmReasoner:
 
         scored.sort(key=sort_key)
         final = [step for _, _, step in scored[:top_k]]
-        final = self._guard_pre_vlm_anchor(
-            final, scored, pre_ranked, visual_map, top_k
-        )
+        is_hybrid = llm_ranked is not None and vlm_weight < 1.0
+        if not is_hybrid:
+            final = self._guard_pre_vlm_anchor(
+                final, scored, pre_ranked, visual_map, top_k
+            )
         final, hit_notes = self._guard_hit_at_k(
             final, scored, visual_map, vlm_output or {}, top_k,
             pre_vlm_ranked=pre_ranked,

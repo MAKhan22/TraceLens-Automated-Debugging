@@ -20,6 +20,9 @@ skipped so the visible fault step can stay #1 (github/youtube-style).
 
 Causal-over-observer still runs at strong pixel when text-only #1 is the same
 interactive action step as find_causal_root_step (hackernews/npm-style).
+
+Hybrid (`llm+vlm`) uses the same post-blend `arbitrate_hit_at_k` pass as VLM-only
+(`vlm_path=True`), after the weighted visual + LLM-rank blend.
 """
 
 from __future__ import annotations
