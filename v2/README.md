@@ -68,6 +68,13 @@ main2.py         # convenience entry point
 
 Reuses v1 infrastructure: parsers, detector, LLM/VLM API clients, reports, evaluation.
 
+Shared signal improvements (both v1 and v2):
+
+- **Placeholder network noise** — `example.com` distractor URLs filtered in heuristic scoring (`src/anomaly_detector.py` + `src/causal_signals.py`).
+- **Consecutive-click visual attribution** — TOC-style faults stay on the diverging click; type→click chains still walk back (`src/visual_signals.py`).
+
+Tests: `tests/test_visual_and_noise.py`.
+
 Reports include **TECHNICAL ROOT CAUSE** (LLM `diagnose`) and **PLAIN LANGUAGE SUMMARY** (LLM `stakeholder_summary`). Both require `--llm`.
 
 ## Tuning
@@ -86,6 +93,8 @@ v2:
 Metrics land in `outputs/v2/metrics/runs/v2_*_run_<timestamp>.json`.
 
 LLM calls use OpenRouter **prompt caching** when `model.prompt_cache: true` in root `config.yaml`.
+
+**Reproducibility:** `model.temperature` and `vlm.temperature` are **`0.0`** in root `config.yaml` (greedy sampling). Rerank order is still not guaranteed on OpenRouter free-tier if the backend endpoint changes between runs.
 
 ## Observed results (representative runs)
 

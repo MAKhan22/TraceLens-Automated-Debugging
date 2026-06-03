@@ -147,6 +147,8 @@ Compares the network requests made during the pass step vs the fail step.
 
 The final `network_score` is the **max** of all individual anomaly scores for that step (worst-case signal wins).
 
+Before scoring, network logs are filtered through `is_noise_network()` (`src/causal_signals.py`). Ad, telemetry, CDN, and **placeholder distractor URLs** (e.g. `https://example.com/...` synthetic errors in `efe_irem/wikipedia`) are excluded from heuristic scoring. The same filter applies when building compact LLM payloads (`new_network_errors` vs shared noise). Legitimate application domains are unaffected.
+
 ### 4.2 Console Score
 
 Identifies new console log entries in the fail step that were absent in the pass step.
@@ -212,7 +214,20 @@ Weights can be overridden in `config.yaml`.
 
 > **Important**: Scores drive **heuristic ranking** (stage 4). The LLM reranker does not receive raw numeric scores in compact mode — it sees action text, filtered network/console diffs, causal flags, `heuristic_rank`, and `page_load_noise_only`. An **anchor guard** after reranking prevents strong heuristic top-5 steps from being demoted without cause.
 
----
+### 4.6 Visual causal attribution (`src/visual_signals.py`)
+
+When `--llm` or `--vlm` is enabled, a local screenshot scan finds the first **persistent** pass/fail pixel divergence and maps it to a root-cause action step (no API call). Each attributed step gets `visual_causal_score`, `visual_divergence_step`, and `visual_causal_reason`.
+
+| Reason | When | Fault attributed to |
+|--------|------|---------------------|
+| `earliest_localized_divergence` | Divergence on a silent type/keyboard step | That step |
+| `symptom_on_next_step` | Visible break one step after a silent action (type→click, etc.) | Prior action step |
+| `symptom_on_verify_step` | Divergence on verify/wait after an action | Prior action step |
+| `earliest_divergence` | Otherwise (including consecutive clicks) | The diverging step |
+
+**Consecutive-click rule**: When both the prior step and the divergence step are **clicks**, walk-back is skipped — the fault stays on the diverging click (e.g. broken TOC anchor on step 13 in `efe_irem/wikipedia`). **Type→click** chains still walk back (e.g. invalid search input on step 21, visible break on search click in `ersel/opencart_purchase_40`).
+
+This logic is shared by v1 guards and v2 fusion (`visual_causal` channel). See [`docs/MODES.md`](docs/MODES.md) for how visual causal relates to pixel boost and VLM.
 
 ## 5. LLM Re-ranking & Diagnosis
 
@@ -250,7 +265,7 @@ Because the re-ranking call and the diagnosis call are independent, they can dis
 
 | Safeguard | Purpose |
 |-----------|---------|
-| **Telemetry noise filter** | Strips ad/iframe/manifest/WebSocket/console noise before scoring and before sending to the LLM |
+| **Telemetry noise filter** | Strips ad/iframe/manifest/WebSocket/console noise before scoring and before sending to the LLM; heuristic network scoring also drops placeholder domains (`example.com`, etc.) |
 | **`page_load_noise_only`** | Flags step 0 homepage loads with only third-party churn; errors stripped from compact payload |
 | **`heuristic_rank` in rerank prompt** | LLM sees where the automated ranker placed each step |
 | **Local screenshot scan (`--llm`)** | Full-trace pixel diff + visual-causal attribution (same local pipeline as `--vlm`, no VLM API) |
@@ -396,6 +411,7 @@ Three data formats are supported, sourced from three prior projects provided by 
 | Auth-gated action | `areeb_salem/amazon` |
 | Invalid search input | `ersel/opencart_purchase_40` |
 | Screenshot-only faults | `areeb_salem/bbc` (stale CDN cache) |
+| Broken anchor / TOC (text-invisible) | `efe_irem/wikipedia` (step 13; consecutive-click visual attribution) |
 
 ---
 
@@ -412,6 +428,8 @@ TraceLens-Automated-Debugging/
 │   ├── trace_parser.py          # Raw → unified step schema
 │   ├── trace_aligner.py         # Align pass/fail steps
 │   ├── anomaly_detector.py      # Per-step scoring (4 signals)
+│   ├── causal_signals.py        # Causal chains, console/network noise filters
+│   ├── visual_signals.py        # Visual causal attribution + VLM inject
 │   ├── ranker.py                # Heuristic ranking + LLM re-ranking apply
 │   ├── ranking_arbitrator.py    # Shared Hit@1 guard + deterministic/diagnosis gates
 │   ├── llm_reasoner.py          # LLM API calls (re-rank, diagnose, summarise)
@@ -513,7 +531,7 @@ model:
   base_url:    "https://openrouter.ai/api/v1"   # provider endpoint
   llm_model:   "openai/gpt-oss-120b:free"       # model ID
   api_key_env: "OPENROUTER_API_KEY"             # env var name to read from .env
-  temperature: 0.1
+  temperature: 0.0                             # greedy sampling for reproducible rerank/diagnosis JSON
   prompt_cache: true                             # OpenRouter static prompt caching (see §5)
 
 vlm:                              # only used with --vlm flag
