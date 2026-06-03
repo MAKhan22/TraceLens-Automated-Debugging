@@ -235,7 +235,7 @@ def run_trace(
             )
             rerank_pool = ranker.candidates_for_llm(llm_scored)
             reranked_ids = llm.rerank(
-                rerank_pool, heuristic_order=heuristic_order
+                rerank_pool, heuristic_order=heuristic_order, session_id=trace_id
             )
             slim_for_guard = slim_steps_for_llm(
                 llm_scored, compact=True, heuristic_order=heuristic_order
@@ -277,7 +277,7 @@ def run_trace(
 
             print(f"  Running LLM diagnosis...")
             diag_steps = ranker.diagnosis_candidates(llm_ranked, llm_scored)
-            llm_output = llm.run(diag_steps, reranked_ids)
+            llm_output = llm.run(diag_steps, reranked_ids, session_id=trace_id)
 
             if det_root is not None:
                 allow_det, det_note = should_apply_deterministic_promote(
@@ -586,8 +586,10 @@ def main():
             model=cfg["model"]["llm_model"],
             temperature=cfg["model"]["temperature"],
             base_url=cfg["model"]["base_url"],
+            enable_prompt_cache=cfg["model"].get("prompt_cache", True),
         )
-        print(f"LLM enabled: {llm.model}")
+        cache_note = "prompt cache on" if llm.enable_prompt_cache else "prompt cache off"
+        print(f"LLM enabled: {llm.model} ({cache_note})")
 
     vlm = None
     resolver = ScreenshotResolver(raw_base=raw_base)

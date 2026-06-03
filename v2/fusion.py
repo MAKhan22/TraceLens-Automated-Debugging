@@ -88,7 +88,8 @@ def vlm_prior_from_output(vlm_output: dict) -> dict[int, float]:
     for entry in vlm_output.get("visual_scores") or []:
         try:
             sid = int(entry.get("step_id"))
-            out[sid] = float(entry.get("score") or 0)
+            raw = entry.get("visual_score", entry.get("score"))
+            out[sid] = float(raw or 0)
         except (TypeError, ValueError):
             continue
     return out

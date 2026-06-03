@@ -124,6 +124,17 @@ def build_step_channels(
     elif px >= 0.65 or vlm >= 0.5:
         ch.observer_symptom = max(px, vlm * 0.7) * 0.5
 
+    for other in step_map.values():
+        if (
+            other.get("visual_causal_reason") == "symptom_on_next_step"
+            and other.get("visual_causal_next_step") == sid
+        ):
+            ch.observer_symptom = max(ch.observer_symptom, px, vlm, 0.75)
+            if vlm >= 0.5 or px >= 0.35:
+                ch.observer_symptom = max(ch.observer_symptom, 0.85)
+            ch.notes.append("visual_symptom_step")
+            break
+
     slim = slim_steps_for_llm([step], compact=True)
     if slim and slim[0].get("action_changed"):
         ch.causal_action = max(ch.causal_action, 0.7)

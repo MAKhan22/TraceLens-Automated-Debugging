@@ -47,6 +47,8 @@ model:
   llm_model:   "nvidia/nemotron-3-super-120b-a12b:free"
   api_key_env: "OPENROUTER_API_KEY"
   temperature: 0.1
+  # OpenRouter: cache static prompt files; per-trace session_id improves sticky routing
+  prompt_cache: true
 
   # --- OpenRouter: Qwen3 Coder (1M ctx — Venice backend, congested) ---
   # llm_model:   "qwen/qwen3-coder:free"

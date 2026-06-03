@@ -121,8 +121,10 @@ def main() -> None:
             model=cfg["model"]["llm_model"],
             temperature=cfg["model"]["temperature"],
             base_url=cfg["model"]["base_url"],
+            enable_prompt_cache=cfg["model"].get("prompt_cache", True),
         )
-        print(f"LLM enabled: {llm.model}")
+        cache_note = "prompt cache on" if llm.enable_prompt_cache else "prompt cache off"
+        print(f"LLM enabled: {llm.model} ({cache_note})")
 
     vlm = None
     resolver = ScreenshotResolver(raw_base=raw_base)

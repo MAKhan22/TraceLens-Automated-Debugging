@@ -79,6 +79,8 @@ def _ranking_pool(
             add(s["step_id"])
         if float(s.get("visual_causal_score") or 0) > 0:
             add(s["step_id"])
+            if s.get("visual_causal_reason") == "symptom_on_next_step":
+                add(s.get("visual_causal_next_step"))
         if best_pixel_signal(s) >= 0.65:
             add(s["step_id"])
     return [by_id[sid] for sid in ids]
@@ -218,7 +220,9 @@ def run_trace_v2(
                 for s in sorted(llm_scored, key=lambda x: x["combined_score"], reverse=True)
             ]
             pool = ranker.candidates_for_llm(llm_scored)
-            reranked_ids = llm.rerank(pool, heuristic_order=heuristic_order)
+            reranked_ids = llm.rerank(
+                pool, heuristic_order=heuristic_order, session_id=trace_id
+            )
             llm_prior = llm_prior_from_order(reranked_ids)
             ranking_decisions.append(
                 "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards)."
@@ -333,7 +337,11 @@ def run_trace_v2(
         try:
             print("  Running LLM diagnosis (read-only, does not change rank)...")
             diag_steps = final_ranked[: ranker.top_k]
-            llm_output = llm.run(diag_steps, reranked_ids or [s["step_id"] for s in diag_steps])
+            llm_output = llm.run(
+                diag_steps,
+                reranked_ids or [s["step_id"] for s in diag_steps],
+                session_id=trace_id,
+            )
             ranking_decisions.append(
                 "LLM diagnosis is explanatory only — ranking frozen after fusion."
             )

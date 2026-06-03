@@ -37,9 +37,23 @@ from src.causal_signals import (
 
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
+CACHE_CONTROL_EPHEMERAL = {"type": "ephemeral"}
+
 
 def _load_prompt(filename: str) -> str:
     return (PROMPTS_DIR / filename).read_text(encoding="utf-8")
+
+
+def _openrouter_base(base_url: str) -> bool:
+    return "openrouter.ai" in (base_url or "")
+
+
+def _split_prompt_template(template: str, placeholder: str) -> tuple[str, str]:
+    """Static instruction body (cacheable) and dynamic fill for placeholder."""
+    idx = template.find(placeholder)
+    if idx < 0:
+        return template, ""
+    return template[:idx] + template[idx + len(placeholder) :], placeholder
 
 
 def _slim_step_for_llm(step: dict) -> dict:
@@ -273,8 +287,14 @@ def slim_steps_for_llm(
 
 
 class LlmReasoner:
-    def __init__(self, api_key: str | None = None, model: str = "meta-llama/llama-3.3-70b-instruct:free",
-                 temperature: float = 0.1, base_url: str = "https://openrouter.ai/api/v1"):
+    def __init__(
+        self,
+        api_key: str | None = None,
+        model: str = "meta-llama/llama-3.3-70b-instruct:free",
+        temperature: float = 0.1,
+        base_url: str = "https://openrouter.ai/api/v1",
+        enable_prompt_cache: bool | None = None,
+    ):
         key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
         # OpenRouter requires HTTP-Referer + X-Title; other providers ignore unknown headers
         self.client = OpenAI(
@@ -287,21 +307,74 @@ class LlmReasoner:
         )
         self.model = model
         self.temperature = temperature
+        self.base_url = base_url
+        if enable_prompt_cache is None:
+            enable_prompt_cache = _openrouter_base(base_url)
+        self.enable_prompt_cache = enable_prompt_cache
 
-    def _call(self, prompt: str) -> str:
+    def _build_messages(
+        self,
+        template: str,
+        placeholder: str,
+        dynamic: str,
+    ) -> list[dict]:
+        static, _ = _split_prompt_template(template, placeholder)
+        if self.enable_prompt_cache and dynamic.strip():
+            content: list[dict] = [
+                {
+                    "type": "text",
+                    "text": static,
+                    "cache_control": CACHE_CONTROL_EPHEMERAL,
+                },
+                {"type": "text", "text": dynamic},
+            ]
+        else:
+            content = static + dynamic
+        return [{"role": "user", "content": content}]
+
+    def _log_cache_usage(self, response) -> None:
+        usage = getattr(response, "usage", None)
+        if not usage:
+            return
+        details = getattr(usage, "prompt_tokens_details", None)
+        if not details:
+            return
+        cached = getattr(details, "cached_tokens", None)
+        if cached is None and isinstance(details, dict):
+            cached = details.get("cached_tokens")
+        if cached:
+            print(f"  [prompt cache] {cached} cached prompt tokens")
+
+    def _call(
+        self,
+        template: str,
+        placeholder: str,
+        dynamic: str,
+        *,
+        session_id: str | None = None,
+    ) -> str:
         """Call LLM; retry indefinitely on 429/empty-response, give up on other errors."""
+        messages = self._build_messages(template, placeholder, dynamic)
+        extra_body: dict = {}
+        if session_id:
+            extra_body["session_id"] = session_id[:256]
+
         attempt = 0
         while True:
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=self.temperature,
-                )
+                kwargs: dict = {
+                    "model": self.model,
+                    "messages": messages,
+                    "temperature": self.temperature,
+                }
+                if extra_body:
+                    kwargs["extra_body"] = extra_body
+                response = self.client.chat.completions.create(**kwargs)
                 choices = response.choices if response else None
                 if not choices or choices[0].message.content is None:
                     # Provider returned 200 but empty body — treat like a soft rate limit
                     raise ValueError("empty-response")
+                self._log_cache_usage(response)
                 return choices[0].message.content.strip()
             except Exception as e:
                 err = str(e)
@@ -337,6 +410,7 @@ class LlmReasoner:
         candidates: list[dict],
         *,
         heuristic_order: list[int] | None = None,
+        session_id: str | None = None,
     ) -> list[int]:
         """
         Ask LLM to re-rank heuristic candidates.
@@ -347,16 +421,20 @@ class LlmReasoner:
             candidates, compact=True, heuristic_order=heuristic_order
         )
         prompt_template = _load_prompt("rerank_steps.txt")
-        prompt = prompt_template.replace("{steps_json}", json.dumps(slim, separators=(",", ":")))
+        dynamic = json.dumps(slim, separators=(",", ":"))
 
-        raw = self._call(prompt)
+        raw = self._call(
+            prompt_template, "{steps_json}", dynamic, session_id=session_id
+        )
         parsed = self._extract_json(raw)
 
         if not parsed:
             # Truncated/malformed JSON on long traces — retry once with compact payload
             print("  [json parse] malformed rerank response, retrying...")
             time.sleep(2)
-            raw = self._call(prompt)
+            raw = self._call(
+                prompt_template, "{steps_json}", dynamic, session_id=session_id
+            )
             parsed = self._extract_json(raw)
 
         if isinstance(parsed, dict) and "ranked_step_ids" in parsed:
@@ -369,7 +447,9 @@ class LlmReasoner:
 
     # ── Stage 2: Root cause analysis ─────────────────────────────────────────
 
-    def diagnose(self, top_steps: list[dict]) -> dict:
+    def diagnose(
+        self, top_steps: list[dict], *, session_id: str | None = None
+    ) -> dict:
         """
         Produce structured technical root cause analysis from top-5 steps.
 
@@ -378,9 +458,11 @@ class LlmReasoner:
         """
         slim = slim_steps_for_llm(top_steps)
         prompt_template = _load_prompt("root_cause.txt")
-        prompt = prompt_template.replace("{steps_json}", json.dumps(slim, indent=2))
+        dynamic = json.dumps(slim, indent=2)
 
-        raw = self._call(prompt)
+        raw = self._call(
+            prompt_template, "{steps_json}", dynamic, session_id=session_id
+        )
         parsed = self._extract_json(raw)
         if isinstance(parsed, dict):
             return parsed
@@ -388,19 +470,32 @@ class LlmReasoner:
 
     # ── Stage 3: Stakeholder summary ─────────────────────────────────────────
 
-    def stakeholder_summary(self, diagnosis: dict) -> str:
+    def stakeholder_summary(
+        self, diagnosis: dict, *, session_id: str | None = None
+    ) -> str:
         """
         Convert technical diagnosis into plain non-technical language.
 
         Returns plain-text string.
         """
         prompt_template = _load_prompt("stakeholder_summary.txt")
-        prompt = prompt_template.replace("{diagnosis_json}", json.dumps(diagnosis, indent=2))
-        return self._call(prompt)
+        dynamic = json.dumps(diagnosis, indent=2)
+        return self._call(
+            prompt_template,
+            "{diagnosis_json}",
+            dynamic,
+            session_id=session_id,
+        )
 
     # ── Full pipeline ─────────────────────────────────────────────────────────
 
-    def run(self, top_steps: list[dict], reranked_ids: list[int]) -> dict:
+    def run(
+        self,
+        top_steps: list[dict],
+        reranked_ids: list[int],
+        *,
+        session_id: str | None = None,
+    ) -> dict:
         """
         Run stages 2 and 3 of the LLM pipeline (re-ranking is done externally).
 
@@ -413,10 +508,10 @@ class LlmReasoner:
 
         Returns dict with all LLM outputs.
         """
-        diagnosis = self.diagnose(top_steps)
+        diagnosis = self.diagnose(top_steps, session_id=session_id)
         time.sleep(2)  # avoid back-to-back 429s on free tier
 
-        summary = self.stakeholder_summary(diagnosis)
+        summary = self.stakeholder_summary(diagnosis, session_id=session_id)
 
         return {
             "llm_reranked_step_ids": reranked_ids,

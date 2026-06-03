@@ -19,7 +19,7 @@ TraceLens is a multimodal automated debugging system that takes a **passing trac
 11. [Configuration](#11-configuration)
 12. [Output Files](#12-output-files)
 
-> **Additional guides**: [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/MODES.md`](docs/MODES.md) — pipeline modes, flag behavior, pixel vs visual causal vs VLM. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`docs/TRACE_SELECTION.md`](docs/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
+> **Additional guides**: [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/MODES.md`](docs/MODES.md) — pipeline modes, flag behavior, pixel vs visual causal vs VLM. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`docs/RANKING_ARBITRATION.md`](docs/RANKING_ARBITRATION.md) — shared Hit@1 guard policy, deterministic/diagnosis gates. [`docs/TRACE_SELECTION.md`](docs/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
 
 ---
 
@@ -41,7 +41,7 @@ TraceLens solves this by diffing the pass and fail traces step-by-step, scoring 
  Pass trace ─┐
               ├─► TraceParser ─► TraceAligner ─► AnomalyDetector ─► Ranker
  Fail trace ─┘                                        │                │
-                                                       │         all steps (slimmed)
+                                                       │         heuristic top-15 + inject
                                                        │                │
                                                        └──────────► LlmReasoner
                                                                    (re-rank + diagnose)
@@ -63,11 +63,13 @@ There are four execution paths (two independent flags):
 | Mode | Command | What runs |
 |------|---------|-----------|
 | **Heuristic only (default)** | `python main.py` | Score + rank by heuristics. Optional pixel-diff boost. No API needed. |
-| LLM only | `python main.py --llm` | Heuristic → LLM re-rank → LLM diagnosis + stakeholder summary. |
-| VLM only | `python main.py --vlm` | Heuristic → VLM screenshot comparison on top-5. |
-| **LLM + VLM (recommended)** | `python main.py --llm --vlm` | Full pipeline → 60% LLM / 40% VLM ensemble merge. |
+| **LLM only** | `python main.py --llm` | Local screenshot scan + LLM re-rank → guards → diagnosis. No VLM API. |
+| **VLM only** | `python main.py --vlm` | Full visual pipeline + VLM API. Falls back to heuristic report if VLM fails. |
+| **LLM + VLM** | `python main.py --llm --vlm` | LLM first, then VLM; unified visual scoring + Hit@k guards for final rank. |
 
 Neither flag = heuristic only. Pass `--llm` and/or `--vlm` to enable each stage.
+
+**v2 (fusion experiments)** — `python main2.py` with the same flags writes to `outputs/v2/` and uses a single weighted fusion rank (no post-hoc guards). See [`v2/README.md`](v2/README.md).
 
 ---
 
@@ -104,7 +106,7 @@ Each aligned step pair receives four component scores (all in `[0, 1]`) and one 
 
 ### Stage 4 — Heuristic Ranking (`src/ranker.py`)
 
-Steps are sorted descending by `combined_score`. By default (`pre_llm_k: 0` in config) **all steps** are passed to the LLM as candidates when `--llm` is enabled. The top-5 by score are kept as the **heuristic ranking** (always shown in reports; used as the base ranking when no LLM/VLM flags are passed).
+Steps are sorted descending by `combined_score`. The top-5 become the **heuristic ranking** (always shown in reports). When `--llm` or `--vlm` is enabled, a **local screenshot scan** (pixel diff + visual-causal attribution) also runs — no VLM API needed for `--llm`. The rerank pool is **heuristic top-15 plus injected strong-signal steps** (`wrong_navigation`, `action_changed`, `errors_observed_on_next_step`, visual-causal root, visible symptom step, pixel leader ≥ 0.65).
 
 ### Stage 5 — LLM Re-ranking & Diagnosis (`src/llm_reasoner.py`, requires `--llm`)
 
@@ -208,7 +210,7 @@ network: ≈0.467  |  console: ≈0.333  |  action: ≈0.200  |  intent: 0.000
 
 Weights can be overridden in `config.yaml`.
 
-> **Important**: Scores are **only used for heuristic ranking** (stage 4). The LLM in stage 5 does not see the numerical scores — it sees the actual step content (action text, network diffs, console errors). The scores determine *which* steps get elevated as candidates for the LLM; the LLM independently reasons about causality.
+> **Important**: Scores drive **heuristic ranking** (stage 4). The LLM reranker does not receive raw numeric scores in compact mode — it sees action text, filtered network/console diffs, causal flags, `heuristic_rank`, and `page_load_noise_only`. An **anchor guard** after reranking prevents strong heuristic top-5 steps from being demoted without cause.
 
 ---
 
@@ -218,15 +220,15 @@ The LLM pipeline runs three sequential calls via an OpenAI-compatible API (curre
 
 ### Call 1 — Re-ranking
 
-**Input**: All steps in the trace (or heuristic top-K if `pre_llm_k > 0`), each with action text, network error diff, and console error diff (raw content, not scores).
+**Input**: Heuristic **top-15** steps (configurable via `pre_llm_k`) **plus injected strong-signal steps** from anywhere in the trace (`wrong_navigation`, `action_changed`, `errors_observed_on_next_step`, causal root, **visual-causal root**, **visible symptom step**, **pixel leader ≥ 0.65**). Each step includes action text, filtered network/console diffs, causal flags, `heuristic_rank`, optional **`visual_causal_score` / `pixel_score` / `screenshots_available`**, and optionally `page_load_noise_only` for noisy homepage loads.
 
-**Prompt** (`prompts/rerank_steps.txt`): Instructs the LLM to reason about which steps are root causes vs downstream symptoms, and return a JSON-ordered list of step IDs.
+**Prompt** (`prompts/rerank_steps.txt`): Instructs the LLM to deprioritize page-load telemetry, respect heuristic priors, and rank visual-causal type/click steps highly.
 
-**Output**: Re-ordered list of step IDs.
+**Output**: Re-ordered list of step IDs → top-5 after **anchor guard** and **LLM Hit@k guard** (pixel / visual-causal promotion when VLM is not used).
 
 ### Call 2 — Root Cause Diagnosis
 
-**Input**: Top-5 re-ranked steps (same content format).
+**Input**: Top-5 re-ranked steps (same content format, full slim payload).
 
 **Prompt** (`prompts/root_cause.txt`): Asks for the primary fault step, a technical summary, the failure chain, and downstream affected steps.
 
@@ -242,7 +244,44 @@ The LLM pipeline runs three sequential calls via an OpenAI-compatible API (curre
 
 ### Ranking consistency fix
 
-Because the re-ranking call and the diagnosis call are independent, they can disagree (e.g., re-ranking leaves a downstream symptom at #1, but diagnosis correctly identifies a different step as the root cause). TraceLens resolves this by **promoting the diagnosed `root_cause_step_id` to rank #1** after all three calls complete. When this promotion changes the order, the report shows both the original heuristic ranking and the final adjusted ranking side by side, and the ranking mode label is set to `llm+diagnosis`.
+Because the re-ranking call and the diagnosis call are independent, they can disagree (e.g., re-ranking leaves a downstream symptom at #1, but diagnosis correctly identifies a different step as the root cause). TraceLens may promote the diagnosed `root_cause_step_id` to rank #1 **unless** a Hit@k guard already locked a different step (see [`docs/RANKING_ARBITRATION.md`](docs/RANKING_ARBITRATION.md)). When promotion applies, the ranking mode is `llm+diagnosis`.
+
+### LLM safeguards (noise + anchors + Hit@k)
+
+| Safeguard | Purpose |
+|-----------|---------|
+| **Telemetry noise filter** | Strips ad/iframe/manifest/WebSocket/console noise before scoring and before sending to the LLM |
+| **`page_load_noise_only`** | Flags step 0 homepage loads with only third-party churn; errors stripped from compact payload |
+| **`heuristic_rank` in rerank prompt** | LLM sees where the automated ranker placed each step |
+| **Local screenshot scan (`--llm`)** | Full-trace pixel diff + visual-causal attribution (same local pipeline as `--vlm`, no VLM API) |
+| **`screenshots_available` flag** | Steps without pass/fail PNGs skip pixel/visual rules; marked `[no screenshots]` in reports |
+| **Hybrid rerank pool (`pre_llm_k: 15` + inject)** | Top-15 by score plus any strong-signal step the heuristic buried |
+| **Anchor guard (post-rerank)** | Steps in heuristic top-5 with `action_changed`, `wrong_navigation`, causal links, pixel ≥ 0.65, or visual-causal root stay in final top-5 |
+| **Hit@k guard (shared)** | `src/ranking_arbitrator.py` — used by LLM and VLM: causal action over observer pixel, text-action anchor, visible symptom, pixel/VC leader, pre-heuristic anchor; VLM adds VLM-confirm tiers |
+| **Deterministic promote (`--llm`)** | `wrong_navigation` or `text_causal` after guard; `text_causal` skipped when verify step has strong observer pixel (≥ 0.95) — see [`docs/RANKING_ARBITRATION.md`](docs/RANKING_ARBITRATION.md) |
+
+All guard and gate decisions appear in the report under **RANKING DECISIONS (rules applied)**.
+
+Set `pre_llm_k: 0` in `config.yaml` to send **all steps** to the reranker (max recall, higher token cost, more step-0 reshuffle risk).
+
+### OpenRouter prompt caching
+
+When `base_url` points at OpenRouter and `model.prompt_cache` is `true` (default), each LLM call splits the prompt into:
+
+1. **Static** — full text of `prompts/rerank_steps.txt`, `root_cause.txt`, or `stakeholder_summary.txt` (marked with `cache_control: {type: ephemeral}`).
+2. **Dynamic** — per-trace JSON (`steps_json` / `diagnosis_json`), uncached.
+
+Across a batch run, calls 2 and 3 on the same trace (and rerank on later traces that share the same prompt file) can reuse cached prefix tokens. OpenRouter reports hits in `usage.prompt_tokens_details.cached_tokens`; TraceLens prints `[prompt cache] N cached prompt tokens` when present.
+
+Per-trace **`session_id`** (`source/trace_id`) is sent on rerank, diagnosis, and summary so OpenRouter can use [sticky routing](https://openrouter.ai/docs/guides/best-practices/prompt-caching#provider-sticky-routing) toward the same provider endpoint.
+
+| Setting | Effect |
+|---------|--------|
+| `prompt_cache: true` | Enabled automatically on `openrouter.ai` URLs; can force on/off explicitly |
+| `prompt_cache: false` | Single plain user message (use for Groq/Gemini or debugging) |
+| Free `:free` models | Caching depends on the upstream provider; many support implicit prefix cache above ~1k tokens |
+
+Caching applies to **LLM text calls only** (three per trace with `--llm`). VLM per-step image calls do not share this prefix.
 
 ### Rate limiting
 
@@ -263,18 +302,23 @@ All 22 evaluation traces include one screenshot per step for both pass and fail 
 
 ### How LLM + VLM combine
 
-The two models run **sequentially**, not in parallel:
+The two models run **sequentially**:
 
-1. **LLM** re-ranks all steps and diagnoses a root cause from text data (same as Phase 1).
-2. **ScreenshotResolver** attaches pass/fail image paths to the current top-5 ranked steps.
-3. **VLM** receives all screenshot pairs in one API call and returns a `visual_score` (0–1) per step plus a `visual_root_cause_step_id`.
-4. **Ensemble merge** recomputes the final ranking:
+1. **Local screenshot scan** (pixel + visual-causal) runs for both `--llm` and `--vlm`.
+2. **LLM** re-ranks from text + visual-causal fields in the slim payload, then diagnosis.
+3. **VLM** (if `--vlm`) scores screenshot pairs for top-K candidates.
+4. **Unified ensemble** (`_vlm_step_score` + Hit@k guards) produces the final ranking:
+   - **`--vlm` only**: VLM + pixel + visual-causal (+ downstream symptom penalty).
+   - **`--llm --vlm`**: same visual score blended with LLM rank position via `ensemble_vlm_weight` (default **0.4** → 40% visual formula / 60% LLM position prior).
 
-```
-combined = (1 - w) × llm_rank_score + w × visual_score
-```
+Hit@k guard tiers are defined in **`src/ranking_arbitrator.py`** (same order for LLM-only and VLM; VLM path requires VLM score ≥ 0.5 on visual tiers). Full precedence table: [`docs/RANKING_ARBITRATION.md`](docs/RANKING_ARBITRATION.md).
 
-Default `w = 0.4` (60% LLM, 40% VLM). If the VLM's root cause scores ≥ 0.7 and is not already at rank #1, it is promoted — same logic as the LLM diagnosis promotion.
+### VLM failure handling
+
+| Mode | VLM fails | Report | Aggregate Hit@k |
+|------|-----------|--------|-----------------|
+| `--vlm` only | yes | Saved with **VLM STATUS: FAILED** + heuristic fallback | Trace **excluded** (`excluded_traces` in run JSON) |
+| `--llm --vlm` | yes | Saved with LLM fallback ranking | **Included** (degraded run) |
 
 ### When to use each mode
 
@@ -369,6 +413,7 @@ TraceLens-Automated-Debugging/
 │   ├── trace_aligner.py         # Align pass/fail steps
 │   ├── anomaly_detector.py      # Per-step scoring (4 signals)
 │   ├── ranker.py                # Heuristic ranking + LLM re-ranking apply
+│   ├── ranking_arbitrator.py    # Shared Hit@1 guard + deterministic/diagnosis gates
 │   ├── llm_reasoner.py          # LLM API calls (re-rank, diagnose, summarise)
 │   ├── vlm_reasoner.py          # VLM screenshot comparison + ensemble merge
 │   ├── screenshot_resolver.py   # Pass/fail screenshot path resolution per source
@@ -469,6 +514,7 @@ model:
   llm_model:   "openai/gpt-oss-120b:free"       # model ID
   api_key_env: "OPENROUTER_API_KEY"             # env var name to read from .env
   temperature: 0.1
+  prompt_cache: true                             # OpenRouter static prompt caching (see §5)
 
 vlm:                              # only used with --vlm flag
   vlm_model: "google/gemma-4-31b-it:free"
@@ -478,7 +524,7 @@ vlm:                              # only used with --vlm flag
 
 ranking:
   top_k:     5    # final ranked steps shown
-  pre_llm_k: 0    # steps sent to LLM when --llm (0 = all steps)
+  pre_llm_k: 15   # heuristic top-K for LLM rerank (+ strong-signal injects; 0 = all steps)
   heuristic_pixel_fallback: true  # pixel-diff boost in heuristic-only mode
 
 weights:
@@ -512,7 +558,13 @@ After running, the following files are created:
 {
   "trace_id": "gutenberg",
   "generated": "2026-05-21T...",
-  "metadata": { "source": "efe_irem", "fault_type": "http_403" },
+  "metadata": {
+    "source": "efe_irem",
+    "fault_type": "http_403",
+    "ranking_decisions": ["LLM Hit@k guard: pixel leader step 7 ..."],
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 32
+  },
   "ranking_mode": "llm+diagnosis",
   "ranked_suspicious_steps": [ ... ],
   "heuristic_steps": [ ... ],
