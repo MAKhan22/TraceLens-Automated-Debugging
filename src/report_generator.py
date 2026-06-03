@@ -83,6 +83,33 @@ class ReportGenerator:
     # ── formatting ────────────────────────────────────────────────────────────
 
     @staticmethod
+    def _format_plain_language_summary(
+        stakeholder_summary: str,
+        diagnosis: dict,
+        vlm_output: dict | None,
+        *,
+        ran_vlm: bool,
+    ) -> str:
+        """Stakeholder text must not be replaced by VLM visual_summary bullets."""
+        plain = (stakeholder_summary or "").strip()
+        if plain:
+            return plain
+        if diagnosis.get("root_cause_summary"):
+            return (
+                f"{diagnosis['root_cause_summary']}\n\n"
+                "(Stakeholder rewrite unavailable; showing technical summary.)"
+            )
+        if ran_vlm and vlm_output:
+            visual = (vlm_output.get("visual_summary") or "").strip()
+            if visual:
+                return (
+                    "(Pass --llm for a full plain-language stakeholder summary.)\n\n"
+                    "Key visual finding:\n"
+                    + "\n".join(f"  {ln}" for ln in visual.splitlines() if ln.strip())
+                )
+        return "(LLM not run — pass --llm for technical and plain-language summaries.)"
+
+    @staticmethod
     def _layers_label(base: str, layers: list[str]) -> str:
         """Build table title listing every signal layer that affects that ranking."""
         if not layers:
@@ -206,7 +233,7 @@ class ReportGenerator:
                      heuristic_visual, used_pixel_boost, has_visual_causal,
                      ran_screenshot_scan, screenshot_analysis,
                      llm_ranked, ran_vlm, vlm_only, ranking_mode,
-                     diagnosis, summary, eval_result, vlm_output=None,
+                     diagnosis, stakeholder_summary, eval_result, vlm_output=None,
                      metadata=None) -> str:
         actual = eval_result.get("actual_fault_step") if eval_result else None
         meta = metadata or {}
@@ -396,8 +423,24 @@ class ReportGenerator:
                 f"Failure chain: {diagnosis.get('failure_chain', '')}",
                 f"Downstream:    {diagnosis.get('downstream_steps', [])}",
             ]
+        elif (
+            vlm_output
+            and vlm_status != "failed"
+            and vlm_output.get("visual_root_cause_step_id") is not None
+        ):
+            vsum = (vlm_output.get("visual_summary") or "").strip()
+            first = next((ln.strip() for ln in vsum.splitlines() if ln.strip()), vsum)
+            lines += [
+                f"Primary step:  Step {vlm_output.get('visual_root_cause_step_id')} "
+                "(from visual analysis — LLM diagnosis not run)",
+                f"Summary:       {first or 'See visual analysis below.'}",
+                "Failure chain: (not available without --llm)",
+                "Downstream:    []",
+            ]
         else:
-            lines.append("(LLM diagnosis not run — heuristic mode)")
+            lines.append(
+                "(LLM diagnosis not run — pass --llm for technical root-cause analysis.)"
+            )
 
         # VLM per-step visual scores (when VLM succeeded)
         if vlm_output and vlm_output.get("steps_with_screenshots", 0) > 0 and vlm_status != "failed":
@@ -408,8 +451,8 @@ class ReportGenerator:
                 f"Visual root cause: Step {vlm_output.get('visual_root_cause_step_id')}",
                 "Summary:",
             ]
-            summary = vlm_output.get("visual_summary", "") or ""
-            for line in summary.split("\n"):
+            vlm_summary_text = vlm_output.get("visual_summary", "") or ""
+            for line in vlm_summary_text.split("\n"):
                 if line.strip():
                     lines.append(f"  {line.strip()}")
             lines += [
@@ -448,7 +491,12 @@ class ReportGenerator:
             "",
             "PLAIN LANGUAGE SUMMARY",
             "-" * 40,
-            summary if summary else "(LLM not run)",
+            self._format_plain_language_summary(
+                stakeholder_summary,
+                diagnosis,
+                vlm_output,
+                ran_vlm=bool(ran_vlm and vlm_status != "failed"),
+            ),
         ]
 
         if eval_result:

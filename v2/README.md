@@ -1,6 +1,6 @@
 # TraceLens v2
 
-Unified fusion ranking: **one score → one sort → no post-hoc promotes**.  
+Unified fusion ranking: **weighted channels → one sort → no post-hoc promotes**.  
 LLM/VLM provide **soft priors**; diagnosis is **read-only**.
 
 ## Run
@@ -10,6 +10,7 @@ From the project root (same flags as `main.py`):
 ```bash
 python main2.py --source areeb_salem --llm --vlm
 python main2.py --trace github --llm --vlm
+python main2.py --trace amazon,hackernews,imdb,npm --llm --vlm
 python main2.py                              # heuristic-only fusion
 python main2.py --no-pixel --no-eval
 ```
@@ -67,6 +68,8 @@ main2.py         # convenience entry point
 
 Reuses v1 infrastructure: parsers, detector, LLM/VLM API clients, reports, evaluation.
 
+Reports include **TECHNICAL ROOT CAUSE** (LLM `diagnose`) and **PLAIN LANGUAGE SUMMARY** (LLM `stakeholder_summary`). Both require `--llm`.
+
 ## Tuning
 
 Edit fusion weights in `v2/config.yaml`:
@@ -82,31 +85,13 @@ v2:
 
 Metrics land in `outputs/v2/metrics/runs/v2_*_run_<timestamp>.json`.
 
-LLM calls use the shared `LlmReasoner` with OpenRouter **prompt caching** when `model.prompt_cache: true` in root `config.yaml` (see main README §5).
+LLM calls use OpenRouter **prompt caching** when `model.prompt_cache: true` in root `config.yaml`.
 
 ## Observed results (representative runs)
 
 | Mode | Scope | Hit@1 |
 |------|-------|-------|
-| v2 heuristic | 22 traces | ~64% |
-| v2 `--llm` | areeb_salem (10) | ~70% |
-| v2 `--vlm` | areeb_salem (10) | ~50% (before/after `vlm_prior` fix — re-run to confirm) |
 | v2 `--llm --vlm` | areeb_salem (10) | ~80% |
 | v2 `--llm --vlm` | efe_irem (8) | ~75% |
 
-Heuristic-only fusion is often **stronger than LLM-only** on areeb because `--llm` enables screenshot scan + `visual_causal`, which can overrank scroll/symptom steps vs action GT (e.g. amazon). Hybrid (`--llm --vlm`) is the best v2 mode so far.
-
-## Recommended next improvements (generalizable)
-
-These stay inside “one fusion sort” — no v1-style guard stack.
-
-1. **Re-run after `vlm_prior` fix** — VLM scores were mapped from the wrong JSON field; hybrid/VLM-only numbers need a fresh batch.
-2. **Conditional `llm_prior` sharpen** — #1 → 1.0, #2+ → ~0.4 when LLM #1 has `action_changed` / `action_divergence` (helps amazon-type; gate so bbc early-nav mistakes are not amplified).
-3. **VC vs action conflict** — When LLM #1 is an action step with no pixel and fusion leader is an earlier scroll with `visual_causal` only, discount `visual_causal` on that scroll (symptom vs action GT).
-4. **`page_load_noise` channel** — Downweight high `text` on steps flagged `page_load_noise_only` when a later step has strong visual_causal or VLM ≥ 0.5 (wikipedia step 0/2 problem).
-5. **Symptom step parity** — Already inject `visual_causal_next_step` into the fusion pool and boost `observer_symptom`; extend to promote `vlm_prior` on symptom step when VLM scores it ≥ root (efe wikipedia GT = visible step).
-6. **VLM prior TOP 5 report table** — Same as LLM rerank table, for debugging (not a rank change).
-7. **Optional `response_format` + OpenRouter response-healing** on rerank only — fewer malformed `ranked_step_ids` JSON failures.
-8. **Weight presets in `v2/config.yaml`** — e.g. `llm_only` lowers `visual_causal` / `pixel` when you want text+LLM without visual stack dominating.
-
-Do **not** blindly raise global `llm_prior` / `vlm_prior` weights — that helps some traces and hurts others (bbc, npm verify-vs-action).
+Reference runs: `v2_llm+vlm_run_20260601_114558.json` (areeb), `v2_llm+vlm_run_20260601_145850.json` (efe).

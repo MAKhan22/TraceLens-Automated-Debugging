@@ -36,6 +36,7 @@ from src.screenshot_resolver import (
     filter_steps_with_screenshot_pairs,
     valid_screenshot_pair,
 )
+from src.trace_filter import parse_trace_ids, trace_selected
 from src.report_generator import ReportGenerator
 from src.evaluation import Evaluator
 from src.ranking_arbitrator import (
@@ -548,7 +549,11 @@ def run_trace(
 def main():
     parser = argparse.ArgumentParser(description="TraceLens pipeline")
     parser.add_argument("--source", default=None, help="Filter by source (efe_irem/areeb_salem/ersel)")
-    parser.add_argument("--trace",  default=None, help="Filter by trace id")
+    parser.add_argument(
+        "--trace",
+        default=None,
+        help="Run only these trace id(s), comma-separated (e.g. amazon,imdb,npm)",
+    )
     parser.add_argument("--skip",   default=None, help="Comma-separated trace IDs to skip (e.g. saucedemo_1,gutenberg)")
     parser.add_argument("--from",   default=None, dest="from_trace",
                         help="Start from this trace ID (skip everything before it in config order)")
@@ -561,6 +566,7 @@ def main():
     args = parser.parse_args()
 
     skip_ids = set(args.skip.split(",")) if args.skip else set()
+    trace_filter = parse_trace_ids(args.trace)
 
     cfg = load_config(args.config)
     raw_base = cfg["data"]["raw_base"]
@@ -636,7 +642,7 @@ def main():
                 else:
                     print(f"  Skipping {source}/{tid} (before --from {args.from_trace})")
                     continue
-            if args.trace and tid != args.trace:
+            if not trace_selected(tid, trace_filter):
                 continue
             if tid in skip_ids:
                 print(f"  Skipping {source}/{tid} (--skip)")

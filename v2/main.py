@@ -7,6 +7,7 @@ Usage:
     python main2.py
     python main2.py --llm --vlm --source areeb_salem
     python main2.py --trace github --llm --vlm
+    python main2.py --trace amazon,hackernews,imdb,npm --llm --vlm
 """
 
 from __future__ import annotations
@@ -30,6 +31,7 @@ from src.llm_reasoner import LlmReasoner
 from src.ranker import Ranker
 from src.report_generator import ReportGenerator
 from src.screenshot_resolver import ScreenshotResolver
+from src.trace_filter import parse_trace_ids, trace_selected
 from src.vlm_reasoner import VlmReasoner
 
 from v2.fusion import FusionWeights
@@ -70,7 +72,11 @@ def _print_overall_accuracy(agg: dict, excluded_count: int = 0) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="TraceLens v2 pipeline (unified fusion)")
     parser.add_argument("--source", default=None, help="Filter by source")
-    parser.add_argument("--trace", default=None, help="Filter by trace id")
+    parser.add_argument(
+        "--trace",
+        default=None,
+        help="Run only these trace id(s), comma-separated (e.g. amazon,imdb,npm)",
+    )
     parser.add_argument("--skip", default=None, help="Comma-separated trace IDs to skip")
     parser.add_argument(
         "--from",
@@ -94,6 +100,7 @@ def main() -> None:
     args = parser.parse_args()
 
     skip_ids = set(args.skip.split(",")) if args.skip else set()
+    trace_filter = parse_trace_ids(args.trace)
     cfg = load_config(Path(args.config))
     raw_base = cfg["data"]["raw_base"]
 
@@ -154,6 +161,9 @@ def main() -> None:
     else:
         print("Mode: v2 heuristic")
 
+    if trace_filter:
+        print(f"Trace filter: {', '.join(sorted(trace_filter))}")
+
     all_results = []
     trace_count = 0
     reached_from = args.from_trace is None
@@ -169,7 +179,7 @@ def main() -> None:
                 else:
                     print(f"  Skipping {source}/{tid} (before --from {args.from_trace})")
                     continue
-            if args.trace and tid != args.trace:
+            if not trace_selected(tid, trace_filter):
                 continue
             if tid in skip_ids:
                 print(f"  Skipping {source}/{tid} (--skip)")
@@ -197,6 +207,23 @@ def main() -> None:
                 fusion_weights=fusion_weights,
             )
             all_results.append(result)
+
+    if trace_count == 0:
+        if trace_filter:
+            known: list[str] = []
+            for src, sc in cfg["data"]["sources"].items():
+                if args.source and src != args.source:
+                    continue
+                known.extend(t["id"] for t in sc.get("traces", []))
+            print(
+                f"\nERROR: No traces matched --trace {args.trace!r}. "
+                "Use comma-separated ids (e.g. --trace amazon,imdb), not spaces only."
+            )
+            if known:
+                print(f"Available for source={args.source or 'all'}: {', '.join(known)}")
+            raise SystemExit(1)
+        print("\nNo traces processed.")
+        return
 
     run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     if args.llm and args.vlm:

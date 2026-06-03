@@ -35,8 +35,6 @@ from v2.fusion import (
     rank_by_fusion,
     vlm_prior_from_output,
 )
-
-
 def _classify_vlm_error(err: str) -> str:
     low = err.lower()
     if "no screenshot" in low or "missing pass or fail" in low:
@@ -333,18 +331,19 @@ def run_trace_v2(
             [by_id[sid] for sid in reranked_ids[: ranker.top_k] if sid in by_id]
         )
 
-    if use_llm and llm and llm_prior:
+    if use_llm and llm:
         try:
             print("  Running LLM diagnosis (read-only, does not change rank)...")
             diag_steps = final_ranked[: ranker.top_k]
-            llm_output = llm.run(
-                diag_steps,
-                reranked_ids or [s["step_id"] for s in diag_steps],
-                session_id=trace_id,
-            )
+            order_ids = reranked_ids or [s["step_id"] for s in diag_steps]
+            llm_output = llm.run(diag_steps, order_ids, session_id=trace_id)
             ranking_decisions.append(
                 "LLM diagnosis is explanatory only — ranking frozen after fusion."
             )
+            if not (llm_output.get("stakeholder_summary") or "").strip():
+                ranking_decisions.append(
+                    "Stakeholder summary empty — check LLM rate limits or diagnosis JSON."
+                )
         except Exception as e:
             print(f"  LLM diagnosis failed ({e})")
             ranking_decisions.append(f"LLM diagnosis failed: {e}")
