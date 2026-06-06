@@ -1,9 +1,9 @@
 ==============================================================
 TraceLens Diagnosis Report: ersel/opencart_wishlist_35
-Ranking mode: heuristic (llm failed)
+Ranking mode: heuristic
 ==============================================================
 
-FINAL RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text)
 ----------------------------------------
   #1  Step 24: Verify product page loaded correctly  [verification failed]  (score=0.250)
   #2  Step 22: Navigate to https://demo.opencart.com/en-gb/product/nonexistent-produc  (score=0.045) ← ACTUAL FAULT

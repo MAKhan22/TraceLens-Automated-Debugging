@@ -1,0 +1,777 @@
+{
+  "run_id": "COMBINED_20260527_llm_efe_irem_areeb_salem",
+  "timestamp": "2026-05-27T08:47:20.181719+00:00",
+  "mode": "llm (nvidia/nemotron-3-super-120b-a12b:free)",
+  "filter_source": [
+    "efe_irem",
+    "areeb_salem"
+  ],
+  "filter_trace": null,
+  "n_traces_expected": 18,
+  "n_traces_evaluated": 18,
+  "n_traces_missing": 0,
+  "n_traces_excluded": 0,
+  "sources_breakdown": {
+    "efe_irem": {
+      "evaluated": 8,
+      "missing": [],
+      "excluded": []
+    },
+    "areeb_salem": {
+      "evaluated": 10,
+      "missing": [],
+      "excluded": []
+    }
+  },
+  "missing_traces": [],
+  "excluded_traces": [],
+  "notes": "Combined aggregate from latest per-trace results across May 27 terminal runs, saved run JSONs, and May 26 partial fallbacks where VLM overwrote LLM reports or traces were not re-run.",
+  "aggregate": {
+    "n_traces": 18,
+    "hit@1": 0.7778,
+    "hit@3": 1.0,
+    "hit@5": 1.0,
+    "mean_rank_position": 1.2222,
+    "mean_rank_distance": 0.2222,
+    "mean_top1_step_distance": 1.4444,
+    "mean_mad@5": 6.6889,
+    "found_in_top5_count": 18
+  },
+  "per_trace": [
+    {
+      "trace_id": "areeb_salem/amazon",
+      "actual_fault_step": 20,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 6
+        },
+        {
+          "rank": 2,
+          "step_id": 20,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 21,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 18
+        },
+        {
+          "rank": 5,
+          "step_id": 22,
+          "step_distance": 2
+        }
+      ],
+      "mad@5": 5.4,
+      "top1_step_distance": 6,
+      "provenance": "run_json:PARTIAL_llm_run_20260526_terminal.json",
+      "provenance_note": "May 26 terminal LLM (report overwritten by May 27 VLM)"
+    },
+    {
+      "actual_fault_step": 18,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 0,
+          "step_distance": 18
+        },
+        {
+          "rank": 2,
+          "step_id": 18,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 19,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 13
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 16
+        }
+      ],
+      "mad@5": 9.6,
+      "top1_step_distance": 18,
+      "trace_id": "areeb_salem/bbc",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T06:28:52.619726Z",
+      "provenance": "report:areeb_salem/bbc.json"
+    },
+    {
+      "actual_fault_step": 23,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 30,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 31,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 1,
+      "trace_id": "areeb_salem/github",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T06:33:11.390863Z",
+      "provenance": "report:areeb_salem/github.json"
+    },
+    {
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 22,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/hackernews",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T06:37:10.652260Z",
+      "provenance": "report:areeb_salem/hackernews.json"
+    },
+    {
+      "actual_fault_step": 14,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 15,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 10,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 30,
+          "step_distance": 16
+        },
+        {
+          "rank": 5,
+          "step_id": 28,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 7.0,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/imdb",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T06:42:37.753316Z",
+      "provenance": "report:areeb_salem/imdb.json"
+    },
+    {
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 18,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 16
+        },
+        {
+          "rank": 5,
+          "step_id": 26,
+          "step_distance": 10
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/npm",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T06:47:10.298444Z",
+      "provenance": "report:areeb_salem/npm.json"
+    },
+    {
+      "trace_id": "areeb_salem/producthunt",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 10
+        },
+        {
+          "rank": 3,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 11
+        },
+        {
+          "rank": 5,
+          "step_id": 13,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 5.0,
+      "top1_step_distance": 0,
+      "provenance": "run_json:PARTIAL_llm_run_20260526_terminal.json",
+      "provenance_note": "May 26 terminal LLM (report overwritten by May 27 VLM)"
+    },
+    {
+      "trace_id": "areeb_salem/pypi",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 20,
+          "step_distance": 13
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 5.2,
+      "top1_step_distance": 0,
+      "provenance": "run_json:llm_run_20260522_181805.json",
+      "provenance_note": "May 22 batch LLM (never completed in later sessions)"
+    },
+    {
+      "actual_fault_step": 17,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 17,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 17
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 16
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 15
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 12.4,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/wikipedia",
+      "ranking_mode": "llm+diagnosis",
+      "generated": "2026-05-27T08:40:16.414764Z",
+      "provenance": "report:areeb_salem/wikipedia.json"
+    },
+    {
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 10,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 5.0,
+      "top1_step_distance": 1,
+      "trace_id": "areeb_salem/youtube",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T08:43:50.761198Z",
+      "provenance": "report:areeb_salem/youtube.json"
+    },
+    {
+      "actual_fault_step": 25,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 25,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 24,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 26,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 27,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 20
+        }
+      ],
+      "mad@5": 4.8,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/dictionary",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T05:56:56.387778Z",
+      "provenance": "report:efe_irem/dictionary.json"
+    },
+    {
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 7.6,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/elinguistics",
+      "ranking_mode": "llm+diagnosis",
+      "generated": "2026-05-27T06:09:15.403223Z",
+      "provenance": "report:efe_irem/elinguistics.json"
+    },
+    {
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 7
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 5
+        }
+      ],
+      "mad@5": 5.2,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/gutenberg",
+      "ranking_mode": "llm+diagnosis",
+      "generated": "2026-05-27T05:53:58.297856Z",
+      "provenance": "report:efe_irem/gutenberg.json"
+    },
+    {
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 7
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 5
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/saucedemo_1",
+      "ranking_mode": "llm",
+      "generated": "2026-05-27T05:47:47.685725Z",
+      "provenance": "report:efe_irem/saucedemo_1.json"
+    },
+    {
+      "actual_fault_step": 27,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 27,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 21
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 27
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 26
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 25
+        }
+      ],
+      "mad@5": 19.8,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/saucedemo_2",
+      "ranking_mode": "llm+diagnosis",
+      "generated": "2026-05-27T05:51:49.283622Z",
+      "provenance": "report:efe_irem/saucedemo_2.json"
+    },
+    {
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 7,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 8,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 3.6,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/webmd",
+      "ranking_mode": "llm+diagnosis",
+      "generated": "2026-05-27T05:59:39.210903Z",
+      "provenance": "report:efe_irem/webmd.json"
+    },
+    {
+      "actual_fault_step": 13,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 11
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/wikipedia",
+      "ranking_mode": "llm",
+      "generated": "2026-05-27T06:11:14.810158Z",
+      "provenance": "report:efe_irem/wikipedia.json"
+    },
+    {
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 16,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 18,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 4.0,
+      "top1_step_distance": 0,
+      "trace_id": "efe_irem/wolfram",
+      "ranking_mode": "llm+deterministic",
+      "generated": "2026-05-27T06:07:38.854695Z",
+      "provenance": "report:efe_irem/wolfram.json"
+    }
+  ]
+}

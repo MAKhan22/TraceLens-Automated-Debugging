@@ -1,11 +1,83 @@
 {
   "trace_id": "areeb_salem/pypi",
-  "generated": "2026-05-20T11:16:28.534492Z",
+  "generated": "2026-05-31T09:24:36.066738Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "captcha_bot_challenge"
+    "fault_type": "captcha_bot_challenge",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [8, 7, 20, 2] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: causal action step 7 over observer pixel leader step 8 (step 7 already #1).",
+      "Deterministic promote: step 7 (text_causal) skipped — already #1.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hybrid final rank = blend score only (no post-ensemble Hit@k arbitration)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 32
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
+    {
+      "step_id": 8,
+      "action": "Verify project page loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.9094,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.909,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1,
+      "vlm_visual_score": 0.7
+    },
+    {
+      "step_id": 7,
+      "action": "Open the first package project page.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 20,
+      "action": "Navigate to release history tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
+    },
     {
       "step_id": 2,
       "action": "Search for Django package.",
@@ -13,7 +85,230 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.524,
+      "combined_score": 0.5947,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 21,
+      "action": "Verify release history visible.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 7,
+      "action": "Open the first package project page.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.72,
+      "rank": 1
+    },
+    {
+      "step_id": 20,
+      "action": "Navigate to release history tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.72,
+      "rank": 2
+    },
+    {
+      "step_id": 2,
+      "action": "Search for Django package.",
+      "network_score": 0.56,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5947,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.5947,
+      "rank": 3
+    },
+    {
+      "step_id": 8,
+      "action": "Verify project page loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.9094,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.3333,
+      "rank": 4
+    },
+    {
+      "step_id": 21,
+      "action": "Verify release history visible.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3333,
+      "rank": 5
+    }
+  ],
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 8,
+      "action": "Verify project page loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5349349999999999,
+      "screenshots_available": true,
+      "pixel_global": 0.9094,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.909,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.534935,
+      "rank": 1
+    },
+    {
+      "step_id": 7,
+      "action": "Open the first package project page.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 2
+    },
+    {
+      "step_id": 20,
+      "action": "Navigate to release history tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Search for Django package.",
+      "network_score": 0.56,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.38655500000000004,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.386555,
+      "rank": 4
+    },
+    {
+      "step_id": 21,
+      "action": "Verify release history visible.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.216645,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.216645,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": [
+    {
+      "step_id": 7,
+      "action": "Open the first package project page.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
       "rank": 1
     },
     {
@@ -23,8 +318,52 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.9094,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.909,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
       "rank": 2
+    },
+    {
+      "step_id": 20,
+      "action": "Navigate to release history tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Search for Django package.",
+      "network_score": 0.56,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5947,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
     },
     {
       "step_id": 21,
@@ -33,39 +372,73 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3,
-      "rank": 3
-    },
-    {
-      "step_id": 0,
-      "action": "Navigate to PyPI homepage.",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "rank": 4
-    },
-    {
-      "step_id": 1,
-      "action": "Verify PyPI homepage loaded.",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "screenshot_analysis": {
+    "steps_scanned": 32,
+    "first_persistent_divergence": null,
+    "divergence_score": 0.0,
+    "attributed_root_step": null,
+    "visual_causal_score": 0.0,
+    "visible_at_step": null,
+    "reason": null,
+    "has_signal": false
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 7,
+    "root_cause_summary": "Opening the first package project page resulted in a 403 Forbidden response from PyPI, preventing proper loading of project data.",
+    "downstream_steps": [
+      8,
+      20,
+      21
+    ],
+    "failure_chain": "The 403 error at step 7 caused the project page to fail loading, leading to missing or null release date data when navigating to the release history tab (step 20), which then triggered a TypeError when trying to format undefined dates (step 21)."
+  },
+  "stakeholder_summary": "When the system tried to open the first package’s project page, it was blocked from getting the information it needed — like trying to open a locked door. This happened early in the process, at step 7, and because the page didn’t load, later steps that rely on the project’s release dates couldn’t find the data, causing the display to break when trying to show those dates. As a result, the user sees missing or garbled release information on the release‑history tab. Checking that the system has permission to access the package page should fix the problem.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 8,
+    "visual_summary": "Step 8 (score=0.70): Bot challenge page instead of project page",
+    "visual_scores": [
+      {
+        "step_id": 7,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 20,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 2,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 8,
+        "visual_score": 0.7,
+        "visual_note": "Bot challenge page instead of project page"
+      },
+      {
+        "step_id": 21,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
-    "actual_fault_step": 8,
+    "actual_fault_step": 7,
     "hit@1": 0,
     "hit@3": 1,
     "hit@5": 1,
@@ -74,32 +447,32 @@
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 2,
-        "step_distance": 6
+        "step_id": 8,
+        "step_distance": 1
       },
       {
         "rank": 2,
-        "step_id": 8,
+        "step_id": 7,
         "step_distance": 0
       },
       {
         "rank": 3,
-        "step_id": 21,
+        "step_id": 20,
         "step_distance": 13
       },
       {
         "rank": 4,
-        "step_id": 0,
-        "step_distance": 8
+        "step_id": 2,
+        "step_distance": 5
       },
       {
         "rank": 5,
-        "step_id": 1,
-        "step_distance": 7
+        "step_id": 21,
+        "step_distance": 14
       }
     ],
-    "mad@5": 6.8,
-    "top1_step_distance": 6
+    "mad@5": 6.6,
+    "top1_step_distance": 1
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/pypi\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 2: Search for Django package.  [console error]  (score=0.524)\n  #2  Step 8: Verify project page loaded.  [console error]  (score=0.300)\n  #3  Step 21: Verify release history visible.  [console error]  (score=0.300)\n  #4  Step 0: Navigate to PyPI homepage.  (score=0.000)\n  #5  Step 1: Verify PyPI homepage loaded.  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 2\nRank distance: 1\nTop-1 step distance: 6\nMAD@5: 6.8\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/pypi\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 7: Open the first package project page.  [network anomaly]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 20: Navigate to release history tab.  [network anomaly]  (score=0.720)\n  #3  Step 2: Search for Django package.  [network anomaly, console error]  (score=0.595)\n  #4  Step 8: Verify project page loaded.  [console error]  (score=0.333)\n  #5  Step 21: Verify release history visible.  [console error]  (score=0.333)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 8: Verify project page loaded.  [console error]  (score=0.535, pixel=0.909)\n  #2  Step 7: Open the first package project page.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT\n  #3  Step 20: Navigate to release history tab.  [network anomaly]  (score=0.468, pixel=0.000)\n  #4  Step 2: Search for Django package.  [network anomaly, console error]  (score=0.387, pixel=0.000)\n  #5  Step 21: Verify release history visible.  [console error]  (score=0.217, pixel=0.000)\n\nLLM TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 7: Open the first package project page.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 8: Verify project page loaded.  [console error]  (score=0.333, pixel=0.909)\n  #3  Step 20: Navigate to release history tab.  [network anomaly]  (score=0.720, pixel=0.000)\n  #4  Step 2: Search for Django package.  [network anomaly, console error]  (score=0.595, pixel=0.000)\n  #5  Step 21: Verify release history visible.  [console error]  (score=0.333, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 8: Verify project page loaded.  [console error]  (vlm=0.700, pixel=0.909)\n  #2  Step 7: Open the first package project page.  [network anomaly]  (vlm=0.000, pixel=0.000) ← ACTUAL FAULT\n  #3  Step 20: Navigate to release history tab.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #4  Step 2: Search for Django package.  [network anomaly, console error]  (vlm=0.000, pixel=0.000)\n  #5  Step 21: Verify release history visible.  [console error]  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [8, 7, 20, 2] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: causal action step 7 over observer pixel leader step 8 (step 7 already #1).\n  • Deterministic promote: step 7 (text_causal) skipped — already #1.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hybrid final rank = blend score only (no post-ensemble Hit@k arbitration).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 7\nSummary:       Opening the first package project page resulted in a 403 Forbidden response from PyPI, preventing proper loading of project data.\nFailure chain: The 403 error at step 7 caused the project page to fail loading, leading to missing or null release date data when navigating to the release history tab (step 20), which then triggered a TypeError when trying to format undefined dates (step 21).\nDownstream:    [8, 20, 21]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 8\nSummary:\n  Step 8 (score=0.70): Bot challenge page instead of project page\n\n  Per-step visual scores:\n    Step   8  score=0.70  Bot challenge page instead of project page  [in final top-5]\n    Step   2  score=0.00  identical  [in final top-5]\n    Step   7  score=0.00  identical  [in final top-5]\n    Step  20  score=0.00  identical  [in final top-5]\n    Step  21  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 8 (score=0.70): Bot challenge page instead of project page\n\nEVALUATION\n----------------------------------------\nActual fault step: 7\nHit@1=0  Hit@3=1  Hit@5=1\nRank position of actual fault: 2\nOverall rank distance (|actual_rank - 1|): 1\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               8         N/A         N/A           1\n  2               7           1           1           0  ← ACTUAL FAULT\n  3              20         N/A         N/A          13\n  4               2         N/A         N/A           5\n  5              21         N/A         N/A          14\n\nTop-1 step distance: 1\nMAD@5 (mean step-dist over top-5): 6.6\n=============================================================="
 }

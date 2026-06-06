@@ -1,9 +1,9 @@
 ==============================================================
 TraceLens Diagnosis Report: efe_irem/wikipedia
-Ranking mode: heuristic
+Ranking mode: llm+vlm
 ==============================================================
 
-FINAL RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
   #1  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)
   #2  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)
@@ -11,31 +11,104 @@ FINAL RANKED SUSPICIOUS STEPS
   #4  Step 23: Wait for history list again  [network anomaly]  (score=0.397)
   #5  Step 1: Wait for the homepage to load  (score=0.000)
 
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (score=1.000, visual_causal=1.000)
+  #2  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)
+  #3  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)
+  #4  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397)
+  #5  Step 23: Wait for history list again  [network anomaly]  (score=0.397)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (score=0.650, visual_causal=1.000, pixel=0.000)
+  #2  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.453, pixel=0.000)
+  #3  Step 2: Click the search field  [network anomaly, console error]  (score=0.453, pixel=0.000)
+  #4  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.258, pixel=0.000)
+  #5  Step 23: Wait for history list again  [network anomaly]  (score=0.258, pixel=0.000)
+
+LLM TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (score=0.000, visual_causal=1.000, pixel=0.000)
+  #2  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697, pixel=0.000)
+  #3  Step 2: Click the search field  [network anomaly, console error]  (score=0.697, pixel=0.000)
+  #4  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397, pixel=0.000)
+  #5  Step 23: Wait for history list again  [network anomaly]  (score=0.397, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 13: Jump to Etymology via table of contents  (score=0.000, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (vlm=0.700, visual_causal=1.000, pixel=0.000)
+  #3  Step 0: Visit wikipedia.org  [network anomaly, console error]  (vlm=0.000, pixel=0.000)
+  #4  Step 2: Click the search field  [network anomaly, console error]  (vlm=0.000, pixel=0.000)
+  #5  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              31
+First persistent divergence: step 13 (score=1.000)
+Attributed root step:        step 12 (visual_causal=1.000)
+Visible symptom step:        step 13
+Reason:                      symptom_on_next_step
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 31 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [0, 2] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: pixel/visual-causal leader step 12 (pixel=0.00, visual_causal=1.00) (step 12 already #1).
+  • Visual-causal root step 12 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
+  • Hit@k guard: visible symptom step 13 after visual-causal root 12 (vlm=0.70, pixel=1.00) — promoted to #1 (was step 12).
+
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-(LLM diagnosis not run — heuristic mode)
+Primary step:  Step 12
+Summary:       The 'Jump to Economy via table of contents' action caused a visual divergence (wrong UI/state) that manifested in the next step.
+Failure chain: Step 12's incorrect navigation altered the page state, leading to a screenshot mismatch at step 13 and causing later verification/wait steps (e.g., step 23) to fail with missing requests and console errors.
+Downstream:    [23]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 12
+Summary:
+  Step 13 (score=0.70): different content
+
+  Per-step visual scores:
+    Step  12  score=0.70  Attributed from step 13: different content  [in final top-5]
+    Step  13  score=0.70  different content  [in final top-5]
+    Step   0  score=0.00  identical  [in final top-5]
+    Step   2  score=0.00  identical  [in final top-5]
+    Step   6  score=0.00  identical  [in final top-5]
+    Step  11  score=0.00  identical  [analyzed only]
+    Step  14  score=0.00  identical  [analyzed only]
+    Step  15  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-(LLM not run)
+Step 13 (score=0.70): different content
 
 EVALUATION
 ----------------------------------------
 Actual fault step: 13
-Hit@1=0  Hit@3=0  Hit@5=0
-Rank position of actual fault: not in top-5
-Overall rank distance (|actual_rank - 1|): 5
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
 
 Per-rank breakdown:
   Pred.Rank    Step   True Rank   rank_dist   step_dist
   (our rank)          (1=fault)  |pred-true|  |step-actual|
   ----------  -----  ----------  ----------  ----------
-  1               0         N/A         N/A          13
-  2               2         N/A         N/A          11
-  3               6         N/A         N/A           7
-  4              23         N/A         N/A          10
-  5               1         N/A         N/A          12
+  1              13           1           0           0  ← ACTUAL FAULT
+  2              12         N/A         N/A           1
+  3               0         N/A         N/A          13
+  4               2         N/A         N/A          11
+  5               6         N/A         N/A           7
 
-Top-1 step distance: 13
-MAD@5 (mean step-dist over top-5): 10.6
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 6.4
 ==============================================================

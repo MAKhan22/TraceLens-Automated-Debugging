@@ -1,12 +1,63 @@
 {
   "trace_id": "efe_irem/wikipedia",
-  "generated": "2026-05-21T15:08:29.388774Z",
+  "generated": "2026-05-30T20:38:44.650551Z",
   "metadata": {
     "source": "efe_irem",
-    "fault_type": "broken_anchor_toc"
+    "fault_type": "broken_anchor_toc",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [0, 2] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 12 (pixel=0.00, visual_causal=1.00) (step 12 already #1).",
+      "Visual-causal root step 12 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hit@k guard: visible symptom step 13 after visual-causal root 12 (vlm=0.70, pixel=1.00) — promoted to #1 (was step 12)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 31
   },
-  "ranking_mode": "heuristic",
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
+    {
+      "step_id": 13,
+      "action": "Jump to Etymology via table of contents",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 12,
+      "action": "Jump to Economy via table of contents",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": 13,
+      "visual_divergence_step": 13,
+      "visual_causal_reason": "symptom_on_next_step",
+      "rank": 2,
+      "vlm_visual_score": 0.7
+    },
     {
       "step_id": 0,
       "action": "Visit wikipedia.org",
@@ -15,7 +66,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.6967,
-      "rank": 1
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 2,
@@ -25,7 +85,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.6967,
-      "rank": 2
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 6,
@@ -35,27 +104,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.3967,
-      "rank": 3
-    },
-    {
-      "step_id": 23,
-      "action": "Wait for history list again",
-      "network_score": 0.85,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3967,
-      "rank": 4
-    },
-    {
-      "step_id": 1,
-      "action": "Wait for the homepage to load",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "rank": 5
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
     }
   ],
   "heuristic_steps": [
@@ -67,6 +125,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.6967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.6967,
       "rank": 1
     },
     {
@@ -77,6 +140,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.6967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.6967,
       "rank": 2
     },
     {
@@ -87,6 +155,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.3967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3967,
       "rank": 3
     },
     {
@@ -97,6 +170,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.3967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3967,
       "rank": 4
     },
     {
@@ -107,52 +185,402 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 12,
+      "action": "Jump to Economy via table of contents",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.65,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": 13,
+      "visual_divergence_step": 13,
+      "visual_causal_reason": "symptom_on_next_step",
+      "rank_score": 0.65,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit wikipedia.org",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.452855,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.452855,
+      "rank": 2
+    },
+    {
+      "step_id": 2,
+      "action": "Click the search field",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.452855,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.452855,
+      "rank": 3
+    },
+    {
+      "step_id": 6,
+      "action": "Open first wikilink in the first paragraph with a link",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.257855,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.257855,
+      "rank": 4
+    },
+    {
+      "step_id": 23,
+      "action": "Wait for history list again",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.257855,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.257855,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": [
+    {
+      "step_id": 12,
+      "action": "Jump to Economy via table of contents",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": 13,
+      "visual_divergence_step": 13,
+      "visual_causal_reason": "symptom_on_next_step",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit wikipedia.org",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.6967,
+      "rank": 2
+    },
+    {
+      "step_id": 2,
+      "action": "Click the search field",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.6967,
+      "rank": 3
+    },
+    {
+      "step_id": 6,
+      "action": "Open first wikilink in the first paragraph with a link",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3967,
+      "rank": 4
+    },
+    {
+      "step_id": 23,
+      "action": "Wait for history list again",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3967,
+      "rank": 5
+    }
+  ],
+  "llm_ranked_steps": [
+    {
+      "step_id": 12,
+      "action": "Jump to Economy via table of contents",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": 13,
+      "visual_divergence_step": 13,
+      "visual_causal_reason": "symptom_on_next_step",
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit wikipedia.org",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 2,
+      "action": "Click the search field",
+      "network_score": 0.85,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 6,
+      "action": "Open first wikilink in the first paragraph with a link",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 23,
+      "action": "Wait for history list again",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3967,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 31,
+    "first_persistent_divergence": 13,
+    "divergence_score": 1.0,
+    "attributed_root_step": 12,
+    "visual_causal_score": 1.0,
+    "visible_at_step": 13,
+    "reason": "symptom_on_next_step",
+    "has_signal": true
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 12,
+    "root_cause_summary": "The 'Jump to Economy via table of contents' action caused a visual divergence (wrong UI/state) that manifested in the next step.",
+    "downstream_steps": [
+      23
+    ],
+    "failure_chain": "Step 12's incorrect navigation altered the page state, leading to a screenshot mismatch at step 13 and causing later verification/wait steps (e.g., step 23) to fail with missing requests and console errors."
+  },
+  "stakeholder_summary": "The test tried to jump to the Economy section using the table‑of‑contents link, but it landed on the wrong page or showed the wrong view. That wrong view made the next screen look different than expected, so the automated check that compares the screen to a reference image failed. Because the page wasn’t in the right state, later steps that wait for certain items to appear couldn’t find them, causing the test to stop with an error. In short, the wrong navigation early on threw off everything that followed, just like taking a turn onto the wrong street and then being unable to locate the destination you were looking for.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 12,
+    "visual_summary": "Step 13 (score=0.70): different content",
+    "visual_scores": [
+      {
+        "step_id": 11,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 12,
+        "visual_score": 0.7,
+        "visual_note": "Attributed from step 13: different content"
+      },
+      {
+        "step_id": 13,
+        "visual_score": 0.7,
+        "visual_note": "different content"
+      },
+      {
+        "step_id": 14,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 15,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 2,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 6,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 8
+  },
   "evaluation": {
     "actual_fault_step": 13,
-    "hit@1": 0,
-    "hit@3": 0,
-    "hit@5": 0,
-    "rank_position": -1,
-    "rank_distance": 5,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
     "step_distances": [
       {
         "rank": 1,
+        "step_id": 13,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 12,
+        "step_distance": 1
+      },
+      {
+        "rank": 3,
         "step_id": 0,
         "step_distance": 13
       },
       {
-        "rank": 2,
+        "rank": 4,
         "step_id": 2,
         "step_distance": 11
       },
       {
-        "rank": 3,
+        "rank": 5,
         "step_id": 6,
         "step_distance": 7
-      },
-      {
-        "rank": 4,
-        "step_id": 23,
-        "step_distance": 10
-      },
-      {
-        "rank": 5,
-        "step_id": 1,
-        "step_distance": 12
       }
     ],
-    "mad@5": 10.6,
-    "top1_step_distance": 13
+    "mad@5": 6.4,
+    "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/wikipedia\nRanking mode: heuristic\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)\n  #2  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)\n  #3  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397)\n  #4  Step 23: Wait for history list again  [network anomaly]  (score=0.397)\n  #5  Step 1: Wait for the homepage to load  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=0  Hit@3=0  Hit@5=0\nRank position of actual fault: not in top-5\nOverall rank distance (|actual_rank - 1|): 5\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               0         N/A         N/A          13\n  2               2         N/A         N/A          11\n  3               6         N/A         N/A           7\n  4              23         N/A         N/A          10\n  5               1         N/A         N/A          12\n\nTop-1 step distance: 13\nMAD@5 (mean step-dist over top-5): 10.6\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/wikipedia\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)\n  #2  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)\n  #3  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397)\n  #4  Step 23: Wait for history list again  [network anomaly]  (score=0.397)\n  #5  Step 1: Wait for the homepage to load  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (score=1.000, visual_causal=1.000)\n  #2  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697)\n  #3  Step 2: Click the search field  [network anomaly, console error]  (score=0.697)\n  #4  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397)\n  #5  Step 23: Wait for history list again  [network anomaly]  (score=0.397)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (score=0.650, visual_causal=1.000, pixel=0.000)\n  #2  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.453, pixel=0.000)\n  #3  Step 2: Click the search field  [network anomaly, console error]  (score=0.453, pixel=0.000)\n  #4  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.258, pixel=0.000)\n  #5  Step 23: Wait for history list again  [network anomaly]  (score=0.258, pixel=0.000)\n\nLLM TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (score=0.000, visual_causal=1.000, pixel=0.000)\n  #2  Step 0: Visit wikipedia.org  [network anomaly, console error]  (score=0.697, pixel=0.000)\n  #3  Step 2: Click the search field  [network anomaly, console error]  (score=0.697, pixel=0.000)\n  #4  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (score=0.397, pixel=0.000)\n  #5  Step 23: Wait for history list again  [network anomaly]  (score=0.397, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  (score=0.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 12: Jump to Economy via table of contents  [visual causal (symptom_on_next_step, visible@13, score=1.00)]  (vlm=0.700, visual_causal=1.000, pixel=0.000)\n  #3  Step 0: Visit wikipedia.org  [network anomaly, console error]  (vlm=0.000, pixel=0.000)\n  #4  Step 2: Click the search field  [network anomaly, console error]  (vlm=0.000, pixel=0.000)\n  #5  Step 6: Open first wikilink in the first paragraph with a link  [network anomaly]  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              31\nFirst persistent divergence: step 13 (score=1.000)\nAttributed root step:        step 12 (visual_causal=1.000)\nVisible symptom step:        step 13\nReason:                      symptom_on_next_step\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 31 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [0, 2] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 12 (pixel=0.00, visual_causal=1.00) (step 12 already #1).\n  • Visual-causal root step 12 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hit@k guard: visible symptom step 13 after visual-causal root 12 (vlm=0.70, pixel=1.00) — promoted to #1 (was step 12).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 12\nSummary:       The 'Jump to Economy via table of contents' action caused a visual divergence (wrong UI/state) that manifested in the next step.\nFailure chain: Step 12's incorrect navigation altered the page state, leading to a screenshot mismatch at step 13 and causing later verification/wait steps (e.g., step 23) to fail with missing requests and console errors.\nDownstream:    [23]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 12\nSummary:\n  Step 13 (score=0.70): different content\n\n  Per-step visual scores:\n    Step  12  score=0.70  Attributed from step 13: different content  [in final top-5]\n    Step  13  score=0.70  different content  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   2  score=0.00  identical  [in final top-5]\n    Step   6  score=0.00  identical  [in final top-5]\n    Step  11  score=0.00  identical  [analyzed only]\n    Step  14  score=0.00  identical  [analyzed only]\n    Step  15  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 13 (score=0.70): different content\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              13           1           0           0  ← ACTUAL FAULT\n  2              12         N/A         N/A           1\n  3               0         N/A         N/A          13\n  4               2         N/A         N/A          11\n  5               6         N/A         N/A           7\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 6.4\n=============================================================="
 }

@@ -1,11 +1,63 @@
 {
   "trace_id": "areeb_salem/github",
-  "generated": "2026-05-20T11:16:28.430130Z",
+  "generated": "2026-05-31T11:05:56.410827Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "ui_rendering_crash"
+    "fault_type": "ui_rendering_crash",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [23, 22, 20, 30] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 23 (pixel=1.00, visual_causal=0.00) — promoted to #1 (was step 22).",
+      "Deterministic promote: step 22 (text_causal) skipped — text_causal blocked — strong observer pixel lock on step 23.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 34
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
+    {
+      "step_id": 23,
+      "action": "Verify pull request file changes section.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9412,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1,
+      "vlm_visual_score": 0.7
+    },
+    {
+      "step_id": 22,
+      "action": "Scroll through the pull request description.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
+    },
     {
       "step_id": 20,
       "action": "Open the first pull request.",
@@ -13,8 +65,17 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.5,
-      "rank": 1
+      "combined_score": 0.5667,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 30,
@@ -23,8 +84,83 @@
       "console_score": 0.1,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.31,
+      "combined_score": 0.36,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 26,
+      "action": "Navigate to the Releases page.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 22,
+      "action": "Scroll through the pull request description.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.72,
+      "rank": 1
+    },
+    {
+      "step_id": 20,
+      "action": "Open the first pull request.",
+      "network_score": 0.5,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5667,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.5667,
       "rank": 2
+    },
+    {
+      "step_id": 30,
+      "action": "Navigate to the repository Insights page.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.36,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.36,
+      "rank": 3
     },
     {
       "step_id": 23,
@@ -33,8 +169,13 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3,
-      "rank": 3
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9412,
+      "pixel_score": 1.0,
+      "rank_score": 0.3333,
+      "rank": 4
     },
     {
       "step_id": 31,
@@ -43,63 +184,294 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3333,
+      "rank": 5
+    }
+  ],
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 23,
+      "action": "Verify pull request file changes section.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.566645,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9412,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.566645,
+      "rank": 1
+    },
+    {
+      "step_id": 22,
+      "action": "Scroll through the pull request description.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 2
+    },
+    {
+      "step_id": 20,
+      "action": "Open the first pull request.",
+      "network_score": 0.5,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.368355,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.368355,
+      "rank": 3
+    },
+    {
+      "step_id": 30,
+      "action": "Navigate to the repository Insights page.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.23399999999999999,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.234,
       "rank": 4
     },
     {
-      "step_id": 4,
-      "action": "Navigate to the Code tab.",
+      "step_id": 31,
+      "action": "Verify Insights activity data loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.216645,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.216645,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": [
+    {
+      "step_id": 23,
+      "action": "Verify pull request file changes section.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9412,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 22,
+      "action": "Scroll through the pull request description.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 20,
+      "action": "Open the first pull request.",
+      "network_score": 0.5,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5667,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 30,
+      "action": "Navigate to the repository Insights page.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.36,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 26,
+      "action": "Navigate to the Releases page.",
       "network_score": 0.7,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.28,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "screenshot_analysis": {
+    "steps_scanned": 34,
+    "first_persistent_divergence": null,
+    "divergence_score": 0.0,
+    "attributed_root_step": null,
+    "visual_causal_score": 0.0,
+    "visible_at_step": null,
+    "reason": null,
+    "has_signal": false
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 22,
+    "root_cause_summary": "Scrolling through the pull request description caused a JavaScript error that left the diff viewer instance null, leading to a TypeError when rendering the diff.",
+    "downstream_steps": [
+      23,
+      26,
+      30
+    ],
+    "failure_chain": "The scroll action (step 22) triggered a JS error that prevented proper initialization of the diff viewer; the verification step (step 23) then observed the TypeError, and subsequent steps (26,30) failed to load assets due to the broken page state."
+  },
+  "stakeholder_summary": "While the tester was scrolling through the description of a proposed change, a hiccup in the page’s code stopped the section that shows the differences from being prepared. Because that section never got set up, the next step that tries to read it ran into an error. This error made the page look blank or broken and stopped other parts (like loading images or scripts) from working correctly. To fix it, we should check that scrolling the description doesn’t interfere with the preparation of the change‑display section.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 23,
+    "visual_summary": "Step 23 (score=0.70): FAIL shows error dialog",
+    "visual_scores": [
+      {
+        "step_id": 22,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 20,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 30,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 23,
+        "visual_score": 0.7,
+        "visual_note": "FAIL shows error dialog"
+      },
+      {
+        "step_id": 31,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
     "actual_fault_step": 23,
-    "hit@1": 0,
+    "hit@1": 1,
     "hit@3": 1,
     "hit@5": 1,
-    "rank_position": 3,
-    "rank_distance": 2,
+    "rank_position": 1,
+    "rank_distance": 0,
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 20,
-        "step_distance": 3
-      },
-      {
-        "rank": 2,
-        "step_id": 30,
-        "step_distance": 7
-      },
-      {
-        "rank": 3,
         "step_id": 23,
         "step_distance": 0
       },
       {
+        "rank": 2,
+        "step_id": 22,
+        "step_distance": 1
+      },
+      {
+        "rank": 3,
+        "step_id": 20,
+        "step_distance": 3
+      },
+      {
         "rank": 4,
-        "step_id": 31,
-        "step_distance": 8
+        "step_id": 30,
+        "step_distance": 7
       },
       {
         "rank": 5,
-        "step_id": 4,
-        "step_distance": 19
+        "step_id": 26,
+        "step_distance": 3
       }
     ],
-    "mad@5": 7.4,
-    "top1_step_distance": 3
+    "mad@5": 2.8,
+    "top1_step_distance": 0
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/github\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 20: Open the first pull request.  [console error]  (score=0.500)\n  #2  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.310)\n  #3  Step 23: Verify pull request file changes section.  [console error]  (score=0.300)\n  #4  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.300)\n  #5  Step 4: Navigate to the Code tab.  [network anomaly]  (score=0.280)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 3\nRank distance: 2\nTop-1 step distance: 3\nMAD@5: 7.4\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/github\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720)\n  #2  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567)\n  #3  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360)\n  #4  Step 23: Verify pull request file changes section.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.333)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.468, pixel=0.000)\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.368, pixel=0.000)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.234, pixel=0.000)\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.217, pixel=0.000)\n\nLLM TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.333, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720, pixel=0.000)\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567, pixel=0.000)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360, pixel=0.000)\n  #5  Step 26: Navigate to the Releases page.  [network anomaly]  (score=0.327, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 23: Verify pull request file changes section.  [console error]  (vlm=0.700, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (vlm=0.000, pixel=0.000)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #5  Step 26: Navigate to the Releases page.  [network anomaly]  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              34\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 34 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [23, 22, 20, 30] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 23 (pixel=1.00, visual_causal=0.00) — promoted to #1 (was step 22).\n  • Deterministic promote: step 22 (text_causal) skipped — text_causal blocked — strong observer pixel lock on step 23.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 22\nSummary:       Scrolling through the pull request description caused a JavaScript error that left the diff viewer instance null, leading to a TypeError when rendering the diff.\nFailure chain: The scroll action (step 22) triggered a JS error that prevented proper initialization of the diff viewer; the verification step (step 23) then observed the TypeError, and subsequent steps (26,30) failed to load assets due to the broken page state.\nDownstream:    [23, 26, 30]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 23\nSummary:\n  Step 23 (score=0.70): FAIL shows error dialog\n\n  Per-step visual scores:\n    Step  23  score=0.70  FAIL shows error dialog  [in final top-5]\n    Step  20  score=0.00  identical  [in final top-5]\n    Step  22  score=0.00  identical  [in final top-5]\n    Step  30  score=0.00  identical  [in final top-5]\n    Step  31  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 23 (score=0.70): FAIL shows error dialog\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              23           1           0           0  ← ACTUAL FAULT\n  2              22         N/A         N/A           1\n  3              20         N/A         N/A           3\n  4              30         N/A         N/A           7\n  5              26         N/A         N/A           3\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 2.8\n=============================================================="
 }

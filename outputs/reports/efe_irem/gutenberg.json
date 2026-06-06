@@ -1,11 +1,25 @@
 {
   "trace_id": "efe_irem/gutenberg",
-  "generated": "2026-05-21T15:12:57.095198Z",
+  "generated": "2026-05-30T20:24:43.863599Z",
   "metadata": {
     "source": "efe_irem",
-    "fault_type": "403_forbidden"
+    "fault_type": "403_forbidden",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [8] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 8 (pixel=1.00, visual_causal=1.00) (step 8 already #1).",
+      "Visual-causal root step 8 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=1.00, vlm=0.90) (step 8 already #1)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 28
   },
-  "ranking_mode": "llm+diagnosis",
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 8,
@@ -14,7 +28,16 @@
       "console_score": 0.9,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.72,
+      "combined_score": 0.82472,
+      "screenshots_available": true,
+      "pixel_global": 0.4992,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.499,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 8,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 0.82472,
       "rank": 1
     },
     {
@@ -25,7 +48,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 2
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 1,
@@ -35,7 +67,35 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 3
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 9,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.4992,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "vlm_visual_score": 0.9,
+      "rank": 4
     },
     {
       "step_id": 2,
@@ -45,17 +105,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 4
-    },
-    {
-      "step_id": 3,
-      "action": "Wait for the page to load",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "rank": 5
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
     }
   ],
   "heuristic_steps": [
@@ -67,6 +126,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.4992,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.72,
       "rank": 1
     },
     {
@@ -77,6 +141,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 2
     },
     {
@@ -87,6 +156,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 3
     },
     {
@@ -97,6 +171,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 4
     },
     {
@@ -107,16 +186,359 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 8,
+      "action": "Click on Read Now to read the book",
+      "network_score": 0.9,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.82472,
+      "screenshots_available": true,
+      "pixel_global": 0.4992,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.499,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 8,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 0.82472,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit gutenberg.org",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Click on Frequently Downloaded",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": [
+    {
+      "step_id": 8,
+      "action": "Click on Read Now to read the book",
+      "network_score": 0.9,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.4992,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 8,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit gutenberg.org",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Click on Frequently Downloaded",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "llm_ranked_steps": [
+    {
+      "step_id": 8,
+      "action": "Click on Read Now to read the book",
+      "network_score": 0.9,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.4992,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.499,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 8,
+      "visual_causal_reason": "earliest_divergence",
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit gutenberg.org",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Click on Frequently Downloaded",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 28,
+    "first_persistent_divergence": 8,
+    "divergence_score": 1.0,
+    "attributed_root_step": 8,
+    "visual_causal_score": 1.0,
+    "visible_at_step": null,
+    "reason": "earliest_divergence",
+    "has_signal": true
+  },
   "technical_diagnosis": {
     "root_cause_step_id": 8,
-    "root_cause_summary": "A 403 status code is returned when attempting to access the ebook resource at https://www.gutenberg.org/ebooks/58169.html.images, preventing the book from being read",
+    "root_cause_summary": "Clicking 'Read Now' resulted in a 403 error for image resources, preventing required assets from loading.",
     "downstream_steps": [],
-    "failure_chain": "The 403 error at step 8 is the primary cause of the failure, and there are no identifiable downstream effects in the provided steps, as the subsequent steps do not exhibit any network or console log differences."
+    "failure_chain": "The click action triggered a request to load book images that returned 403 Forbidden, causing missing asset requests and visual divergence; subsequent steps then failed because the expected content and images were not present."
   },
-  "stakeholder_summary": "When our system tried to access a specific book resource, it was blocked, like trying to open a door that no longer exists. This happened during the step where we attempt to retrieve the book, which is a crucial part of the process. As a result, the book cannot be read, and an error occurs. It's possible that the issue is with the book's online location, so we should check if the address is correct and if we have permission to access it.",
+  "stakeholder_summary": "When the user clicked the “Read Now” button, the system tried to fetch the pictures needed to display the book but was blocked from getting them. This block occurred right after the click, while the app was loading the book’s images. Because those images couldn’t be retrieved, the page appeared incomplete or broken, and any later steps that relied on seeing those images failed. Verifying that the image files are still present and have the right access permissions should fix the problem.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 8,
+    "visual_summary": "Step 8 (score=0.90): Error message instead of book content",
+    "visual_scores": [
+      {
+        "step_id": 6,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 7,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 8,
+        "visual_score": 0.9,
+        "visual_note": "Error message instead of book content"
+      },
+      {
+        "step_id": 9,
+        "visual_score": 0.9,
+        "visual_note": "Error message instead of book content"
+      },
+      {
+        "step_id": 10,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 1,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 7
+  },
   "evaluation": {
     "actual_fault_step": 8,
     "hit@1": 1,
@@ -142,17 +564,17 @@
       },
       {
         "rank": 4,
-        "step_id": 2,
-        "step_distance": 6
+        "step_id": 9,
+        "step_distance": 1
       },
       {
         "rank": 5,
-        "step_id": 3,
-        "step_distance": 5
+        "step_id": 2,
+        "step_distance": 6
       }
     ],
-    "mad@5": 5.2,
+    "mad@5": 4.4,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/gutenberg\nRanking mode: llm+diagnosis\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 0: Visit gutenberg.org  (score=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000)\n  #4  Step 2: Click on Frequently Downloaded  (score=0.000)\n  #5  Step 3: Wait for the page to load  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 8\nSummary:       A 403 status code is returned when attempting to access the ebook resource at https://www.gutenberg.org/ebooks/58169.html.images, preventing the book from being read\nFailure chain: The 403 error at step 8 is the primary cause of the failure, and there are no identifiable downstream effects in the provided steps, as the subsequent steps do not exhibit any network or console log differences.\nDownstream:    []\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen our system tried to access a specific book resource, it was blocked, like trying to open a door that no longer exists. This happened during the step where we attempt to retrieve the book, which is a crucial part of the process. As a result, the book cannot be read, and an error occurs. It's possible that the issue is with the book's online location, so we should check if the address is correct and if we have permission to access it.\n\nEVALUATION\n----------------------------------------\nActual fault step: 8\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               8           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A           8\n  3               1         N/A         N/A           7\n  4               2         N/A         N/A           6\n  5               3         N/A         N/A           5\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.2\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/gutenberg\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 0: Visit gutenberg.org  (score=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000)\n  #4  Step 2: Click on Frequently Downloaded  (score=0.000)\n  #5  Step 3: Wait for the page to load  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit gutenberg.org  (score=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000)\n  #4  Step 2: Click on Frequently Downloaded  (score=0.000)\n  #5  Step 3: Wait for the page to load  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=0.825, visual_causal=1.000, pixel=0.499) ← ACTUAL FAULT\n  #2  Step 0: Visit gutenberg.org  (score=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000, pixel=0.000)\n  #4  Step 2: Click on Frequently Downloaded  (score=0.000, pixel=0.000)\n  #5  Step 3: Wait for the page to load  (score=0.000, pixel=0.000)\n\nLLM TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=0.720, visual_causal=1.000, pixel=0.499) ← ACTUAL FAULT\n  #2  Step 0: Visit gutenberg.org  (score=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000, pixel=0.000)\n  #4  Step 2: Click on Frequently Downloaded  (score=0.000, pixel=0.000)\n  #5  Step 3: Wait for the page to load  (score=0.000, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=0.825, visual_causal=1.000, pixel=0.499) ← ACTUAL FAULT\n  #2  Step 0: Visit gutenberg.org  (vlm=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  (vlm=0.000, pixel=0.000)\n  #4  Step 9: Wait for the page to load  (vlm=0.900, pixel=1.000)\n  #5  Step 2: Click on Frequently Downloaded  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              28\nFirst persistent divergence: step 8 (score=1.000)\nAttributed root step:        step 8 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 28 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [8] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 8 (pixel=1.00, visual_causal=1.00) (step 8 already #1).\n  • Visual-causal root step 8 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=1.00, vlm=0.90) (step 8 already #1).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 8\nSummary:       Clicking 'Read Now' resulted in a 403 error for image resources, preventing required assets from loading.\nFailure chain: The click action triggered a request to load book images that returned 403 Forbidden, causing missing asset requests and visual divergence; subsequent steps then failed because the expected content and images were not present.\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 8\nSummary:\n  Step 8 (score=0.90): Error message instead of book content\n\n  Per-step visual scores:\n    Step   8  score=0.90  Error message instead of book content  [in final top-5]\n    Step   9  score=0.90  Error message instead of book content  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   1  score=0.00  identical  [in final top-5]\n    Step   6  score=0.00  identical  [analyzed only]\n    Step   7  score=0.00  identical  [analyzed only]\n    Step  10  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 8 (score=0.90): Error message instead of book content\n\nEVALUATION\n----------------------------------------\nActual fault step: 8\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               8           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A           8\n  3               1         N/A         N/A           7\n  4               9         N/A         N/A           1\n  5               2         N/A         N/A           6\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 4.4\n=============================================================="
 }

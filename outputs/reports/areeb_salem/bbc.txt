@@ -1,30 +1,98 @@
-============================================================
+==============================================================
 TraceLens Diagnosis Report: areeb_salem/bbc
-============================================================
+Ranking mode: llm+vlm
+==============================================================
 
-RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
-  #1  Step 16: Scroll back to article top.  [network anomaly, console error]  (score=0.495)
-  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.495)
-  #3  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.270)
-  #4  Step 15: Verify related article links visible.  [network anomaly]  (score=0.270)
-  #5  Step 18: Navigate to a news category.  [network anomaly]  (score=0.270)
+  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660)
+  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477)
+  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.443)
+  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.442, pixel=0.038)
+  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.310, pixel=0.000)
+  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.288, pixel=0.000)
+  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.234, pixel=0.000)
+
+LLM TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 5: Open the first news article.  [network anomaly]  (score=0.443, pixel=0.000)
+  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477, pixel=0.000)
+  #3  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
+  #4  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660, pixel=0.038)
+  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 5: Open the first news article.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #3  Step 18: Navigate to a news category.  [network anomaly]  (vlm=0.000, pixel=0.000) ← ACTUAL FAULT
+  #4  Step 19: Verify category page loaded.  [network anomaly, console error]  (vlm=0.100, pixel=0.038)
+  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              32
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [18, 19, 0, 5] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • Deterministic promote: step 5 (wrong_navigation).
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step: 16
-Summary:      Iframe script loading issues trigger a chain of ad rendering failures and console warnings.
-Failure chain:The root cause at step 16 leads to ad rendering issues, which in turn cause verification failures at step 19, and propagate to other steps due to the inability to access ad HTML content, resulting in a cascade of console warnings and errors.
+Primary step:  Step 0
+Summary:       The navigation to the BBC News homepage loaded an incorrect page (likely an ad iframe) instead of the expected homepage, causing the test to operate on the wrong context.
+Failure chain: Loading the wrong homepage caused subsequent steps (opening an article, navigating a category, verifying the category page, and scrolling) to interact with unexpected content, leading to failed fetches, 503 errors, stale-cache warnings, and missing asset requests observed later in the trace.
+Downstream:    [5, 18, 19, 10]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 19
+Summary:
+  Step 19 (score=0.10): Cached content banner present in FAIL
+
+  Per-step visual scores:
+    Step  19  score=0.10  Cached content banner present in FAIL  [in final top-5]
+    Step   0  score=0.00  identical  [in final top-5]
+    Step   5  score=0.00  identical  [in final top-5]
+    Step  10  score=0.00  identical  [in final top-5]
+    Step  18  score=0.00  identical  [in final top-5]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When our system tried to load a crucial part of the webpage, it couldn't find what it needed, kind of like trying to open a door that no longer exists. This happened during a specific step in the process where we prepare to show ads. As a result, the ads didn't display properly, and this caused a chain reaction of problems that affected several other parts of the system. The visible impact was that the ads didn't show up as expected, and we should check if the missing part is correctly set up and accessible to fix the issue.
+Step 19 (score=0.10): Cached content banner present in FAIL
 
 EVALUATION
 ----------------------------------------
-Hit@1: 0  |  Hit@3: 0  |  Hit@5: 1
-Rank position of actual fault: 5
-Rank distance: 4
-Top-1 step distance: 2
-MAD@5: 2.8
-============================================================
+Actual fault step: 18
+Hit@1=0  Hit@3=1  Hit@5=1
+Rank position of actual fault: 3
+Overall rank distance (|actual_rank - 1|): 2
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1               5         N/A         N/A          13
+  2               0         N/A         N/A          18
+  3              18           1           2           0  ← ACTUAL FAULT
+  4              19         N/A         N/A           1
+  5              10         N/A         N/A           8
+
+Top-1 step distance: 13
+MAD@5 (mean step-dist over top-5): 8.0
+==============================================================

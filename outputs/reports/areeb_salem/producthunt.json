@@ -1,11 +1,45 @@
 {
   "trace_id": "areeb_salem/producthunt",
-  "generated": "2026-05-20T11:16:28.520106Z",
+  "generated": "2026-05-31T08:16:46.952332Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "auth_gated_action"
+    "fault_type": "auth_gated_action",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [16, 6] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 16 (pixel=1.00, visual_causal=1.00) (step 16 already #1).",
+      "Visual-causal root step 16 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hybrid final rank = blend score only (no post-ensemble Hit@k arbitration)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 28
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
+    {
+      "step_id": 16,
+      "action": "Click the upvote button on the product.",
+      "network_score": 0.0,
+      "console_score": 0.9,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.42,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 16,
+      "visual_causal_reason": "earliest_divergence",
+      "rank": 1,
+      "vlm_visual_score": 0.7
+    },
     {
       "step_id": 6,
       "action": "Open the first product page.",
@@ -13,7 +47,90 @@
       "console_score": 0.9,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.558,
+      "combined_score": 0.636,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 5,
+      "action": "Verify product cards with upvote counts.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 13,
+      "action": "Scroll to comments section.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4733,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 17,
+      "action": "Verify upvote action result.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.3,
+      "intent_score": 0.0,
+      "combined_score": 0.06,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "vlm_visual_score": 0.7,
+      "rank": 5
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 6,
+      "action": "Open the first product page.",
+      "network_score": 0.72,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.636,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0001,
+      "rank_score": 0.636,
       "rank": 1
     },
     {
@@ -23,7 +140,12 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.42,
+      "combined_score": 0.4733,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.4733,
       "rank": 2
     },
     {
@@ -33,7 +155,12 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.42,
+      "combined_score": 0.4733,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.4733,
       "rank": 3
     },
     {
@@ -43,7 +170,12 @@
       "console_score": 0.9,
       "action_score": 0.6,
       "intent_score": 0.0,
-      "combined_score": 0.36,
+      "combined_score": 0.42,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.42,
       "rank": 4
     },
     {
@@ -53,53 +185,404 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.28,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0001,
+      "rank_score": 0.3267,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 16,
+      "action": "Click the upvote button on the product.",
+      "network_score": 0.0,
+      "console_score": 0.9,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 1.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 16,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 6,
+      "action": "Open the first product page.",
+      "network_score": 0.72,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.41343500000000005,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.413435,
+      "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to Product Hunt homepage.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.307645,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.307645,
+      "rank": 3
+    },
+    {
+      "step_id": 13,
+      "action": "Scroll to comments section.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.307645,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.307645,
+      "rank": 4
+    },
+    {
+      "step_id": 5,
+      "action": "Verify product cards with upvote counts.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.21239,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.21239,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": [
+    {
+      "step_id": 16,
+      "action": "Click the upvote button on the product.",
+      "network_score": 0.0,
+      "console_score": 0.9,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.42,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 16,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 6,
+      "action": "Open the first product page.",
+      "network_score": 0.72,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.636,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0001,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.636,
+      "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to Product Hunt homepage.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4733,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.4733,
+      "rank": 3
+    },
+    {
+      "step_id": 13,
+      "action": "Scroll to comments section.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4733,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.4733,
+      "rank": 4
+    },
+    {
+      "step_id": 5,
+      "action": "Verify product cards with upvote counts.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0001,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3267,
+      "rank": 5
+    }
+  ],
+  "llm_ranked_steps": [
+    {
+      "step_id": 16,
+      "action": "Click the upvote button on the product.",
+      "network_score": 0.0,
+      "console_score": 0.9,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.42,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 16,
+      "visual_causal_reason": "earliest_divergence",
+      "rank": 1
+    },
+    {
+      "step_id": 6,
+      "action": "Open the first product page.",
+      "network_score": 0.72,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.636,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 5,
+      "action": "Verify product cards with upvote counts.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 13,
+      "action": "Scroll to comments section.",
+      "network_score": 0.3,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4733,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 4,
+      "action": "Scroll through the product feed.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0001,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0001,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 28,
+    "first_persistent_divergence": 16,
+    "divergence_score": 1.0,
+    "attributed_root_step": 16,
+    "visual_causal_score": 1.0,
+    "visible_at_step": null,
+    "reason": "earliest_divergence",
+    "has_signal": true
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 16,
+    "root_cause_summary": "At step 16 the test clicked the upvote button instead of verifying product metadata and stats, causing the UI to diverge.",
+    "downstream_steps": [
+      6,
+      13
+    ],
+    "failure_chain": "Changing the action at step 16 altered the expected page state, which prevented proper metadata verification and led to missing/failed GraphQL requests (observed as 403 errors in steps 6 and 13)."
+  },
+  "stakeholder_summary": "At step 16 of the test, the script clicked the upvote button when it was supposed to be checking the product’s details. That click took the test to a different screen than expected, so the later steps couldn’t find the information they needed. As a result, steps 6 and 13 of the test failed, showing an error or missing data that caused the overall test to stop. To fix it, we should make sure the test verifies the product details before trying to upvote.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 16,
+    "visual_summary": "Step 16 (score=0.70): Overlay modal appeared",
+    "visual_scores": [
+      {
+        "step_id": 14,
+        "visual_score": 0.0,
+        "visual_note": "Identical"
+      },
+      {
+        "step_id": 15,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 16,
+        "visual_score": 0.7,
+        "visual_note": "Overlay modal appeared"
+      },
+      {
+        "step_id": 17,
+        "visual_score": 0.7,
+        "visual_note": "Overlay modal appeared"
+      },
+      {
+        "step_id": 18,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 6,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 13,
+        "visual_score": 0.0,
+        "visual_note": "Identical"
+      }
+    ],
+    "steps_with_screenshots": 8
+  },
   "evaluation": {
-    "actual_fault_step": 15,
-    "hit@1": 0,
-    "hit@3": 0,
-    "hit@5": 0,
-    "rank_position": -1,
-    "rank_distance": 5,
+    "actual_fault_step": 16,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 6,
-        "step_distance": 9
+        "step_id": 16,
+        "step_distance": 0
       },
       {
         "rank": 2,
-        "step_id": 0,
-        "step_distance": 15
+        "step_id": 6,
+        "step_distance": 10
       },
       {
         "rank": 3,
-        "step_id": 13,
-        "step_distance": 2
+        "step_id": 5,
+        "step_distance": 11
       },
       {
         "rank": 4,
-        "step_id": 16,
-        "step_distance": 1
+        "step_id": 13,
+        "step_distance": 3
       },
       {
         "rank": 5,
-        "step_id": 5,
-        "step_distance": 10
+        "step_id": 17,
+        "step_distance": 1
       }
     ],
-    "mad@5": 7.4,
-    "top1_step_distance": 9
+    "mad@5": 5.0,
+    "top1_step_distance": 0
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/producthunt\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.558)\n  #2  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.420)\n  #3  Step 13: Scroll to comments section.  [console error]  (score=0.420)\n  #4  Step 16: Click the upvote button on the product.  [console error, action divergence]  (score=0.360)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.280)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 0  |  Hit@5: 0\nRank position of actual fault: -1\nRank distance: 5\nTop-1 step distance: 9\nMAD@5: 7.4\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/producthunt\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636)\n  #2  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.473)\n  #3  Step 13: Scroll to comments section.  [console error]  (score=0.473)\n  #4  Step 16: Click the upvote button on the product.  [console error, action divergence]  (score=0.420) ← ACTUAL FAULT\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636)\n  #3  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.473)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.473)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.413, pixel=0.000)\n  #3  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.308, pixel=0.000)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.308, pixel=0.000)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.212, pixel=0.000)\n\nLLM TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=0.420, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636, pixel=0.000)\n  #3  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327, pixel=0.000)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.473, pixel=0.000)\n  #5  Step 4: Scroll through the product feed.  (score=0.000, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (vlm=0.700, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (vlm=0.000, pixel=0.000)\n  #3  Step 5: Verify product cards with upvote counts.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #4  Step 13: Scroll to comments section.  [console error]  (vlm=0.000, pixel=0.000)\n  #5  Step 17: Verify upvote action result.  (vlm=0.700, pixel=1.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              28\nFirst persistent divergence: step 16 (score=1.000)\nAttributed root step:        step 16 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 28 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [16, 6] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 16 (pixel=1.00, visual_causal=1.00) (step 16 already #1).\n  • Visual-causal root step 16 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hybrid final rank = blend score only (no post-ensemble Hit@k arbitration).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 16\nSummary:       At step 16 the test clicked the upvote button instead of verifying product metadata and stats, causing the UI to diverge.\nFailure chain: Changing the action at step 16 altered the expected page state, which prevented proper metadata verification and led to missing/failed GraphQL requests (observed as 403 errors in steps 6 and 13).\nDownstream:    [6, 13]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 16\nSummary:\n  Step 16 (score=0.70): Overlay modal appeared\n\n  Per-step visual scores:\n    Step  16  score=0.70  Overlay modal appeared  [in final top-5]\n    Step  17  score=0.70  Overlay modal appeared  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   6  score=0.00  identical  [in final top-5]\n    Step  13  score=0.00  Identical  [in final top-5]\n    Step  14  score=0.00  Identical  [analyzed only]\n    Step  15  score=0.00  identical  [analyzed only]\n    Step  18  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 16 (score=0.70): Overlay modal appeared\n\nEVALUATION\n----------------------------------------\nActual fault step: 16\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              16           1           0           0  ← ACTUAL FAULT\n  2               6         N/A         N/A          10\n  3               5         N/A         N/A          11\n  4              13         N/A         N/A           3\n  5              17         N/A         N/A           1\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.0\n=============================================================="
 }

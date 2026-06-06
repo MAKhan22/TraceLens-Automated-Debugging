@@ -1,9 +1,9 @@
 ==============================================================
 TraceLens Diagnosis Report: ersel/opencart_manufacturer_404_35
-Ranking mode: heuristic (llm failed)
+Ranking mode: heuristic
 ==============================================================
 
-FINAL RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text)
 ----------------------------------------
   #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT
   #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)

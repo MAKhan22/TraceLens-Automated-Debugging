@@ -7,6 +7,7 @@
     "action_score": 0.0,
     "intent_score": 1.0,
     "combined_score": 0.25,
+    "rank_score": 0.25,
     "rank": 1
   },
   {
@@ -17,6 +18,7 @@
     "action_score": 0.3,
     "intent_score": 0.0,
     "combined_score": 0.045,
+    "rank_score": 0.045,
     "rank": 2
   },
   {
@@ -27,6 +29,7 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.0,
+    "rank_score": 0.0,
     "rank": 3
   },
   {
@@ -37,6 +40,7 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.0,
+    "rank_score": 0.0,
     "rank": 4
   },
   {
@@ -47,6 +51,7 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.0,
+    "rank_score": 0.0,
     "rank": 5
   }
 ]

@@ -1,30 +1,99 @@
-============================================================
+==============================================================
 TraceLens Diagnosis Report: areeb_salem/github
-============================================================
+Ranking mode: llm+vlm
+==============================================================
 
-RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
-  #1  Step 20: Open the first pull request.  [console error]  (score=0.500)
-  #2  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.310)
-  #3  Step 23: Verify pull request file changes section.  [console error]  (score=0.300)
-  #4  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.300)
-  #5  Step 4: Navigate to the Code tab.  [network anomaly]  (score=0.280)
+  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720)
+  #2  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567)
+  #3  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360)
+  #4  Step 23: Verify pull request file changes section.  [console error]  (score=0.333) ← ACTUAL FAULT
+  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.333)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.468, pixel=0.000)
+  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.368, pixel=0.000)
+  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.234, pixel=0.000)
+  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.217, pixel=0.000)
+
+LLM TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.333, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720, pixel=0.000)
+  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567, pixel=0.000)
+  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360, pixel=0.000)
+  #5  Step 26: Navigate to the Releases page.  [network anomaly]  (score=0.327, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 23: Verify pull request file changes section.  [console error]  (vlm=0.700, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (vlm=0.000, pixel=0.000)
+  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #5  Step 26: Navigate to the Releases page.  [network anomaly]  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              34
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 34 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [23, 22, 20, 30] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: pixel/visual-causal leader step 23 (pixel=1.00, visual_causal=0.00) — promoted to #1 (was step 22).
+  • Deterministic promote: step 22 (text_causal) skipped — text_causal blocked — strong observer pixel lock on step 23.
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step: unknown
-Summary:      
-Failure chain:
+Primary step:  Step 22
+Summary:       Scrolling through the pull request description caused a JavaScript error that left the diff viewer instance null, leading to a TypeError when rendering the diff.
+Failure chain: The scroll action (step 22) triggered a JS error that prevented proper initialization of the diff viewer; the verification step (step 23) then observed the TypeError, and subsequent steps (26,30) failed to load assets due to the broken page state.
+Downstream:    [23, 26, 30]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 23
+Summary:
+  Step 23 (score=0.70): FAIL shows error dialog
+
+  Per-step visual scores:
+    Step  23  score=0.70  FAIL shows error dialog  [in final top-5]
+    Step  20  score=0.00  identical  [in final top-5]
+    Step  22  score=0.00  identical  [in final top-5]
+    Step  30  score=0.00  identical  [in final top-5]
+    Step  31  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-
+Step 23 (score=0.70): FAIL shows error dialog
 
 EVALUATION
 ----------------------------------------
-Hit@1: 0  |  Hit@3: 1  |  Hit@5: 1
-Rank position of actual fault: 3
-Rank distance: 2
-Top-1 step distance: 3
-MAD@5: 7.4
-============================================================
+Actual fault step: 23
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              23           1           0           0  ← ACTUAL FAULT
+  2              22         N/A         N/A           1
+  3              20         N/A         N/A           3
+  4              30         N/A         N/A           7
+  5              26         N/A         N/A           3
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 2.8
+==============================================================

@@ -1,11 +1,25 @@
 {
   "trace_id": "efe_irem/webmd",
-  "generated": "2026-05-21T15:16:54.425653Z",
+  "generated": "2026-05-30T20:30:22.854821Z",
   "metadata": {
     "source": "efe_irem",
-    "fault_type": "404_page_not_found"
+    "fault_type": "404_page_not_found",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [2, 5, 6, 7, 8] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 2 (pixel=1.00, visual_causal=1.00) (step 2 already #1).",
+      "Visual-causal root step 2 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=1.00, vlm=0.90) (step 2 already #1)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 24
   },
-  "ranking_mode": "heuristic (llm failed)",
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 2,
@@ -14,7 +28,16 @@
       "console_score": 0.5,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.5867,
+      "combined_score": 1.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 2,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
       "rank": 1
     },
     {
@@ -25,7 +48,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
-      "rank": 2
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.9
     },
     {
       "step_id": 6,
@@ -35,7 +67,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
-      "rank": 3
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.9
     },
     {
       "step_id": 7,
@@ -45,7 +86,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
-      "rank": 4
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.9
     },
     {
       "step_id": 8,
@@ -55,7 +105,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
-      "rank": 5
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.9
     }
   ],
   "heuristic_steps": [
@@ -67,6 +126,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.5867,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.5867,
       "rank": 1
     },
     {
@@ -77,6 +141,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "rank_score": 0.4933,
       "rank": 2
     },
     {
@@ -87,6 +156,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "rank_score": 0.4933,
       "rank": 3
     },
     {
@@ -97,6 +171,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "rank_score": 0.4933,
       "rank": 4
     },
     {
@@ -107,16 +186,379 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.4933,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 2,
+      "action": "Visit depression page directly",
+      "network_score": 0.9,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 1.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 2,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 5,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6706449999999999,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.670645,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Click on the author of the article",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6706449999999999,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.670645,
+      "rank": 3
+    },
+    {
+      "step_id": 7,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6706449999999999,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.670645,
+      "rank": 4
+    },
+    {
+      "step_id": 8,
+      "action": "Click on Who we are to see other authors",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6706449999999999,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.670645,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": [
+    {
+      "step_id": 2,
+      "action": "Visit depression page directly",
+      "network_score": 0.9,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5867,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 2,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 5,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.4933,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Click on the author of the article",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.4933,
+      "rank": 3
+    },
+    {
+      "step_id": 7,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.4933,
+      "rank": 4
+    },
+    {
+      "step_id": 8,
+      "action": "Click on Who we are to see other authors",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.4933,
+      "rank": 5
+    }
+  ],
+  "llm_ranked_steps": [
+    {
+      "step_id": 2,
+      "action": "Visit depression page directly",
+      "network_score": 0.9,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.5867,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 2,
+      "visual_causal_reason": "earliest_divergence",
+      "rank": 1
+    },
+    {
+      "step_id": 5,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 6,
+      "action": "Click on the author of the article",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 7,
+      "action": "Wait for the page to load",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9725,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 8,
+      "action": "Click on Who we are to see other authors",
+      "network_score": 0.7,
+      "console_score": 0.5,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4933,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 24,
+    "first_persistent_divergence": 2,
+    "divergence_score": 1.0,
+    "attributed_root_step": 2,
+    "visual_causal_score": 1.0,
+    "visible_at_step": null,
+    "reason": "earliest_divergence",
+    "has_signal": true
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 2,
+    "root_cause_summary": "The depression page returned a 404 error, preventing the page from loading correctly.",
+    "downstream_steps": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "failure_chain": "Because the initial visit to the depression page resulted in a 404, the page content never loaded, causing all subsequent actions (clicks, waits) to operate on a missing or broken page, leading to missing asset requests and test failures."
+  },
+  "stakeholder_summary": "The test tried to open the depression page, but the page couldn’t be found — like looking for a room that isn’t there. This happened at the second step of the test, right when the system was supposed to load that page. Because the page never appeared, later steps that depended on it (such as clicking buttons or waiting for content) had nothing to work with, causing the test to fail. Checking that the link to the depression page is correct and that the page actually exists should fix the issue.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 2,
+    "visual_summary": "Step 2 (score=0.90): Error page instead of depression resource center\nStep 3 (score=0.90): Error page displayed instead of expected content\nStep 6 (score=0.90): FAIL shows 404 error page\nStep 9 (score=0.90): FAIL shows 404 error page, PASS shows About WebMD page",
+    "visual_scores": [
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 1,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 2,
+        "visual_score": 0.9,
+        "visual_note": "Error page instead of depression resource center"
+      },
+      {
+        "step_id": 3,
+        "visual_score": 0.9,
+        "visual_note": "Error page displayed instead of expected content"
+      },
+      {
+        "step_id": 4,
+        "visual_score": 0.9,
+        "visual_note": "Error page displayed instead of expected content"
+      },
+      {
+        "step_id": 5,
+        "visual_score": 0.9,
+        "visual_note": "Error page displayed instead of expected content"
+      },
+      {
+        "step_id": 6,
+        "visual_score": 0.9,
+        "visual_note": "FAIL shows 404 error page"
+      },
+      {
+        "step_id": 7,
+        "visual_score": 0.9,
+        "visual_note": "Error page displayed instead of expected content"
+      },
+      {
+        "step_id": 8,
+        "visual_score": 0.9,
+        "visual_note": "FAIL shows 404 error page"
+      },
+      {
+        "step_id": 9,
+        "visual_score": 0.9,
+        "visual_note": "FAIL shows 404 error page, PASS shows About WebMD page"
+      }
+    ],
+    "steps_with_screenshots": 10
+  },
   "evaluation": {
     "actual_fault_step": 2,
     "hit@1": 1,
@@ -154,5 +596,5 @@
     "mad@5": 3.6,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/webmd\nRanking mode: heuristic (llm failed)\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error]  (score=0.587) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 2\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               2           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           3\n  3               6         N/A         N/A           4\n  4               7         N/A         N/A           5\n  5               8         N/A         N/A           6\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 3.6\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/webmd\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error]  (score=0.587) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.671, pixel=1.000)\n\nLLM TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=0.587, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493, pixel=1.000)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493, pixel=1.000)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493, pixel=1.000)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493, pixel=1.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (vlm=0.900, pixel=1.000)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (vlm=0.900, pixel=1.000)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (vlm=0.900, pixel=1.000)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (vlm=0.900, pixel=1.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              24\nFirst persistent divergence: step 2 (score=1.000)\nAttributed root step:        step 2 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 24 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [2, 5, 6, 7, 8] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 2 (pixel=1.00, visual_causal=1.00) (step 2 already #1).\n  • Visual-causal root step 2 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=1.00, vlm=0.90) (step 2 already #1).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 2\nSummary:       The depression page returned a 404 error, preventing the page from loading correctly.\nFailure chain: Because the initial visit to the depression page resulted in a 404, the page content never loaded, causing all subsequent actions (clicks, waits) to operate on a missing or broken page, leading to missing asset requests and test failures.\nDownstream:    [5, 6, 7, 8]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 2\nSummary:\n  Step 2 (score=0.90): Error page instead of depression resource center\n  Step 3 (score=0.90): Error page displayed instead of expected content\n  Step 6 (score=0.90): FAIL shows 404 error page\n  Step 9 (score=0.90): FAIL shows 404 error page, PASS shows About WebMD page\n\n  Per-step visual scores:\n    Step   2  score=0.90  Error page instead of depression resource center  [in final top-5]\n    Step   3  score=0.90  Error page displayed instead of expected content  [analyzed only]\n    Step   4  score=0.90  Error page displayed instead of expected content  [analyzed only]\n    Step   5  score=0.90  Error page displayed instead of expected content  [in final top-5]\n    Step   6  score=0.90  FAIL shows 404 error page  [in final top-5]\n    Step   7  score=0.90  Error page displayed instead of expected content  [in final top-5]\n    Step   8  score=0.90  FAIL shows 404 error page  [in final top-5]\n    Step   9  score=0.90  FAIL shows 404 error page, PASS shows About WebMD page  [analyzed only]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 2 (score=0.90): Error page instead of depression resource center\nStep 3 (score=0.90): Error page displayed instead of expected content\nStep 6 (score=0.90): FAIL shows 404 error page\nStep 9 (score=0.90): FAIL shows 404 error page, PASS shows About WebMD page\n\nEVALUATION\n----------------------------------------\nActual fault step: 2\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               2           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           3\n  3               6         N/A         N/A           4\n  4               7         N/A         N/A           5\n  5               8         N/A         N/A           6\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 3.6\n=============================================================="
 }

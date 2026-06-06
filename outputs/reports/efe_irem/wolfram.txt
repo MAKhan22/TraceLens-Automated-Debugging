@@ -1,41 +1,114 @@
 ==============================================================
 TraceLens Diagnosis Report: efe_irem/wolfram
-Ranking mode: heuristic
+Ranking mode: llm+vlm
 ==============================================================
 
-FINAL RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
-  #1  Step 4: Hit enter  [network anomaly]  (score=0.327)
-  #2  Step 14: Click Division Problems  [network anomaly]  (score=0.327)
-  #3  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)
-  #4  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)
-  #5  Step 17: Wait for the Ham Sandwich Theorem page  [network anomaly]  (score=0.327)
+  #1  Step 12: Click Geometry topic card  [network anomaly]  (score=0.443) ← ACTUAL FAULT
+  #2  Step 4: Hit enter  [network anomaly]  (score=0.327)
+  #3  Step 14: Click Division Problems  [network anomaly]  (score=0.327)
+  #4  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)
+  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)
+
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT
+  #2  Step 4: Hit enter  [network anomaly]  (score=0.327)
+  #3  Step 14: Click Division Problems  [network anomaly]  (score=0.327)
+  #4  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)
+  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.758, visual_causal=1.000, pixel=0.307) ← ACTUAL FAULT
+  #2  Step 4: Hit enter  [network anomaly]  (score=0.562, pixel=1.000)
+  #3  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.539, pixel=0.932)
+  #4  Step 14: Click Division Problems  [network anomaly]  (score=0.335, pixel=0.350)
+  #5  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.335, pixel=0.350)
+
+LLM TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.443, visual_causal=1.000, pixel=0.307) ← ACTUAL FAULT
+  #2  Step 4: Hit enter  [network anomaly]  (score=0.327, pixel=1.000)
+  #3  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327, pixel=0.932)
+  #4  Step 14: Click Division Problems  [network anomaly]  (score=0.327, pixel=0.350)
+  #5  Step 18: Click Pancake Theorem  [network anomaly]  (score=0.327, pixel=1.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.758, visual_causal=1.000, pixel=0.307) ← ACTUAL FAULT
+  #2  Step 4: Hit enter  [network anomaly]  (vlm=0.800, pixel=1.000)
+  #3  Step 14: Click Division Problems  [network anomaly]  (vlm=0.900, pixel=0.350)
+  #4  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (vlm=0.000, pixel=0.932)
+  #5  Step 13: Wait for the Geometry topics page  (vlm=0.900, pixel=1.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              20
+First persistent divergence: step 12 (score=1.000)
+Attributed root step:        step 12 (visual_causal=1.000)
+Reason:                      earliest_divergence
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 20 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [12, 4, 16] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: pixel/visual-causal leader step 12 (pixel=1.00, visual_causal=1.00) (step 12 already #1).
+  • Visual-causal root step 12 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.
+  • Deterministic promote: step 12 (wrong_navigation) skipped — already #1.
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
+  • Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=1.00, vlm=0.90) (step 12 already #1).
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-(LLM diagnosis not run — heuristic mode)
+Primary step:  Step 12
+Summary:       Clicking the Geometry topic card navigated to the RecreationalMathematics page instead of the expected Geometry topics page.
+Failure chain: The wrong navigation placed the test on an incorrect page, causing subsequent steps to miss expected assets and network requests, which manifested as failures in those later steps.
+Downstream:    [4, 16, 14, 18]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 12
+Summary:
+  Step 12 (score=0.90): wrong page
+  Step 4 (score=0.80): different page content
+
+  Per-step visual scores:
+    Step  12  score=0.90  wrong page  [in final top-5]
+    Step  13  score=0.90  wrong page  [in final top-5]
+    Step  14  score=0.90  wrong page  [in final top-5]
+    Step   4  score=0.80  different page content  [in final top-5]
+    Step  10  score=0.00  identical  [analyzed only]
+    Step  11  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-(LLM not run)
+Step 12 (score=0.90): wrong page
+Step 4 (score=0.80): different page content
 
 EVALUATION
 ----------------------------------------
 Actual fault step: 12
-Hit@1=0  Hit@3=0  Hit@5=0
-Rank position of actual fault: not in top-5
-Overall rank distance (|actual_rank - 1|): 5
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
 
 Per-rank breakdown:
   Pred.Rank    Step   True Rank   rank_dist   step_dist
   (our rank)          (1=fault)  |pred-true|  |step-actual|
   ----------  -----  ----------  ----------  ----------
-  1               4         N/A         N/A           8
-  2              14         N/A         N/A           2
-  3              15         N/A         N/A           3
+  1              12           1           0           0  ← ACTUAL FAULT
+  2               4         N/A         N/A           8
+  3              14         N/A         N/A           2
   4              16         N/A         N/A           4
-  5              17         N/A         N/A           5
+  5              13         N/A         N/A           1
 
-Top-1 step distance: 8
-MAD@5 (mean step-dist over top-5): 4.4
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 3.0
 ==============================================================

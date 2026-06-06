@@ -1,5 +1,24 @@
 [
   {
+    "step_id": 12,
+    "action": "Click Geometry topic card",
+    "network_score": 0.95,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.75759,
+    "screenshots_available": true,
+    "pixel_global": 0.3074,
+    "pixel_localized": 1.0,
+    "pixel_score": 0.307,
+    "visual_causal_score": 1.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": 12,
+    "visual_causal_reason": "earliest_divergence",
+    "rank_score": 0.75759,
+    "rank": 1
+  },
+  {
     "step_id": 4,
     "action": "Hit enter",
     "network_score": 0.7,
@@ -7,7 +26,16 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.3267,
-    "rank": 1
+    "screenshots_available": true,
+    "pixel_global": 1.0,
+    "pixel_localized": 1.0,
+    "pixel_score": 1.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "rank": 2,
+    "vlm_visual_score": 0.8
   },
   {
     "step_id": 14,
@@ -17,17 +45,16 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.3267,
-    "rank": 2
-  },
-  {
-    "step_id": 15,
-    "action": "Wait for the Division Problems page",
-    "network_score": 0.7,
-    "console_score": 0.0,
-    "action_score": 0.0,
-    "intent_score": 0.0,
-    "combined_score": 0.3267,
-    "rank": 3
+    "screenshots_available": true,
+    "pixel_global": 0.3505,
+    "pixel_localized": 1.0,
+    "pixel_score": 0.35,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "rank": 3,
+    "vlm_visual_score": 0.9
   },
   {
     "step_id": 16,
@@ -37,16 +64,34 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.3267,
-    "rank": 4
+    "screenshots_available": true,
+    "pixel_global": 0.9324,
+    "pixel_localized": 1.0,
+    "pixel_score": 0.932,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "rank": 4,
+    "vlm_visual_score": 0.0
   },
   {
-    "step_id": 17,
-    "action": "Wait for the Ham Sandwich Theorem page",
-    "network_score": 0.7,
+    "step_id": 13,
+    "action": "Wait for the Geometry topics page",
+    "network_score": 0.0,
     "console_score": 0.0,
     "action_score": 0.0,
     "intent_score": 0.0,
-    "combined_score": 0.3267,
+    "combined_score": 0.0,
+    "screenshots_available": true,
+    "pixel_global": 0.3274,
+    "pixel_localized": 1.0,
+    "pixel_score": 1.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "vlm_visual_score": 0.9,
     "rank": 5
   }
 ]

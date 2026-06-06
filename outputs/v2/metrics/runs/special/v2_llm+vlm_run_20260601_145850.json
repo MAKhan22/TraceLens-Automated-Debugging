@@ -1,0 +1,356 @@
+{
+  "run_id": "20260601_145850",
+  "timestamp": "2026-06-01T14:58:50.844665+00:00",
+  "mode": "v2:llm+vlm (nvidia/nemotron-3-super-120b-a12b:free + meta-llama/llama-4-scout-17b-16e-instruct)",
+  "pipeline_version": "v2",
+  "filter_source": "efe_irem",
+  "filter_trace": null,
+  "n_traces_run": 8,
+  "n_traces_evaluated": 8,
+  "n_traces_excluded": 0,
+  "excluded_traces": [],
+  "aggregate": {
+    "n_traces": 8,
+    "hit@1": 0.75,
+    "hit@3": 0.875,
+    "hit@5": 0.875,
+    "mean_rank_position": 1.2857,
+    "mean_rank_distance": 0.875,
+    "mean_top1_step_distance": 1.75,
+    "mean_mad@5": 6.325,
+    "found_in_top5_count": 7
+  },
+  "per_trace": [
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 10,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 2.0,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 27,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 21
+        },
+        {
+          "rank": 3,
+          "step_id": 2,
+          "step_distance": 25
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 26
+        },
+        {
+          "rank": 5,
+          "step_id": 31,
+          "step_distance": 4
+        }
+      ],
+      "mad@5": 15.2,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 9,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 4.4,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/dictionary",
+      "actual_fault_step": 25,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 3,
+      "rank_distance": 2,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 26,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 25,
+          "step_distance": 0
+        },
+        {
+          "rank": 4,
+          "step_id": 27,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 24
+        }
+      ],
+      "mad@5": 5.6,
+      "top1_step_distance": 1,
+      "vlm_status": "failed",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 7,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 9,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 4
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 16,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 18,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 4,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 4.0,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 7.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "rank_position": -1,
+      "rank_distance": 5,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 2,
+          "step_id": 2,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 8.0,
+      "top1_step_distance": 13,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    }
+  ],
+  "fusion_weights": {
+    "text": 0.28,
+    "navigation": 0.12,
+    "causal_action": 0.2,
+    "observer_symptom": 0.2,
+    "visual_causal": 0.14,
+    "pixel": 0.12,
+    "llm_prior": 0.24,
+    "vlm_prior": 0.24,
+    "downstream_penalty": 0.05
+  }
+}

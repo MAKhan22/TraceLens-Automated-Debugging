@@ -1,19 +1,218 @@
 {
   "trace_id": "areeb_salem/amazon",
-  "generated": "2026-05-21T07:55:11.710044Z",
+  "generated": "2026-05-31T10:56:49.518757Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "auth_gated_action"
+    "fault_type": "auth_gated_action",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [14, 20] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: text-only #1 step 20 (text leader) over visual-causal leader step 14 — promoted to #1 (was step 14).",
+      "Visual-causal root step 14 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.",
+      "Diagnosis root step 14 not promoted — Hit@k guard locked step 20 (text_action_anchor).",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hybrid Hit@k guard: text-only #1 step 20 (text leader) over visual-causal leader step 14 — promoted to #1 (was step 14)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 32
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
+    {
+      "step_id": 20,
+      "action": "Click the add to wish list button.",
+      "network_score": 0.0,
+      "console_score": 0.8,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.25149499999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.251495,
+      "rank": 1
+    },
+    {
+      "step_id": 14,
+      "action": "Scroll to customer reviews.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 14,
+      "visual_causal_reason": "earliest_divergence",
+      "rank": 2,
+      "vlm_visual_score": 0.8
+    },
+    {
+      "step_id": 4,
+      "action": "Verify product listings in results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 16,
+      "action": "Scroll through customer review text.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "vlm_visual_score": 0.8,
+      "rank": 4
+    },
     {
       "step_id": 2,
       "action": "Search for Python programming book.",
       "network_score": 0.5,
-      "console_score": 1.0,
+      "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.425,
+      "combined_score": 0.2333,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 20,
+      "action": "Click the add to wish list button.",
+      "network_score": 0.0,
+      "console_score": 0.8,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.3867,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "rank_score": 0.3867,
+      "rank": 1
+    },
+    {
+      "step_id": 4,
+      "action": "Verify product listings in results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "rank_score": 0.3267,
+      "rank": 2
+    },
+    {
+      "step_id": 5,
+      "action": "Scroll through search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0078,
+      "pixel_score": 0.0078,
+      "rank_score": 0.3267,
+      "rank": 3
+    },
+    {
+      "step_id": 7,
+      "action": "Open the first book result.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "rank_score": 0.3267,
+      "rank": 4
+    },
+    {
+      "step_id": 12,
+      "action": "Scroll to the product description.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3267,
+      "rank": 5
+    }
+  ],
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 14,
+      "action": "Scroll to customer reviews.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 1.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 14,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
       "rank": 1
     },
     {
@@ -23,7 +222,16 @@
       "console_score": 0.8,
       "action_score": 0.6,
       "intent_score": 0.0,
-      "combined_score": 0.29,
+      "combined_score": 0.25149499999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.251495,
       "rank": 2
     },
     {
@@ -33,7 +241,16 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.245,
+      "combined_score": 0.212495,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212495,
       "rank": 3
     },
     {
@@ -43,7 +260,16 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.245,
+      "combined_score": 0.212495,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0078,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212495,
       "rank": 4
     },
     {
@@ -53,39 +279,297 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.245,
+      "combined_score": 0.212495,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212495,
       "rank": 5
     }
   ],
+  "heuristic_visual_steps": [
+    {
+      "step_id": 14,
+      "action": "Scroll to customer reviews.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 14,
+      "visual_causal_reason": "earliest_divergence",
+      "rank_score": 1.0,
+      "rank": 1
+    },
+    {
+      "step_id": 20,
+      "action": "Click the add to wish list button.",
+      "network_score": 0.0,
+      "console_score": 0.8,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.3867,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3867,
+      "rank": 2
+    },
+    {
+      "step_id": 4,
+      "action": "Verify product listings in results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3267,
+      "rank": 3
+    },
+    {
+      "step_id": 5,
+      "action": "Scroll through search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0078,
+      "pixel_score": 0.0078,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3267,
+      "rank": 4
+    },
+    {
+      "step_id": 7,
+      "action": "Open the first book result.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3267,
+      "rank": 5
+    }
+  ],
+  "llm_ranked_steps": [
+    {
+      "step_id": 20,
+      "action": "Click the add to wish list button.",
+      "network_score": 0.0,
+      "console_score": 0.8,
+      "action_score": 0.6,
+      "intent_score": 0.0,
+      "combined_score": 0.3867,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 14,
+      "action": "Scroll to customer reviews.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 1.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 14,
+      "visual_causal_reason": "earliest_divergence",
+      "rank": 2
+    },
+    {
+      "step_id": 4,
+      "action": "Verify product listings in results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Search for Python programming book.",
+      "network_score": 0.5,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.2333,
+      "screenshots_available": true,
+      "pixel_global": 0.0004,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0004,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 22,
+      "action": "Navigate back to search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 32,
+    "first_persistent_divergence": 14,
+    "divergence_score": 1.0,
+    "attributed_root_step": 14,
+    "visual_causal_score": 1.0,
+    "visible_at_step": null,
+    "reason": "earliest_divergence",
+    "has_signal": true
+  },
   "technical_diagnosis": {
-    "root_cause_step_id": 2,
-    "root_cause_summary": "Failed to load resource due to net::ERR_TRUST_TOKEN_OPERATION_FAILED and 405 status code from https://www.amazon.com/suggestions",
+    "root_cause_step_id": 14,
+    "root_cause_summary": "Scroll to customer reviews caused a visual divergence, likely due to missing or altered review section loading, leading to an incorrect page state.",
     "downstream_steps": [
       20,
-      4,
-      5,
-      7
+      22
     ],
-    "failure_chain": "The initial failure to load resources at step 2 due to trust token operation failure and 405 status code prevents subsequent steps from executing correctly, leading to downstream effects such as warnings about preloaded resources at step 20 and potential verification failures at steps 4, 5, and 7."
+    "failure_chain": "The scroll action at step 14 failed to load the expected review content, causing the page to render differently; subsequent steps that rely on the review section (e.g., clicking add to wish list and navigating back) interacted with unexpected elements or missing data, resulting in failures."
   },
-  "stakeholder_summary": "When our system tried to get some information from a website, it was like trying to open a door that no longer exists - the website didn't allow us to access what we needed. This happened early in the process, at a point where we were trying to load some necessary resources. As a result, the rest of the process didn't work correctly, and we saw some warning messages and potential errors later on. It's possible that the website has changed its security settings, so we should check if our system needs to be updated to match those changes.",
+  "stakeholder_summary": "When the tester scrolled down to see the customer reviews, the review section didn’t load as it should, so the page looked different than expected. Because the reviews were missing, the later steps that tried to add the item to a wish list and then go back interacted with the wrong parts of the page or found nothing where they expected something. This caused those later actions to fail, which showed up as errors in the test results. To fix it, we should check that the review area appears correctly whenever a user scrolls to that point.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 16,
+    "visual_summary": "Step 16 (score=0.80): Different book recommendations\nStep 14 (score=0.50): different customer reviews\nStep 15 (score=0.50): Different recommended products",
+    "visual_scores": [
+      {
+        "step_id": 12,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 13,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 14,
+        "visual_score": 0.8,
+        "visual_note": "Attributed from step 16: Different book recommendations"
+      },
+      {
+        "step_id": 15,
+        "visual_score": 0.5,
+        "visual_note": "Different recommended products"
+      },
+      {
+        "step_id": 16,
+        "visual_score": 0.8,
+        "visual_note": "Different book recommendations"
+      },
+      {
+        "step_id": 20,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 4,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 5,
+        "visual_score": 0.0,
+        "visual_note": "Identical"
+      },
+      {
+        "step_id": 21,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 9
+  },
   "evaluation": {
     "actual_fault_step": 20,
-    "hit@1": 0,
+    "hit@1": 1,
     "hit@3": 1,
     "hit@5": 1,
-    "rank_position": 2,
-    "rank_distance": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 2,
-        "step_distance": 18
+        "step_id": 20,
+        "step_distance": 0
       },
       {
         "rank": 2,
-        "step_id": 20,
-        "step_distance": 0
+        "step_id": 14,
+        "step_distance": 6
       },
       {
         "rank": 3,
@@ -94,17 +578,17 @@
       },
       {
         "rank": 4,
-        "step_id": 5,
-        "step_distance": 15
+        "step_id": 16,
+        "step_distance": 4
       },
       {
         "rank": 5,
-        "step_id": 7,
-        "step_distance": 13
+        "step_id": 2,
+        "step_distance": 18
       }
     ],
-    "mad@5": 12.4,
-    "top1_step_distance": 18
+    "mad@5": 8.8,
+    "top1_step_distance": 0
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/amazon\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 2: Search for Python programming book.  [console error]  (score=0.425)\n  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.290)\n  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.245)\n  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.245)\n  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.245)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: 2\nSummary:      Failed to load resource due to net::ERR_TRUST_TOKEN_OPERATION_FAILED and 405 status code from https://www.amazon.com/suggestions\nFailure chain:The initial failure to load resources at step 2 due to trust token operation failure and 405 status code prevents subsequent steps from executing correctly, leading to downstream effects such as warnings about preloaded resources at step 20 and potential verification failures at steps 4, 5, and 7.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen our system tried to get some information from a website, it was like trying to open a door that no longer exists - the website didn't allow us to access what we needed. This happened early in the process, at a point where we were trying to load some necessary resources. As a result, the rest of the process didn't work correctly, and we saw some warning messages and potential errors later on. It's possible that the website has changed its security settings, so we should check if our system needs to be updated to match those changes.\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 2\nRank distance: 1\nTop-1 step distance: 18\nMAD@5: 12.4\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/amazon\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.387) ← ACTUAL FAULT\n  #2  Step 4: Verify product listings in results.  [network anomaly]  (score=0.327)\n  #3  Step 5: Scroll through search results.  [network anomaly]  (score=0.327)\n  #4  Step 7: Open the first book result.  [network anomaly]  (score=0.327)\n  #5  Step 12: Scroll to the product description.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000)\n  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.387) ← ACTUAL FAULT\n  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.327)\n  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.327)\n  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000)\n  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.251, pixel=0.000) ← ACTUAL FAULT\n  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.212, pixel=0.000)\n  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.212, pixel=0.000)\n  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.212, pixel=0.000)\n\nLLM TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.387, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.327, visual_causal=1.000, pixel=1.000)\n  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.327, pixel=0.000)\n  #4  Step 2: Search for Python programming book.  [network anomaly]  (score=0.233, pixel=0.000)\n  #5  Step 22: Navigate back to search results.  [network anomaly]  (score=0.327, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.251, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (vlm=0.800, visual_causal=1.000, pixel=1.000)\n  #3  Step 4: Verify product listings in results.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #4  Step 16: Scroll through customer review text.  [network anomaly]  (vlm=0.800, pixel=1.000)\n  #5  Step 2: Search for Python programming book.  [network anomaly]  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nFirst persistent divergence: step 14 (score=1.000)\nAttributed root step:        step 14 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [14, 20] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: text-only #1 step 20 (text leader) over visual-causal leader step 14 — promoted to #1 (was step 14).\n  • Visual-causal root step 14 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.\n  • Diagnosis root step 14 not promoted — Hit@k guard locked step 20 (text_action_anchor).\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hybrid Hit@k guard: text-only #1 step 20 (text leader) over visual-causal leader step 14 — promoted to #1 (was step 14).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 14\nSummary:       Scroll to customer reviews caused a visual divergence, likely due to missing or altered review section loading, leading to an incorrect page state.\nFailure chain: The scroll action at step 14 failed to load the expected review content, causing the page to render differently; subsequent steps that rely on the review section (e.g., clicking add to wish list and navigating back) interacted with unexpected elements or missing data, resulting in failures.\nDownstream:    [20, 22]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 16\nSummary:\n  Step 16 (score=0.80): Different book recommendations\n  Step 14 (score=0.50): different customer reviews\n  Step 15 (score=0.50): Different recommended products\n\n  Per-step visual scores:\n    Step  14  score=0.80  Attributed from step 16: Different book recommendations  [in final top-5]\n    Step  16  score=0.80  Different book recommendations  [in final top-5]\n    Step  15  score=0.50  Different recommended products  [analyzed only]\n    Step   4  score=0.00  identical  [in final top-5]\n    Step   5  score=0.00  Identical  [analyzed only]\n    Step  12  score=0.00  identical  [analyzed only]\n    Step  13  score=0.00  identical  [analyzed only]\n    Step  20  score=0.00  identical  [in final top-5]\n    Step  21  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 16 (score=0.80): Different book recommendations\nStep 14 (score=0.50): different customer reviews\nStep 15 (score=0.50): Different recommended products\n\nEVALUATION\n----------------------------------------\nActual fault step: 20\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              20           1           0           0  ← ACTUAL FAULT\n  2              14         N/A         N/A           6\n  3               4         N/A         N/A          16\n  4              16         N/A         N/A           4\n  5               2         N/A         N/A          18\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 8.8\n=============================================================="
 }

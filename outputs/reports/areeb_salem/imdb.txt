@@ -1,30 +1,99 @@
-============================================================
+==============================================================
 TraceLens Diagnosis Report: areeb_salem/imdb
-============================================================
+Ranking mode: llm+vlm
+==============================================================
 
-RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
-  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.580)
-  #2  Step 20: Scroll back to movie header.  [network anomaly, console error]  (score=0.550)
-  #3  Step 5: Open the Inception movie page.  [console error]  (score=0.470)
-  #4  Step 12: Open the lead actor profile page.  [console error]  (score=0.390)
-  #5  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.310)
+  #1  Step 14: Scroll through actor filmography.  [network anomaly]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.660)
+  #3  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.360)
+  #4  Step 28: Open a recommended movie.  [network anomaly]  (score=0.360)
+  #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (score=0.327)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.779, pixel=1.000)
+  #2  Step 14: Scroll through actor filmography.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.234, pixel=0.000)
+  #4  Step 28: Open a recommended movie.  [network anomaly]  (score=0.234, pixel=0.000)
+  #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (score=0.212, pixel=0.000)
+
+LLM TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.660, pixel=1.000)
+  #2  Step 14: Scroll through actor filmography.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 28: Open a recommended movie.  [network anomaly]  (score=0.360, pixel=0.000)
+  #4  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.360, pixel=0.000)
+  #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (score=0.327, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (vlm=0.700, pixel=1.000)
+  #2  Step 14: Scroll through actor filmography.  [network anomaly]  (vlm=0.000, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 28: Open a recommended movie.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #4  Step 6: Verify movie title page loaded.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              34
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 34 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [15, 14] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: pixel/visual-causal leader step 15 (pixel=1.00, visual_causal=0.00) — promoted to #1 (was step 14).
+  • Deterministic promote: step 14 (text_causal) skipped — text_causal blocked — strong observer pixel lock on step 15.
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step: unknown
-Summary:      
-Failure chain:
+Primary step:  Step 14
+Summary:       Scrolling through actor filmography failed to load required filmography resources, causing a 500 error and empty credits list.
+Failure chain: The scroll action in step 14 did not load the filmography API correctly, resulting in a 500 response and empty credits at step 15, which caused the verification of the filmography section to fail; subsequent steps that depend on filmography data (e.g., opening recommended movies) may also fail due to missing or incorrect data.
+Downstream:    [15]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 15
+Summary:
+  Step 15 (score=0.70): Filmography section not visible, shows 'No known credits' instead
+
+  Per-step visual scores:
+    Step  15  score=0.70  Filmography section not visible, shows 'No known credits' instead  [in final top-5]
+    Step   1  score=0.00  identical  [in final top-5]
+    Step   6  score=0.00  identical  [in final top-5]
+    Step  14  score=0.00  identical  [in final top-5]
+    Step  28  score=0.00  identical  [in final top-5]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-
+Step 15 (score=0.70): Filmography section not visible, shows 'No known credits' instead
 
 EVALUATION
 ----------------------------------------
-Hit@1: 1  |  Hit@3: 1  |  Hit@5: 1
-Rank position of actual fault: 1
-Rank distance: 0
-Top-1 step distance: 0
-MAD@5: 5.4
-============================================================
+Actual fault step: 14
+Hit@1=0  Hit@3=1  Hit@5=1
+Rank position of actual fault: 2
+Overall rank distance (|actual_rank - 1|): 1
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              15         N/A         N/A           1
+  2              14           1           1           0  ← ACTUAL FAULT
+  3              28         N/A         N/A          14
+  4               6         N/A         N/A           8
+  5               1         N/A         N/A          13
+
+Top-1 step distance: 1
+MAD@5 (mean step-dist over top-5): 7.2
+==============================================================

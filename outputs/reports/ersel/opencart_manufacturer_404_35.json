@@ -1,11 +1,19 @@
 {
   "trace_id": "ersel/opencart_manufacturer_404_35",
-  "generated": "2026-05-21T17:24:18.681438Z",
+  "generated": "2026-05-28T23:10:49.320457Z",
   "metadata": {
     "source": "ersel",
-    "fault_type": "404_invalid_manufacturer"
+    "fault_type": "404_invalid_manufacturer",
+    "ranking_decisions": [],
+    "vlm_status": "not_run",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": false,
+    "screenshots_available_count": 0
   },
-  "ranking_mode": "heuristic (llm failed)",
+  "ranking_mode": "heuristic",
   "ranked_suspicious_steps": [
     {
       "step_id": 23,
@@ -15,6 +23,7 @@
       "action_score": 0.3,
       "intent_score": 0.0,
       "combined_score": 0.045,
+      "rank_score": 0.045,
       "rank": 1
     },
     {
@@ -25,6 +34,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 2
     },
     {
@@ -35,6 +45,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 3
     },
     {
@@ -45,6 +56,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 4
     },
     {
@@ -55,6 +67,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
@@ -67,6 +80,7 @@
       "action_score": 0.3,
       "intent_score": 0.0,
       "combined_score": 0.045,
+      "rank_score": 0.045,
       "rank": 1
     },
     {
@@ -77,6 +91,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 2
     },
     {
@@ -87,6 +102,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 3
     },
     {
@@ -97,6 +113,7 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 4
     },
     {
@@ -107,9 +124,14 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
+  "heuristic_pixel_steps": null,
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": null,
+  "screenshot_analysis": null,
   "technical_diagnosis": {
     "root_cause_step_id": null,
     "root_cause_summary": null,
@@ -117,6 +139,7 @@
     "failure_chain": null
   },
   "stakeholder_summary": "",
+  "visual_analysis": null,
   "evaluation": {
     "actual_fault_step": 23,
     "hit@1": 1,
@@ -154,5 +177,5 @@
     "mad@5": 17.2,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens Diagnosis Report: ersel/opencart_manufacturer_404_35\nRanking mode: heuristic (llm failed)\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)\n  #3  Step 1: Wait for element logo  (score=0.000)\n  #4  Step 2: Scroll homepage  (score=0.000)\n  #5  Step 3: Desktops menu  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              23           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          23\n  3               1         N/A         N/A          22\n  4               2         N/A         N/A          21\n  5               3         N/A         N/A          20\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 17.2\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: ersel/opencart_manufacturer_404_35\nRanking mode: heuristic\n==============================================================\n\nHEURISTIC TOP 5 (text)\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)\n  #3  Step 1: Wait for element logo  (score=0.000)\n  #4  Step 2: Scroll homepage  (score=0.000)\n  #5  Step 3: Desktops menu  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              23           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          23\n  3               1         N/A         N/A          22\n  4               2         N/A         N/A          21\n  5               3         N/A         N/A          20\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 17.2\n=============================================================="
 }

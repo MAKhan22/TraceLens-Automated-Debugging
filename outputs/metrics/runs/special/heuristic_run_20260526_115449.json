@@ -1,0 +1,858 @@
+{
+  "run_id": "20260526_115449",
+  "timestamp": "2026-05-26T11:54:49.207670+00:00",
+  "mode": "heuristic",
+  "filter_source": null,
+  "filter_trace": null,
+  "n_traces_run": 22,
+  "n_traces_evaluated": 22,
+  "aggregate": {
+    "n_traces": 22,
+    "hit@1": 0.5455,
+    "hit@3": 0.8182,
+    "hit@5": 0.9091,
+    "mean_rank_position": 1.7,
+    "mean_rank_distance": 1.0909,
+    "mean_top1_step_distance": 3.5909,
+    "mean_mad@5": 8.6545,
+    "found_in_top5_count": 20
+  },
+  "per_trace": [
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 2,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 4.2,
+      "top1_step_distance": 5
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "rank_position": -1,
+      "rank_distance": 5,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 25
+        },
+        {
+          "rank": 2,
+          "step_id": 1,
+          "step_distance": 26
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 21
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 27
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 24
+        }
+      ],
+      "mad@5": 24.6,
+      "top1_step_distance": 25
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 7
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 5
+        }
+      ],
+      "mad@5": 5.2,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/dictionary",
+      "actual_fault_step": 25,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 3,
+      "rank_distance": 2,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 26,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 25,
+          "step_distance": 0
+        },
+        {
+          "rank": 4,
+          "step_id": 27,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 25
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 7,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 8,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 3.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 15,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 16,
+          "step_distance": 4
+        }
+      ],
+      "mad@5": 3.4,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 7.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "rank_position": -1,
+      "rank_distance": 5,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 2,
+          "step_id": 2,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 7
+        },
+        {
+          "rank": 4,
+          "step_id": 23,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 10.6,
+      "top1_step_distance": 13
+    },
+    {
+      "trace_id": "areeb_salem/amazon",
+      "actual_fault_step": 20,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 18
+        },
+        {
+          "rank": 2,
+          "step_id": 20,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 4,
+          "step_distance": 16
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 15
+        },
+        {
+          "rank": 5,
+          "step_id": 7,
+          "step_distance": 13
+        }
+      ],
+      "mad@5": 12.4,
+      "top1_step_distance": 18
+    },
+    {
+      "trace_id": "areeb_salem/bbc",
+      "actual_fault_step": 18,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 18,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 16,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 19,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 18
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 13
+        }
+      ],
+      "mad@5": 6.8,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/github",
+      "actual_fault_step": 23,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "rank_position": 4,
+      "rank_distance": 3,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 20,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 30,
+          "step_distance": 7
+        },
+        {
+          "rank": 4,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 5,
+          "step_id": 31,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 1
+    },
+    {
+      "trace_id": "areeb_salem/hackernews",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 22,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/imdb",
+      "actual_fault_step": 14,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 15,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 12,
+          "step_distance": 2
+        }
+      ],
+      "mad@5": 3.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/npm",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 26,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 18,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 16
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/producthunt",
+      "actual_fault_step": 16,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "rank_position": 4,
+      "rank_distance": 3,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 6,
+          "step_distance": 10
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 16
+        },
+        {
+          "rank": 3,
+          "step_id": 13,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 11
+        }
+      ],
+      "mad@5": 8.0,
+      "top1_step_distance": 10
+    },
+    {
+      "trace_id": "areeb_salem/pypi",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 20,
+          "step_distance": 13
+        },
+        {
+          "rank": 3,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 5,
+          "step_id": 21,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/wikipedia",
+      "actual_fault_step": 17,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 17,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 17
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 16
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 15
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 12.4,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/youtube",
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 3,
+      "rank_distance": 2,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 3,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1
+    },
+    {
+      "trace_id": "ersel/opencart_purchase_40",
+      "actual_fault_step": 21,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 3
+        },
+        {
+          "rank": 2,
+          "step_id": 21,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 21
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 20
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 19
+        }
+      ],
+      "mad@5": 12.6,
+      "top1_step_distance": 3
+    },
+    {
+      "trace_id": "ersel/opencart_wishlist_35",
+      "actual_fault_step": 22,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 2
+        },
+        {
+          "rank": 2,
+          "step_id": 22,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 22
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 21
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 20
+        }
+      ],
+      "mad@5": 13.0,
+      "top1_step_distance": 2
+    },
+    {
+      "trace_id": "ersel/opencart_manufacturer_404_35",
+      "actual_fault_step": 23,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 23
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 22
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 21
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 20
+        }
+      ],
+      "mad@5": 17.2,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "ersel/opencart_contact_35",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 16
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 15
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 14
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 13
+        }
+      ],
+      "mad@5": 11.6,
+      "top1_step_distance": 0
+    }
+  ]
+}

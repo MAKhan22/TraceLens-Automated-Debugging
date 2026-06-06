@@ -1,0 +1,424 @@
+{
+  "run_id": "20260529_003709",
+  "timestamp": "2026-05-29T00:37:09.288542+00:00",
+  "mode": "llm (nvidia/nemotron-3-super-120b-a12b:free)",
+  "filter_source": "areeb_salem",
+  "filter_trace": null,
+  "n_traces_run": 10,
+  "n_traces_evaluated": 10,
+  "n_traces_excluded": 0,
+  "excluded_traces": [],
+  "aggregate": {
+    "n_traces": 10,
+    "hit@1": 0.7,
+    "hit@3": 1.0,
+    "hit@5": 1.0,
+    "mean_rank_position": 1.3,
+    "mean_rank_distance": 0.3,
+    "mean_top1_step_distance": 2.5,
+    "mean_mad@5": 6.98,
+    "found_in_top5_count": 10
+  },
+  "per_trace": [
+    {
+      "trace_id": "areeb_salem/amazon",
+      "actual_fault_step": 20,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 6
+        },
+        {
+          "rank": 2,
+          "step_id": 20,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 5,
+          "step_distance": 15
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 16
+        },
+        {
+          "rank": 5,
+          "step_id": 12,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 9.0,
+      "top1_step_distance": 6,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/bbc",
+      "actual_fault_step": 18,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 0,
+          "step_distance": 18
+        },
+        {
+          "rank": 2,
+          "step_id": 18,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 19,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 13
+        },
+        {
+          "rank": 5,
+          "step_id": 10,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 8.0,
+      "top1_step_distance": 18,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/github",
+      "actual_fault_step": 23,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 30,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 4,
+          "step_distance": 19
+        }
+      ],
+      "mad@5": 6.0,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/hackernews",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 22,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/imdb",
+      "actual_fault_step": 14,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 15,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 10,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 6,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 13
+        }
+      ],
+      "mad@5": 5.2,
+      "top1_step_distance": 1,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/npm",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 18,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 16
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 15
+        }
+      ],
+      "mad@5": 6.8,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/producthunt",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 10
+        },
+        {
+          "rank": 3,
+          "step_id": 13,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 11
+        },
+        {
+          "rank": 5,
+          "step_id": 17,
+          "step_distance": 1
+        }
+      ],
+      "mad@5": 5.0,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/pypi",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 20,
+          "step_distance": 13
+        },
+        {
+          "rank": 3,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 21,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/wikipedia",
+      "actual_fault_step": 17,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 17,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 17
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 16
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 15
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 12.4,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "areeb_salem/youtube",
+      "actual_fault_step": 13,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 10,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 5.0,
+      "top1_step_distance": 0,
+      "vlm_status": "not_run",
+      "exclude_from_aggregate": false
+    }
+  ]
+}

@@ -1,5 +1,41 @@
 [
   {
+    "step_id": 24,
+    "action": "Click on writing tips",
+    "network_score": 0.85,
+    "console_score": 0.0,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.72,
+    "screenshots_available": true,
+    "pixel_global": 0.0,
+    "pixel_localized": 0.0,
+    "pixel_score": 0.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "rank": 1
+  },
+  {
+    "step_id": 26,
+    "action": "Click on see more",
+    "network_score": 0.85,
+    "console_score": 0.9,
+    "action_score": 0.0,
+    "intent_score": 0.0,
+    "combined_score": 0.72,
+    "screenshots_available": true,
+    "pixel_global": 0.0,
+    "pixel_localized": 0.0,
+    "pixel_score": 0.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "rank": 2
+  },
+  {
     "step_id": 25,
     "action": "Wait for page to load",
     "network_score": 0.7,
@@ -7,17 +43,15 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.66,
-    "rank": 1
-  },
-  {
-    "step_id": 26,
-    "action": "Click on see more",
-    "network_score": 0.7,
-    "console_score": 0.9,
-    "action_score": 0.0,
-    "intent_score": 0.0,
-    "combined_score": 0.6267,
-    "rank": 2
+    "screenshots_available": true,
+    "pixel_global": 0.0,
+    "pixel_localized": 0.0,
+    "pixel_score": 0.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
+    "rank": 3
   },
   {
     "step_id": 27,
@@ -27,16 +61,14 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.6267,
-    "rank": 3
-  },
-  {
-    "step_id": 0,
-    "action": "Visit https://www.dictionary.com/",
-    "network_score": 0.0,
-    "console_score": 0.0,
-    "action_score": 0.0,
-    "intent_score": 0.0,
-    "combined_score": 0.0,
+    "screenshots_available": true,
+    "pixel_global": 0.0,
+    "pixel_localized": 0.0,
+    "pixel_score": 0.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
     "rank": 4
   },
   {
@@ -47,6 +79,14 @@
     "action_score": 0.0,
     "intent_score": 0.0,
     "combined_score": 0.0,
+    "screenshots_available": true,
+    "pixel_global": 0.0,
+    "pixel_localized": 0.0,
+    "pixel_score": 0.0,
+    "visual_causal_score": 0.0,
+    "visual_causal_next_step": null,
+    "visual_divergence_step": null,
+    "visual_causal_reason": null,
     "rank": 5
   }
 ]

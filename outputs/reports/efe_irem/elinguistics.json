@@ -1,11 +1,24 @@
 {
   "trace_id": "efe_irem/elinguistics",
-  "generated": "2026-05-21T15:08:29.375584Z",
+  "generated": "2026-05-30T20:35:37.537038Z",
   "metadata": {
     "source": "efe_irem",
-    "fault_type": "404_missing_resource"
+    "fault_type": "404_missing_resource",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [11] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 11 (pixel=1.00, visual_causal=0.00) (step 11 already #1).",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=0.00, vlm=0.90) (step 11 already #1)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 32
   },
-  "ranking_mode": "heuristic",
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 11,
@@ -14,7 +27,16 @@
       "console_score": 0.9,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.72,
+      "combined_score": 0.818,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.8706,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.818,
       "rank": 1
     },
     {
@@ -25,7 +47,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 2
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 1,
@@ -35,7 +66,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 3
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 2,
@@ -45,7 +85,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 4
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 3,
@@ -55,7 +104,16 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 5
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
     }
   ],
   "heuristic_steps": [
@@ -67,6 +125,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.8706,
+      "pixel_score": 1.0,
+      "rank_score": 0.72,
       "rank": 1
     },
     {
@@ -77,6 +140,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 2
     },
     {
@@ -87,6 +155,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 3
     },
     {
@@ -97,6 +170,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 4
     },
     {
@@ -107,16 +185,253 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 11,
+      "action": "Open Wiktionary Kazakh Swadesh list link",
+      "network_score": 0.9,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.818,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.8706,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.818,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit elinguistics.net home",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Click \"Compare languages\"",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Wait for the compare page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": [
+    {
+      "step_id": 11,
+      "action": "Open Wiktionary Kazakh Swadesh list link",
+      "network_score": 0.9,
+      "console_score": 0.9,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.8706,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Visit elinguistics.net home",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 2,
+      "action": "Click \"Compare languages\"",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Wait for the compare page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 32,
+    "first_persistent_divergence": null,
+    "divergence_score": 0.0,
+    "attributed_root_step": null,
+    "visual_causal_score": 0.0,
+    "visible_at_step": null,
+    "reason": null,
+    "has_signal": false
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 11,
+    "root_cause_summary": "The Wiktionary Kazakh Swadesh list link returned a 404 Not Found, preventing the page from loading expected content.",
+    "downstream_steps": [],
+    "failure_chain": "At step 11 the navigation to the Kazakh Swadesh list URL failed with a 404 error, causing missing resource requests and console errors, which led to the test failure."
+  },
+  "stakeholder_summary": "At step 11 of the test, the system tried to retrieve a Kazakh word list from Wiktionary, but the page it was looking for had been removed — like going to a library shelf and finding the book missing. Because that list wasn’t available, the test couldn’t gather the data it needed and stopped with an error. The visible result was a failed test that reported a missing resource. To fix it, verify that the web address for the Kazakh Swadesh list is still correct or replace it with a working link.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 11,
+    "visual_summary": "Step 11 (score=0.90): Error page instead of Swadesh list",
+    "visual_scores": [
+      {
+        "step_id": 11,
+        "visual_score": 0.9,
+        "visual_note": "Error page instead of Swadesh list"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 1,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 2,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 3,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
     "actual_fault_step": 11,
     "hit@1": 1,
@@ -154,5 +469,5 @@
     "mad@5": 7.6,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/elinguistics\nRanking mode: heuristic\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 11: Open Wiktionary Kazakh Swadesh list link  [network anomaly, console error]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 0: Visit elinguistics.net home  (score=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000)\n  #4  Step 2: Click \"Compare languages\"  (score=0.000)\n  #5  Step 3: Wait for the compare page to load  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\n(LLM diagnosis not run — heuristic mode)\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(LLM not run)\n\nEVALUATION\n----------------------------------------\nActual fault step: 11\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              11           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          11\n  3               1         N/A         N/A          10\n  4               2         N/A         N/A           9\n  5               3         N/A         N/A           8\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 7.6\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/elinguistics\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 11: Open Wiktionary Kazakh Swadesh list link  [network anomaly, console error]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 0: Visit elinguistics.net home  (score=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000)\n  #4  Step 2: Click \"Compare languages\"  (score=0.000)\n  #5  Step 3: Wait for the compare page to load  (score=0.000)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 11: Open Wiktionary Kazakh Swadesh list link  [network anomaly, console error]  (score=0.818, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit elinguistics.net home  (score=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000, pixel=0.000)\n  #4  Step 2: Click \"Compare languages\"  (score=0.000, pixel=0.000)\n  #5  Step 3: Wait for the compare page to load  (score=0.000, pixel=0.000)\n\nLLM TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 11: Open Wiktionary Kazakh Swadesh list link  [network anomaly, console error]  (score=0.720, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit elinguistics.net home  (score=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  (score=0.000, pixel=0.000)\n  #4  Step 2: Click \"Compare languages\"  (score=0.000, pixel=0.000)\n  #5  Step 3: Wait for the compare page to load  (score=0.000, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 11: Open Wiktionary Kazakh Swadesh list link  [network anomaly, console error]  (score=0.818, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit elinguistics.net home  (vlm=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  (vlm=0.000, pixel=0.000)\n  #4  Step 2: Click \"Compare languages\"  (vlm=0.000, pixel=0.000)\n  #5  Step 3: Wait for the compare page to load  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [11] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 11 (pixel=1.00, visual_causal=0.00) (step 11 already #1).\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=0.00, vlm=0.90) (step 11 already #1).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 11\nSummary:       The Wiktionary Kazakh Swadesh list link returned a 404 Not Found, preventing the page from loading expected content.\nFailure chain: At step 11 the navigation to the Kazakh Swadesh list URL failed with a 404 error, causing missing resource requests and console errors, which led to the test failure.\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 11\nSummary:\n  Step 11 (score=0.90): Error page instead of Swadesh list\n\n  Per-step visual scores:\n    Step  11  score=0.90  Error page instead of Swadesh list  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   1  score=0.00  identical  [in final top-5]\n    Step   2  score=0.00  identical  [in final top-5]\n    Step   3  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 11 (score=0.90): Error page instead of Swadesh list\n\nEVALUATION\n----------------------------------------\nActual fault step: 11\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              11           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          11\n  3               1         N/A         N/A          10\n  4               2         N/A         N/A           9\n  5               3         N/A         N/A           8\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 7.6\n=============================================================="
 }

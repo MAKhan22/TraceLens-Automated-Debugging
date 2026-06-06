@@ -1,31 +1,44 @@
 {
   "trace_id": "efe_irem/saucedemo_2",
-  "generated": "2026-05-21T20:43:35.076105Z",
+  "generated": "2026-05-30T20:22:49.324782Z",
   "metadata": {
     "source": "efe_irem",
-    "fault_type": "missing_input_zipcode"
+    "fault_type": "missing_input_zipcode",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [6, 0] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 27 (pixel=0.72, visual_causal=0.72) (step 27 already #1).",
+      "Visual-causal root step 27 not hard-promoted on LLM path (score=0.72) — handled via LLM rerank + post-LLM guards instead.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hit@k guard: pixel-boost #1 + VLM confirm (pixel=0.72, visual_causal=0.72, vlm=0.90) (step 27 already #1)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 32
   },
-  "ranking_mode": "llm+diagnosis",
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
     {
-      "step_id": 1,
-      "action": "Wait for the page to load",
-      "network_score": 0.56,
+      "step_id": 27,
+      "action": "Type 34890",
+      "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.2613,
+      "combined_score": 0.46831,
+      "screenshots_available": true,
+      "pixel_global": 0.0046,
+      "pixel_localized": 0.7176,
+      "pixel_score": 0.005,
+      "visual_causal_score": 0.718,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 27,
+      "visual_causal_reason": "earliest_localized_divergence",
+      "rank_score": 0.46831,
       "rank": 1
-    },
-    {
-      "step_id": 2,
-      "action": "Verify that the login screen is visible",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "rank": 2
     },
     {
       "step_id": 6,
@@ -35,7 +48,16 @@
       "action_score": 0.3,
       "intent_score": 0.0,
       "combined_score": 0.06,
-      "rank": 3
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 0,
@@ -45,16 +67,53 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
-      "rank": 4
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
     },
     {
-      "step_id": 3,
-      "action": "Click on the username field",
+      "step_id": 29,
+      "action": "Wait for the page to load",
       "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.4823,
+      "pixel_localized": 0.9255,
+      "pixel_score": 0.9255,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "vlm_visual_score": 0.9,
+      "rank": 4
+    },
+    {
+      "step_id": 28,
+      "action": "Click Continue",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.4823,
+      "pixel_localized": 0.9255,
+      "pixel_score": 0.9255,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "vlm_visual_score": 0.8,
       "rank": 5
     }
   ],
@@ -67,6 +126,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3267,
       "rank": 1
     },
     {
@@ -77,6 +141,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.2613,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.2613,
       "rank": 2
     },
     {
@@ -87,6 +156,11 @@
       "action_score": 0.3,
       "intent_score": 0.0,
       "combined_score": 0.06,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.06,
       "rank": 3
     },
     {
@@ -97,6 +171,11 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 4
     },
     {
@@ -107,55 +186,400 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": 1,
-    "root_cause_summary": "Failed to load resource due to 401 Unauthorized status, preventing the page from loading correctly",
-    "downstream_steps": [
-      2,
-      6
-    ],
-    "failure_chain": "The failure to load the page at step 1 due to a 401 Unauthorized status causes the login screen to not be visible at step 2, and subsequently prevents the password from being typed at step 6, leading to a cascade of failures"
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 27,
+      "action": "Type 34890",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46831,
+      "screenshots_available": true,
+      "pixel_global": 0.0046,
+      "pixel_localized": 0.7176,
+      "pixel_score": 0.005,
+      "visual_causal_score": 0.718,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 27,
+      "visual_causal_reason": "earliest_localized_divergence",
+      "rank_score": 0.46831,
+      "rank": 1
+    },
+    {
+      "step_id": 2,
+      "action": "Verify that the login screen is visible",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.212355,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212355,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.56,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.169845,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.169845,
+      "rank": 3
+    },
+    {
+      "step_id": 6,
+      "action": "Type the password: secret_sauce",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.3,
+      "intent_score": 0.0,
+      "combined_score": 0.039,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.039,
+      "rank": 4
+    },
+    {
+      "step_id": 0,
+      "action": "Visit saucedemo.com",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": [
+    {
+      "step_id": 27,
+      "action": "Type 34890",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0046,
+      "pixel_localized": 0.7176,
+      "pixel_score": 0.7176,
+      "visual_causal_score": 0.718,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 27,
+      "visual_causal_reason": "earliest_localized_divergence",
+      "rank_score": 0.718,
+      "rank": 1
+    },
+    {
+      "step_id": 2,
+      "action": "Verify that the login screen is visible",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.3267,
+      "rank": 2
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.56,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.2613,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.2613,
+      "rank": 3
+    },
+    {
+      "step_id": 6,
+      "action": "Type the password: secret_sauce",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.3,
+      "intent_score": 0.0,
+      "combined_score": 0.06,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.06,
+      "rank": 4
+    },
+    {
+      "step_id": 0,
+      "action": "Visit saucedemo.com",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "llm_ranked_steps": [
+    {
+      "step_id": 27,
+      "action": "Type 34890",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0046,
+      "pixel_localized": 0.7176,
+      "pixel_score": 0.005,
+      "visual_causal_score": 0.718,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": 27,
+      "visual_causal_reason": "earliest_localized_divergence",
+      "rank": 1
+    },
+    {
+      "step_id": 6,
+      "action": "Type the password: secret_sauce",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.3,
+      "intent_score": 0.0,
+      "combined_score": 0.06,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Visit saucedemo.com",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 1,
+      "action": "Wait for the page to load",
+      "network_score": 0.56,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.2613,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 3,
+      "action": "Click on the username field",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 32,
+    "first_persistent_divergence": 27,
+    "divergence_score": 0.718,
+    "attributed_root_step": 27,
+    "visual_causal_score": 0.718,
+    "visible_at_step": null,
+    "reason": "earliest_localized_divergence",
+    "has_signal": true
   },
-  "stakeholder_summary": "When our system tried to load a necessary part of the page, it was denied access, like trying to enter a room without the right key. This happened at the very beginning of the process, so the page didn't load correctly. As a result, the login screen didn't appear, and the whole process fell apart from there. It's possible that the issue is with the way we're trying to authenticate, so we should check our login credentials to see if they're set up correctly.",
+  "technical_diagnosis": {
+    "root_cause_step_id": 27,
+    "root_cause_summary": "Typing the zipcode '34890' caused a visual divergence, indicating an incorrect input that leads to downstream validation failures.",
+    "downstream_steps": [],
+    "failure_chain": "The incorrect zipcode entry altered the checkout form state, causing the UI to diverge and subsequent steps to fail validation or show errors."
+  },
+  "stakeholder_summary": "During the checkout flow, when the shopper reached the zip‑code entry field (step 27), they typed ‘34890’, a code the system doesn’t recognize.  \nThat wrong zip‑code made the checkout screen behave oddly, like trying to open a door that’s been replaced by a wall.  \nBecause of the mismatch, the later steps couldn’t proceed and the shopper saw error messages or the form stopped responding.  \nWe should verify that the zip‑code field only accepts valid codes and gives a clear hint when something is entered incorrectly.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 29,
+    "visual_summary": "Step 29 (score=0.90): Different page, wrong checkout step\nStep 28 (score=0.80): different page content",
+    "visual_scores": [
+      {
+        "step_id": 25,
+        "visual_score": 0.0,
+        "visual_note": "Identical"
+      },
+      {
+        "step_id": 26,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 27,
+        "visual_score": 0.9,
+        "visual_note": "Attributed from step 29: Different page, wrong checkout step"
+      },
+      {
+        "step_id": 28,
+        "visual_score": 0.8,
+        "visual_note": "different page content"
+      },
+      {
+        "step_id": 29,
+        "visual_score": 0.9,
+        "visual_note": "Different page, wrong checkout step"
+      },
+      {
+        "step_id": 2,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 1,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 6,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 8
+  },
   "evaluation": {
     "actual_fault_step": 27,
-    "hit@1": 0,
-    "hit@3": 0,
-    "hit@5": 0,
-    "rank_position": -1,
-    "rank_distance": 5,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 1,
-        "step_distance": 26
+        "step_id": 27,
+        "step_distance": 0
       },
       {
         "rank": 2,
-        "step_id": 2,
-        "step_distance": 25
-      },
-      {
-        "rank": 3,
         "step_id": 6,
         "step_distance": 21
       },
       {
-        "rank": 4,
+        "rank": 3,
         "step_id": 0,
         "step_distance": 27
       },
       {
+        "rank": 4,
+        "step_id": 29,
+        "step_distance": 2
+      },
+      {
         "rank": 5,
-        "step_id": 3,
-        "step_distance": 24
+        "step_id": 28,
+        "step_distance": 1
       }
     ],
-    "mad@5": 24.6,
-    "top1_step_distance": 26
+    "mad@5": 10.2,
+    "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/saucedemo_2\nRanking mode: llm+diagnosis\n==============================================================\n\nFINAL RANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #3  Step 6: Type the password: secret_sauce  (score=0.060)\n  #4  Step 0: Visit saucedemo.com  (score=0.000)\n  #5  Step 3: Click on the username field  (score=0.000)\n\nHEURISTIC RANKING (before LLM)\n----------------------------------------\n  #1  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #2  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #3  Step 6: Type the password: secret_sauce  (score=0.060)\n  #4  Step 0: Visit saucedemo.com  (score=0.000)\n  #5  Step 3: Click on the username field  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 1\nSummary:       Failed to load resource due to 401 Unauthorized status, preventing the page from loading correctly\nFailure chain: The failure to load the page at step 1 due to a 401 Unauthorized status causes the login screen to not be visible at step 2, and subsequently prevents the password from being typed at step 6, leading to a cascade of failures\nDownstream:    [2, 6]\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen our system tried to load a necessary part of the page, it was denied access, like trying to enter a room without the right key. This happened at the very beginning of the process, so the page didn't load correctly. As a result, the login screen didn't appear, and the whole process fell apart from there. It's possible that the issue is with the way we're trying to authenticate, so we should check our login credentials to see if they're set up correctly.\n\nEVALUATION\n----------------------------------------\nActual fault step: 27\nHit@1=0  Hit@3=0  Hit@5=0\nRank position of actual fault: not in top-5\nOverall rank distance (|actual_rank - 1|): 5\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               1         N/A         N/A          26\n  2               2         N/A         N/A          25\n  3               6         N/A         N/A          21\n  4               0         N/A         N/A          27\n  5               3         N/A         N/A          24\n\nTop-1 step distance: 26\nMAD@5 (mean step-dist over top-5): 24.6\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: efe_irem/saucedemo_2\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #2  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #3  Step 6: Type the password: secret_sauce  (score=0.060)\n  #4  Step 0: Visit saucedemo.com  (score=0.000)\n  #5  Step 3: Click on the username field  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.718, visual_causal=0.718) ← ACTUAL FAULT\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #4  Step 6: Type the password: secret_sauce  (score=0.060)\n  #5  Step 0: Visit saucedemo.com  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.468, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.212, pixel=0.000)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)\n  #4  Step 6: Type the password: secret_sauce  (score=0.039, pixel=0.000)\n  #5  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)\n\nLLM TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.000, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT\n  #2  Step 6: Type the password: secret_sauce  (score=0.060, pixel=0.000)\n  #3  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)\n  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.261, pixel=0.000)\n  #5  Step 3: Click on the username field  (score=0.000, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.468, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT\n  #2  Step 6: Type the password: secret_sauce  (vlm=0.000, pixel=0.000)\n  #3  Step 0: Visit saucedemo.com  (vlm=0.000, pixel=0.000)\n  #4  Step 29: Wait for the page to load  (vlm=0.900, pixel=0.925)\n  #5  Step 28: Click Continue  (vlm=0.800, pixel=0.925)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nFirst persistent divergence: step 27 (score=0.718)\nAttributed root step:        step 27 (visual_causal=0.718)\nReason:                      earliest_localized_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [6, 0] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 27 (pixel=0.72, visual_causal=0.72) (step 27 already #1).\n  • Visual-causal root step 27 not hard-promoted on LLM path (score=0.72) — handled via LLM rerank + post-LLM guards instead.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hit@k guard: pixel-boost #1 + VLM confirm (pixel=0.72, visual_causal=0.72, vlm=0.90) (step 27 already #1).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 27\nSummary:       Typing the zipcode '34890' caused a visual divergence, indicating an incorrect input that leads to downstream validation failures.\nFailure chain: The incorrect zipcode entry altered the checkout form state, causing the UI to diverge and subsequent steps to fail validation or show errors.\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 29\nSummary:\n  Step 29 (score=0.90): Different page, wrong checkout step\n  Step 28 (score=0.80): different page content\n\n  Per-step visual scores:\n    Step  27  score=0.90  Attributed from step 29: Different page, wrong checkout step  [in final top-5]\n    Step  29  score=0.90  Different page, wrong checkout step  [in final top-5]\n    Step  28  score=0.80  different page content  [in final top-5]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  identical  [analyzed only]\n    Step   6  score=0.00  identical  [in final top-5]\n    Step  25  score=0.00  Identical  [analyzed only]\n    Step  26  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 29 (score=0.90): Different page, wrong checkout step\nStep 28 (score=0.80): different page content\n\nEVALUATION\n----------------------------------------\nActual fault step: 27\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              27           1           0           0  ← ACTUAL FAULT\n  2               6         N/A         N/A          21\n  3               0         N/A         N/A          27\n  4              29         N/A         N/A           2\n  5              28         N/A         N/A           1\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 10.2\n=============================================================="
 }

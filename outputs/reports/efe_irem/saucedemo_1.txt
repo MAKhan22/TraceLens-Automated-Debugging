@@ -1,9 +1,9 @@
 ==============================================================
 TraceLens Diagnosis Report: efe_irem/saucedemo_1
-Ranking mode: llm+diagnosis
+Ranking mode: llm+vlm
 ==============================================================
 
-FINAL RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
   #1  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493)
   #2  Step 7: Click the login button  [network anomaly]  (score=0.327) ← ACTUAL FAULT
@@ -11,34 +11,105 @@ FINAL RANKED SUSPICIOUS STEPS
   #4  Step 4: Type the username: standard_user  (score=0.033)
   #5  Step 0: Visit saucedemo.com  (score=0.000)
 
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.718, visual_causal=0.718)
+  #2  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493)
+  #3  Step 7: Click the login button  [network anomaly]  (score=0.327) ← ACTUAL FAULT
+  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)
+  #5  Step 4: Type the username: standard_user  (score=0.033)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 7: Click the login button  [network anomaly]  (score=0.562, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.467, visual_causal=0.718, pixel=0.001)
+  #3  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.321, pixel=0.000)
+  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)
+  #5  Step 4: Type the username: standard_user  (score=0.022, pixel=0.000)
+
+LLM TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 7: Click the login button  [network anomaly]  (score=0.327, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)
+  #3  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.000, visual_causal=0.718, pixel=0.001)
+  #4  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493, pixel=0.000)
+  #5  Step 1: Wait for the page to load  [network anomaly]  (score=0.261, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 7: Click the login button  [network anomaly]  (score=0.562, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (vlm=0.900, visual_causal=0.718, pixel=0.001)
+  #3  Step 0: Visit saucedemo.com  (vlm=0.000, pixel=0.000)
+  #4  Step 8: Wait for the page to load  (vlm=0.900, pixel=1.000)
+  #5  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              32
+First persistent divergence: step 6 (score=0.718)
+Attributed root step:        step 6 (visual_causal=0.718)
+Reason:                      earliest_localized_divergence
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [7, 0] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: pixel/visual-causal leader step 7 (pixel=1.00, visual_causal=0.00) (step 7 already #1).
+  • Visual-causal root step 6 not hard-promoted on LLM path (score=0.72) — handled via LLM rerank + post-LLM guards instead.
+  • Diagnosis root step 6 not promoted — Hit@k guard locked step 7 (pixel_leader).
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
+  • Hit@k guard: pixel-boost #1 + VLM confirm (pixel=1.00, visual_causal=0.00, vlm=0.90) (step 7 already #1).
+
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 2
-Summary:       401 Unauthorized error occurs when verifying the login screen is visible, indicating an authentication issue
-Failure chain: The 401 Unauthorized error at step 2 prevents the login screen from being verified, which in turn causes the login button click at step 7 to fail with an Incorrect password error, as the authentication issue is not resolved
+Primary step:  Step 6
+Summary:       Typed an incorrect password, causing the login request to fail with 401 Unauthorized.
+Failure chain: Entering the wrong password at step 6 resulted in the login API call at step 7 returning a 401 error, which prevented successful authentication and led to the observed failures in subsequent steps.
 Downstream:    [7]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 7
+Summary:
+  Step 7 (score=0.90): Error dialog appears, wrong page
+  Step 8 (score=0.90): FAIL shows login page with error message, PASS shows product page
+
+  Per-step visual scores:
+    Step   6  score=0.90  Attributed from step 7: Error dialog appears, wrong page  [in final top-5]
+    Step   7  score=0.90  Error dialog appears, wrong page  [in final top-5]
+    Step   8  score=0.90  FAIL shows login page with error message, PASS shows product page  [in final top-5]
+    Step   1  score=0.00  identical  [analyzed only]
+    Step   2  score=0.00  identical  [in final top-5]
+    Step   4  score=0.00  Identical  [analyzed only]
+    Step   5  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When our system tried to verify that the login screen was visible, it encountered an issue with authentication, which is like trying to enter a building without the right key. This problem occurred early in the login process, at the step where we check if the login screen is accessible. As a result, the system couldn't proceed with the login, and later on, it incorrectly reported that the password was wrong. To fix this, we should check our authentication settings to make sure they're correct.
+Step 7 (score=0.90): Error dialog appears, wrong page
+Step 8 (score=0.90): FAIL shows login page with error message, PASS shows product page
 
 EVALUATION
 ----------------------------------------
 Actual fault step: 7
-Hit@1=0  Hit@3=1  Hit@5=1
-Rank position of actual fault: 2
-Overall rank distance (|actual_rank - 1|): 1
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
 
 Per-rank breakdown:
   Pred.Rank    Step   True Rank   rank_dist   step_dist
   (our rank)          (1=fault)  |pred-true|  |step-actual|
   ----------  -----  ----------  ----------  ----------
-  1               2         N/A         N/A           5
-  2               7           1           1           0  ← ACTUAL FAULT
-  3               1         N/A         N/A           6
-  4               4         N/A         N/A           3
-  5               0         N/A         N/A           7
+  1               7           1           0           0  ← ACTUAL FAULT
+  2               6         N/A         N/A           1
+  3               0         N/A         N/A           7
+  4               8         N/A         N/A           1
+  5               2         N/A         N/A           5
 
-Top-1 step distance: 5
-MAD@5 (mean step-dist over top-5): 4.2
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 2.8
 ==============================================================

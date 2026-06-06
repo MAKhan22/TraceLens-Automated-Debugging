@@ -1,0 +1,720 @@
+{
+  "run_id": "COMBINED_20260527_vlm_efe_irem_areeb_salem",
+  "timestamp": "2026-05-27T08:47:20.181719+00:00",
+  "mode": "vlm (meta-llama/llama-4-scout-17b-16e-instruct)",
+  "filter_source": [
+    "efe_irem",
+    "areeb_salem"
+  ],
+  "filter_trace": null,
+  "n_traces_expected": 18,
+  "n_traces_evaluated": 17,
+  "n_traces_missing": 0,
+  "n_traces_excluded": 1,
+  "sources_breakdown": {
+    "efe_irem": {
+      "evaluated": 7,
+      "missing": [],
+      "excluded": [
+        "dictionary"
+      ]
+    },
+    "areeb_salem": {
+      "evaluated": 10,
+      "missing": [],
+      "excluded": []
+    }
+  },
+  "missing_traces": [],
+  "excluded_traces": [
+    {
+      "trace_id": "efe_irem/dictionary",
+      "reason": "VLM all-zero scores / insufficient visual signal (skipped in May 26 session)"
+    }
+  ],
+  "notes": "Combined aggregate from latest VLM per-trace results. dictionary excluded (no visual signal).",
+  "aggregate": {
+    "n_traces": 17,
+    "hit@1": 0.8824,
+    "hit@3": 1.0,
+    "hit@5": 1.0,
+    "mean_rank_position": 1.1176,
+    "mean_rank_distance": 0.1176,
+    "mean_top1_step_distance": 0.1176,
+    "mean_mad@5": 5.9059,
+    "found_in_top5_count": 17
+  },
+  "per_trace": [
+    {
+      "actual_fault_step": 20,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 20,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 6
+        },
+        {
+          "rank": 3,
+          "step_id": 16,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 15,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 15
+        }
+      ],
+      "mad@5": 6.0,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/amazon",
+      "ranking_mode": "vlm",
+      "generated": "2026-05-27T06:25:37.830758Z",
+      "provenance": "report:areeb_salem/amazon.json"
+    },
+    {
+      "trace_id": "areeb_salem/bbc",
+      "actual_fault_step": 18,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 18,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 19,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 18
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 13
+        },
+        {
+          "rank": 5,
+          "step_id": 10,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 8.0,
+      "top1_step_distance": 0,
+      "provenance": "run_json:PARTIAL_vlm_run_20260526_terminal.json",
+      "provenance_note": "May 26 terminal VLM (not re-run May 27)"
+    },
+    {
+      "trace_id": "areeb_salem/github",
+      "actual_fault_step": 23,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 30,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 31,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 1,
+      "provenance": "run_json:PARTIAL_vlm_run_20260526_terminal.json",
+      "provenance_note": "May 26 terminal VLM (not re-run May 27)"
+    },
+    {
+      "trace_id": "areeb_salem/hackernews",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 22,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260525_134351.json"
+    },
+    {
+      "trace_id": "areeb_salem/imdb",
+      "actual_fault_step": 14,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 15,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 12,
+          "step_distance": 2
+        }
+      ],
+      "mad@5": 3.6,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260525_134701.json"
+    },
+    {
+      "trace_id": "areeb_salem/npm",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 26,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 18,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 16
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260525_134815.json"
+    },
+    {
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 0,
+          "step_distance": 16
+        },
+        {
+          "rank": 5,
+          "step_id": 13,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 6.0,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/producthunt",
+      "ranking_mode": "vlm",
+      "generated": "2026-05-27T06:58:42.655828Z",
+      "provenance": "report:areeb_salem/producthunt.json"
+    },
+    {
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 21,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 0,
+      "trace_id": "areeb_salem/pypi",
+      "ranking_mode": "vlm",
+      "generated": "2026-05-27T08:11:31.983282Z",
+      "provenance": "report:areeb_salem/pypi.json"
+    },
+    {
+      "trace_id": "areeb_salem/wikipedia",
+      "actual_fault_step": 17,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 17,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 17
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 16
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 15
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 12.4,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260527_084007.json"
+    },
+    {
+      "trace_id": "areeb_salem/youtube",
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1,
+      "provenance": "run_json:vlm_run_20260527_084150.json"
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 7.6,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 9,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 4.4,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 2.6,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 27,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 28,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 29,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 25
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 26
+        }
+      ],
+      "mad@5": 10.8,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 3,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 4,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 4
+        }
+      ],
+      "mad@5": 2.0,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 11
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 6.4,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 15,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 2.8,
+      "top1_step_distance": 0,
+      "provenance": "run_json:vlm_run_20260526_130136.json"
+    }
+  ]
+}

@@ -1,30 +1,100 @@
-============================================================
+==============================================================
 TraceLens Diagnosis Report: areeb_salem/npm
-============================================================
+Ranking mode: llm+vlm
+==============================================================
 
-RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
-  #1  Step 17: Verify dependencies list visible.  [console error]  (score=0.300)
-  #2  Step 26: Navigate back to search results.  [network anomaly]  (score=0.280)
-  #3  Step 18: Scroll through dependency list.  (score=0.030)
-  #4  Step 0: Navigate to NPM homepage.  (score=0.000)
-  #5  Step 1: Verify NPM homepage loaded.  (score=0.000)
+  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 17: Verify dependencies list visible.  [console error]  (score=0.333)
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.327)
+  #4  Step 18: Scroll through dependency list.  (score=0.033)
+  #5  Step 0: Navigate to NPM homepage.  (score=0.000)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 17: Verify dependencies list visible.  [console error]  (score=0.506, pixel=0.827)
+  #2  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.212, pixel=0.000)
+  #4  Step 18: Scroll through dependency list.  (score=0.022, pixel=0.000)
+  #5  Step 0: Navigate to NPM homepage.  (score=0.000, pixel=0.000)
+
+LLM TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 17: Verify dependencies list visible.  [console error]  (score=0.333, pixel=0.827)
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.327, pixel=0.000)
+  #4  Step 18: Scroll through dependency list.  (score=0.033, pixel=0.000)
+  #5  Step 0: Navigate to NPM homepage.  (score=0.000, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 17: Verify dependencies list visible.  [console error]  (vlm=0.700, pixel=0.827)
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #4  Step 18: Scroll through dependency list.  (vlm=0.000, pixel=0.000)
+  #5  Step 0: Navigate to NPM homepage.  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              30
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 30 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [17, 16] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: causal action step 16 over observer pixel leader step 17 (step 16 already #1).
+  • Deterministic promote: step 16 (text_causal) skipped — already #1.
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
+  • Hybrid Hit@k guard: causal action step 16 over observer pixel leader step 17 — promoted to #1 (was step 17).
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step: unknown
-Summary:      
-Failure chain:
+Primary step:  Step 16
+Summary:       Navigating to the dependencies tab triggered a failed network request to fetch react-router.json (ERR_CONNECTION_RESET), preventing the dependency list from loading.
+Failure chain: The failed fetch at step 16 caused console errors observed at the verification step 17, leading to the test's failure to verify the dependencies list visibility.
+Downstream:    [17]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 17
+Summary:
+  Step 17 (score=0.70): Error dialog appears
+
+  Per-step visual scores:
+    Step  17  score=0.70  Error dialog appears  [in final top-5]
+    Step   0  score=0.00  identical  [in final top-5]
+    Step  16  score=0.00  identical  [in final top-5]
+    Step  18  score=0.00  identical  [in final top-5]
+    Step  26  score=0.00  identical  [in final top-5]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-
+Step 17 (score=0.70): Error dialog appears
 
 EVALUATION
 ----------------------------------------
-Hit@1: 1  |  Hit@3: 1  |  Hit@5: 1
+Actual fault step: 16
+Hit@1=1  Hit@3=1  Hit@5=1
 Rank position of actual fault: 1
-Rank distance: 0
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              16           1           0           0  ← ACTUAL FAULT
+  2              17         N/A         N/A           1
+  3              26         N/A         N/A          10
+  4              18         N/A         N/A           2
+  5               0         N/A         N/A          16
+
 Top-1 step distance: 0
-MAD@5: 8.6
-============================================================
+MAD@5 (mean step-dist over top-5): 5.8
+==============================================================

@@ -1,0 +1,423 @@
+{
+  "run_id": "PARTIAL_20260526_terminal_vlm",
+  "timestamp": "2026-05-26T12:34:02.119193+00:00",
+  "mode": "vlm (meta-llama/llama-4-scout-17b-16e-instruct)",
+  "filter_source": null,
+  "filter_trace": null,
+  "n_traces_run": 18,
+  "n_traces_evaluated": 10,
+  "notes": "PARTIAL VLM run from May 26 session. efe_irem: 7 traces evaluated (dictionary skipped \u2014 VLM all-zero scores, missing screenshots). areeb_salem: 3 traces completed (amazon, bbc, github); hackernews interrupted on rate limit.",
+  "sources_completed": {
+    "efe_irem": 7,
+    "areeb_salem": 3
+  },
+  "sources_skipped": {
+    "efe_irem": [
+      "dictionary"
+    ]
+  },
+  "sources_pending": {
+    "areeb_salem": [
+      "hackernews",
+      "imdb",
+      "npm",
+      "producthunt",
+      "pypi",
+      "wikipedia",
+      "youtube"
+    ]
+  },
+  "aggregate": {
+    "n_traces": 10,
+    "hit@1": 0.6,
+    "hit@3": 0.9,
+    "hit@5": 1.0,
+    "mean_rank_position": 1.6,
+    "mean_rank_distance": 0.6,
+    "mean_top1_step_distance": 0.9,
+    "mean_mad@5": 5.46,
+    "found_in_top5_count": 10
+  },
+  "per_trace": [
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 6,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 2.6,
+      "top1_step_distance": 1
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 27,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 28,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 29,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 25
+        },
+        {
+          "rank": 5,
+          "step_id": 1,
+          "step_distance": 26
+        }
+      ],
+      "mad@5": 10.8,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 9,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 1,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 4.4,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 3,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 4,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 4
+        }
+      ],
+      "mad@5": 2.0,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 15,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 2.8,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 1,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 7.6,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 11
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 7
+        }
+      ],
+      "mad@5": 6.4,
+      "top1_step_distance": 1
+    },
+    {
+      "trace_id": "areeb_salem/amazon",
+      "actual_fault_step": 20,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "rank_position": 4,
+      "rank_distance": 3,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 6
+        },
+        {
+          "rank": 2,
+          "step_id": 16,
+          "step_distance": 4
+        },
+        {
+          "rank": 3,
+          "step_id": 15,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 20,
+          "step_distance": 0
+        },
+        {
+          "rank": 5,
+          "step_id": 4,
+          "step_distance": 16
+        }
+      ],
+      "mad@5": 6.2,
+      "top1_step_distance": 6
+    },
+    {
+      "trace_id": "areeb_salem/bbc",
+      "actual_fault_step": 18,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 18,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 19,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 18
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 13
+        },
+        {
+          "rank": 5,
+          "step_id": 10,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 8.0,
+      "top1_step_distance": 0
+    },
+    {
+      "trace_id": "areeb_salem/github",
+      "actual_fault_step": 23,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 30,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 31,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 1
+    }
+  ]
+}

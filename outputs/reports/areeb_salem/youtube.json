@@ -1,19 +1,43 @@
 {
   "trace_id": "areeb_salem/youtube",
-  "generated": "2026-05-20T11:16:28.603721Z",
+  "generated": "2026-05-31T00:06:27.486270Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "metadata_pipeline_bug"
+    "fault_type": "metadata_pipeline_bug",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [13, 12, 0] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: pixel/visual-causal leader step 13 (pixel=1.00, visual_causal=0.00) — promoted to #1 (was step 12).",
+      "Deterministic promote: step 12 (text_causal) skipped — text_causal blocked — strong observer pixel lock on step 13.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hit@k guard: causal action step 12 over observer pixel leader step 13 — promoted to #1 (was step 13)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 29
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
     {
-      "step_id": 0,
-      "action": "Navigate to YouTube homepage.",
-      "network_score": 0.72,
-      "console_score": 1.0,
+      "step_id": 12,
+      "action": "Scroll to comments section.",
+      "network_score": 0.85,
+      "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.588,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
       "rank": 1
     },
     {
@@ -23,8 +47,55 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3,
-      "rank": 2
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.7
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to YouTube homepage.",
+      "network_score": 0.72,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6693,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 10,
+      "action": "Expand the video description.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 5,
@@ -33,8 +104,79 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.28,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 12,
+      "action": "Scroll to comments section.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.72,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to YouTube homepage.",
+      "network_score": 0.72,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6693,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.6693,
+      "rank": 2
+    },
+    {
+      "step_id": 13,
+      "action": "Verify comments section loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.3333,
       "rank": 3
+    },
+    {
+      "step_id": 5,
+      "action": "Open the first video result.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3267,
+      "rank": 4
     },
     {
       "step_id": 6,
@@ -43,27 +185,256 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.28,
-      "rank": 4
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3267,
+      "rank": 5
+    }
+  ],
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 13,
+      "action": "Verify comments section loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.566645,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.566645,
+      "rank": 1
     },
     {
-      "step_id": 8,
-      "action": "Scroll to the video description.",
+      "step_id": 12,
+      "action": "Scroll to comments section.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to YouTube homepage.",
+      "network_score": 0.72,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.435045,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.435045,
+      "rank": 3
+    },
+    {
+      "step_id": 5,
+      "action": "Open the first video result.",
       "network_score": 0.7,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.28,
+      "combined_score": 0.212355,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212355,
+      "rank": 4
+    },
+    {
+      "step_id": 6,
+      "action": "Verify video page loaded.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.212355,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212355,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": [
+    {
+      "step_id": 13,
+      "action": "Verify comments section loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 12,
+      "action": "Scroll to comments section.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to YouTube homepage.",
+      "network_score": 0.72,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.6693,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 10,
+      "action": "Expand the video description.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 5,
+      "action": "Open the first video result.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 29,
+    "first_persistent_divergence": null,
+    "divergence_score": 0.0,
+    "attributed_root_step": null,
+    "visual_causal_score": 0.0,
+    "visible_at_step": null,
+    "reason": null,
+    "has_signal": false
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 12,
+    "root_cause_summary": "Scrolling to the comments section caused a malformed request to youtubei/v1/next, resulting in a 400 error that prevented the comments section from loading.",
+    "downstream_steps": [
+      13
+    ],
+    "failure_chain": "The scroll action (step 12) triggered an invalid API request to fetch comments, which returned a 400 error observed at the next verification step (step 13). This error stopped the comments section from rendering, causing the verification of the comments section to fail."
+  },
+  "stakeholder_summary": "When the test scrolled down to show the comments, the app tried to load the comments but got a confusing reply instead. This happened right after the scroll, before the comments could appear. Because of that bad reply, the comments section never showed up on the screen. As a result, the test that checks whether the comments are visible failed; making sure the scroll action sends the correct information should fix the problem.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 13,
+    "visual_summary": "Step 13 (score=0.70): Comments section not loaded, error dialog shown",
+    "visual_scores": [
+      {
+        "step_id": 12,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 13,
+        "visual_score": 0.7,
+        "visual_note": "Comments section not loaded, error dialog shown"
+      },
+      {
+        "step_id": 10,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 5,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
     "actual_fault_step": 13,
     "hit@1": 0,
@@ -74,8 +445,8 @@
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 0,
-        "step_distance": 13
+        "step_id": 12,
+        "step_distance": 1
       },
       {
         "rank": 2,
@@ -84,22 +455,22 @@
       },
       {
         "rank": 3,
-        "step_id": 5,
-        "step_distance": 8
+        "step_id": 0,
+        "step_distance": 13
       },
       {
         "rank": 4,
-        "step_id": 6,
-        "step_distance": 7
+        "step_id": 10,
+        "step_distance": 3
       },
       {
         "rank": 5,
-        "step_id": 8,
-        "step_distance": 5
+        "step_id": 5,
+        "step_distance": 8
       }
     ],
-    "mad@5": 6.6,
-    "top1_step_distance": 13
+    "mad@5": 5.0,
+    "top1_step_distance": 1
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/youtube\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 0: Navigate to YouTube homepage.  [network anomaly, console error]  (score=0.588)\n  #2  Step 13: Verify comments section loaded.  [console error]  (score=0.300)\n  #3  Step 5: Open the first video result.  [network anomaly]  (score=0.280)\n  #4  Step 6: Verify video page loaded.  [network anomaly]  (score=0.280)\n  #5  Step 8: Scroll to the video description.  [network anomaly]  (score=0.280)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 2\nRank distance: 1\nTop-1 step distance: 13\nMAD@5: 6.6\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/youtube\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 12: Scroll to comments section.  [network anomaly]  (score=0.720)\n  #2  Step 0: Navigate to YouTube homepage.  [network anomaly, console error]  (score=0.669)\n  #3  Step 13: Verify comments section loaded.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #4  Step 5: Open the first video result.  [network anomaly]  (score=0.327)\n  #5  Step 6: Verify video page loaded.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 13: Verify comments section loaded.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 12: Scroll to comments section.  [network anomaly]  (score=0.468, pixel=0.000)\n  #3  Step 0: Navigate to YouTube homepage.  [network anomaly, console error]  (score=0.435, pixel=0.000)\n  #4  Step 5: Open the first video result.  [network anomaly]  (score=0.212, pixel=0.000)\n  #5  Step 6: Verify video page loaded.  [network anomaly]  (score=0.212, pixel=0.000)\n\nLLM TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 13: Verify comments section loaded.  [console error]  (score=0.333, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 12: Scroll to comments section.  [network anomaly]  (score=0.720, pixel=0.000)\n  #3  Step 0: Navigate to YouTube homepage.  [network anomaly, console error]  (score=0.669, pixel=0.000)\n  #4  Step 10: Expand the video description.  [network anomaly]  (score=0.327, pixel=0.000)\n  #5  Step 5: Open the first video result.  [network anomaly]  (score=0.327, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 12: Scroll to comments section.  [network anomaly]  (score=0.468, pixel=0.000)\n  #2  Step 13: Verify comments section loaded.  [console error]  (vlm=0.700, pixel=1.000) ← ACTUAL FAULT\n  #3  Step 0: Navigate to YouTube homepage.  [network anomaly, console error]  (vlm=0.000, pixel=0.000)\n  #4  Step 10: Expand the video description.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #5  Step 5: Open the first video result.  [network anomaly]  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              29\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 29 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [13, 12, 0] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: pixel/visual-causal leader step 13 (pixel=1.00, visual_causal=0.00) — promoted to #1 (was step 12).\n  • Deterministic promote: step 12 (text_causal) skipped — text_causal blocked — strong observer pixel lock on step 13.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hit@k guard: causal action step 12 over observer pixel leader step 13 — promoted to #1 (was step 13).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 12\nSummary:       Scrolling to the comments section caused a malformed request to youtubei/v1/next, resulting in a 400 error that prevented the comments section from loading.\nFailure chain: The scroll action (step 12) triggered an invalid API request to fetch comments, which returned a 400 error observed at the next verification step (step 13). This error stopped the comments section from rendering, causing the verification of the comments section to fail.\nDownstream:    [13]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 13\nSummary:\n  Step 13 (score=0.70): Comments section not loaded, error dialog shown\n\n  Per-step visual scores:\n    Step  13  score=0.70  Comments section not loaded, error dialog shown  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   5  score=0.00  identical  [in final top-5]\n    Step  10  score=0.00  identical  [in final top-5]\n    Step  12  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 13 (score=0.70): Comments section not loaded, error dialog shown\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=0  Hit@3=1  Hit@5=1\nRank position of actual fault: 2\nOverall rank distance (|actual_rank - 1|): 1\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              12         N/A         N/A           1\n  2              13           1           1           0  ← ACTUAL FAULT\n  3               0         N/A         N/A          13\n  4              10         N/A         N/A           3\n  5               5         N/A         N/A           8\n\nTop-1 step distance: 1\nMAD@5 (mean step-dist over top-5): 5.0\n=============================================================="
 }

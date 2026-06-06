@@ -1,30 +1,119 @@
-============================================================
+==============================================================
 TraceLens Diagnosis Report: areeb_salem/amazon
-============================================================
+Ranking mode: llm+vlm
+==============================================================
 
-RANKED SUSPICIOUS STEPS
+HEURISTIC TOP 5 (text signals only)
 ----------------------------------------
-  #1  Step 2: Search for Python programming book.  [console error]  (score=0.425)
-  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.290)
-  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.245)
-  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.245)
-  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.245)
+  #1  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.387) ← ACTUAL FAULT
+  #2  Step 4: Verify product listings in results.  [network anomaly]  (score=0.327)
+  #3  Step 5: Scroll through search results.  [network anomaly]  (score=0.327)
+  #4  Step 7: Open the first book result.  [network anomaly]  (score=0.327)
+  #5  Step 12: Scroll to the product description.  [network anomaly]  (score=0.327)
+
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000)
+  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.387) ← ACTUAL FAULT
+  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.327)
+  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.327)
+  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.327)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000)
+  #2  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.251, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.212, pixel=0.000)
+  #4  Step 5: Scroll through search results.  [network anomaly]  (score=0.212, pixel=0.000)
+  #5  Step 7: Open the first book result.  [network anomaly]  (score=0.212, pixel=0.000)
+
+LLM TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.387, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.327, visual_causal=1.000, pixel=1.000)
+  #3  Step 4: Verify product listings in results.  [network anomaly]  (score=0.327, pixel=0.000)
+  #4  Step 2: Search for Python programming book.  [network anomaly]  (score=0.233, pixel=0.000)
+  #5  Step 22: Navigate back to search results.  [network anomaly]  (score=0.327, pixel=0.000)
+
+VLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)
+----------------------------------------
+  #1  Step 20: Click the add to wish list button.  [console error, action divergence]  (score=0.251, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (vlm=0.800, visual_causal=1.000, pixel=1.000)
+  #3  Step 4: Verify product listings in results.  [network anomaly]  (vlm=0.000, pixel=0.000)
+  #4  Step 16: Scroll through customer review text.  [network anomaly]  (vlm=0.800, pixel=1.000)
+  #5  Step 2: Search for Python programming book.  [network anomaly]  (vlm=0.000, pixel=0.000)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              32
+First persistent divergence: step 14 (score=1.000)
+Attributed root step:        step 14 (visual_causal=1.000)
+Reason:                      earliest_divergence
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])
+
+RANKING DECISIONS (rules applied)
+----------------------------------------
+  • LLM anchor guard: kept strong heuristic step(s) [14, 20] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).
+  • LLM Hit@k guard: text-only #1 step 20 (text leader) over visual-causal leader step 14 — promoted to #1 (was step 14).
+  • Visual-causal root step 14 not hard-promoted on LLM path (score=1.00) — handled via LLM rerank + post-LLM guards instead.
+  • Diagnosis root step 14 not promoted — Hit@k guard locked step 20 (text_action_anchor).
+  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).
+  • Hybrid Hit@k guard: text-only #1 step 20 (text leader) over visual-causal leader step 14 — promoted to #1 (was step 14).
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step: 2
-Summary:      Failed to load resource due to net::ERR_TRUST_TOKEN_OPERATION_FAILED and 405 status code from https://www.amazon.com/suggestions
-Failure chain:The initial failure to load resources at step 2 due to trust token operation failure and 405 status code prevents subsequent steps from executing correctly, leading to downstream effects such as warnings about preloaded resources at step 20 and potential verification failures at steps 4, 5, and 7.
+Primary step:  Step 14
+Summary:       Scroll to customer reviews caused a visual divergence, likely due to missing or altered review section loading, leading to an incorrect page state.
+Failure chain: The scroll action at step 14 failed to load the expected review content, causing the page to render differently; subsequent steps that rely on the review section (e.g., clicking add to wish list and navigating back) interacted with unexpected elements or missing data, resulting in failures.
+Downstream:    [20, 22]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 16
+Summary:
+  Step 16 (score=0.80): Different book recommendations
+  Step 14 (score=0.50): different customer reviews
+  Step 15 (score=0.50): Different recommended products
+
+  Per-step visual scores:
+    Step  14  score=0.80  Attributed from step 16: Different book recommendations  [in final top-5]
+    Step  16  score=0.80  Different book recommendations  [in final top-5]
+    Step  15  score=0.50  Different recommended products  [analyzed only]
+    Step   4  score=0.00  identical  [in final top-5]
+    Step   5  score=0.00  Identical  [analyzed only]
+    Step  12  score=0.00  identical  [analyzed only]
+    Step  13  score=0.00  identical  [analyzed only]
+    Step  20  score=0.00  identical  [in final top-5]
+    Step  21  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When our system tried to get some information from a website, it was like trying to open a door that no longer exists - the website didn't allow us to access what we needed. This happened early in the process, at a point where we were trying to load some necessary resources. As a result, the rest of the process didn't work correctly, and we saw some warning messages and potential errors later on. It's possible that the website has changed its security settings, so we should check if our system needs to be updated to match those changes.
+Step 16 (score=0.80): Different book recommendations
+Step 14 (score=0.50): different customer reviews
+Step 15 (score=0.50): Different recommended products
 
 EVALUATION
 ----------------------------------------
-Hit@1: 0  |  Hit@3: 1  |  Hit@5: 1
-Rank position of actual fault: 2
-Rank distance: 1
-Top-1 step distance: 18
-MAD@5: 12.4
-============================================================
+Actual fault step: 20
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              20           1           0           0  ← ACTUAL FAULT
+  2              14         N/A         N/A           6
+  3               4         N/A         N/A          16
+  4              16         N/A         N/A           4
+  5               2         N/A         N/A          18
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 8.8
+==============================================================

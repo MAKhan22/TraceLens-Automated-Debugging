@@ -1,11 +1,45 @@
 {
   "trace_id": "areeb_salem/npm",
-  "generated": "2026-05-20T11:16:28.504769Z",
+  "generated": "2026-05-31T11:14:51.446434Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "network_error_registry"
+    "fault_type": "network_error_registry",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [17, 16] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "LLM Hit@k guard: causal action step 16 over observer pixel leader step 17 (step 16 already #1).",
+      "Deterministic promote: step 16 (text_causal) skipped — already #1.",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).",
+      "Hybrid Hit@k guard: causal action step 16 over observer pixel leader step 17 — promoted to #1 (was step 17)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 30
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
+    {
+      "step_id": 16,
+      "action": "Navigate to dependencies tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 1
+    },
     {
       "step_id": 17,
       "action": "Verify dependencies list visible.",
@@ -13,8 +47,17 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3,
-      "rank": 1
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.8274,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.827,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.7
     },
     {
       "step_id": 26,
@@ -23,8 +66,17 @@
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.28,
-      "rank": 2
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 18,
@@ -33,8 +85,17 @@
       "console_score": 0.1,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.03,
-      "rank": 3
+      "combined_score": 0.0333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.0
     },
     {
       "step_id": 0,
@@ -44,28 +105,338 @@
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 16,
+      "action": "Navigate to dependencies tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.72,
+      "rank": 1
+    },
+    {
+      "step_id": 17,
+      "action": "Verify dependencies list visible.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.8274,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "rank_score": 0.3333,
+      "rank": 2
+    },
+    {
+      "step_id": 26,
+      "action": "Navigate back to search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.3267,
+      "rank": 3
+    },
+    {
+      "step_id": 18,
+      "action": "Scroll through dependency list.",
+      "network_score": 0.0,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0333,
       "rank": 4
     },
     {
-      "step_id": 1,
-      "action": "Verify NPM homepage loaded.",
+      "step_id": 0,
+      "action": "Navigate to NPM homepage.",
       "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.0,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": null,
-    "root_cause_summary": null,
-    "downstream_steps": [],
-    "failure_chain": null
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 17,
+      "action": "Verify dependencies list visible.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.506235,
+      "screenshots_available": true,
+      "pixel_global": 0.8274,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.827,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.506235,
+      "rank": 1
+    },
+    {
+      "step_id": 16,
+      "action": "Navigate to dependencies tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 2
+    },
+    {
+      "step_id": 26,
+      "action": "Navigate back to search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.212355,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.212355,
+      "rank": 3
+    },
+    {
+      "step_id": 18,
+      "action": "Scroll through dependency list.",
+      "network_score": 0.0,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.021645000000000005,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.021645,
+      "rank": 4
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to NPM homepage.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.0,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": [
+    {
+      "step_id": 16,
+      "action": "Navigate to dependencies tab.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 17,
+      "action": "Verify dependencies list visible.",
+      "network_score": 0.0,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3333,
+      "screenshots_available": true,
+      "pixel_global": 0.8274,
+      "pixel_localized": 1.0,
+      "pixel_score": 0.827,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
+    },
+    {
+      "step_id": 26,
+      "action": "Navigate back to search results.",
+      "network_score": 0.7,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.3267,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 18,
+      "action": "Scroll through dependency list.",
+      "network_score": 0.0,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0333,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to NPM homepage.",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5
+    }
+  ],
+  "screenshot_analysis": {
+    "steps_scanned": 30,
+    "first_persistent_divergence": null,
+    "divergence_score": 0.0,
+    "attributed_root_step": null,
+    "visual_causal_score": 0.0,
+    "visible_at_step": null,
+    "reason": null,
+    "has_signal": false
   },
-  "stakeholder_summary": "",
+  "technical_diagnosis": {
+    "root_cause_step_id": 16,
+    "root_cause_summary": "Navigating to the dependencies tab triggered a failed network request to fetch react-router.json (ERR_CONNECTION_RESET), preventing the dependency list from loading.",
+    "downstream_steps": [
+      17
+    ],
+    "failure_chain": "The failed fetch at step 16 caused console errors observed at the verification step 17, leading to the test's failure to verify the dependencies list visibility."
+  },
+  "stakeholder_summary": "When the test tried to open the dependencies tab, it attempted to load a needed file but couldn’t reach it—like dialing a phone that’s been disconnected. Because the file didn’t load, the list of dependencies never appeared on the screen. The next step checked to see if that list was visible, and since it wasn’t, the test marked that step as failed. To fix this, we should verify that the file is present and accessible so the tab can load the list properly.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 17,
+    "visual_summary": "Step 17 (score=0.70): Error dialog appears",
+    "visual_scores": [
+      {
+        "step_id": 16,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 17,
+        "visual_score": 0.7,
+        "visual_note": "Error dialog appears"
+      },
+      {
+        "step_id": 26,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 18,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
-    "actual_fault_step": 17,
+    "actual_fault_step": 16,
     "hit@1": 1,
     "hit@3": 1,
     "hit@5": 1,
@@ -74,32 +445,32 @@
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 17,
+        "step_id": 16,
         "step_distance": 0
       },
       {
         "rank": 2,
-        "step_id": 26,
-        "step_distance": 9
-      },
-      {
-        "rank": 3,
-        "step_id": 18,
+        "step_id": 17,
         "step_distance": 1
       },
       {
+        "rank": 3,
+        "step_id": 26,
+        "step_distance": 10
+      },
+      {
         "rank": 4,
-        "step_id": 0,
-        "step_distance": 17
+        "step_id": 18,
+        "step_distance": 2
       },
       {
         "rank": 5,
-        "step_id": 1,
+        "step_id": 0,
         "step_distance": 16
       }
     ],
-    "mad@5": 8.6,
+    "mad@5": 5.8,
     "top1_step_distance": 0
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/npm\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 17: Verify dependencies list visible.  [console error]  (score=0.300)\n  #2  Step 26: Navigate back to search results.  [network anomaly]  (score=0.280)\n  #3  Step 18: Scroll through dependency list.  (score=0.030)\n  #4  Step 0: Navigate to NPM homepage.  (score=0.000)\n  #5  Step 1: Verify NPM homepage loaded.  (score=0.000)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: unknown\nSummary:      \nFailure chain:\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n\n\nEVALUATION\n----------------------------------------\nHit@1: 1  |  Hit@3: 1  |  Hit@5: 1\nRank position of actual fault: 1\nRank distance: 0\nTop-1 step distance: 0\nMAD@5: 8.6\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/npm\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 17: Verify dependencies list visible.  [console error]  (score=0.333)\n  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.327)\n  #4  Step 18: Scroll through dependency list.  (score=0.033)\n  #5  Step 0: Navigate to NPM homepage.  (score=0.000)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 17: Verify dependencies list visible.  [console error]  (score=0.506, pixel=0.827)\n  #2  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT\n  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.212, pixel=0.000)\n  #4  Step 18: Scroll through dependency list.  (score=0.022, pixel=0.000)\n  #5  Step 0: Navigate to NPM homepage.  (score=0.000, pixel=0.000)\n\nLLM TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 17: Verify dependencies list visible.  [console error]  (score=0.333, pixel=0.827)\n  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.327, pixel=0.000)\n  #4  Step 18: Scroll through dependency list.  (score=0.033, pixel=0.000)\n  #5  Step 0: Navigate to NPM homepage.  (score=0.000, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 17: Verify dependencies list visible.  [console error]  (vlm=0.700, pixel=0.827)\n  #3  Step 26: Navigate back to search results.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #4  Step 18: Scroll through dependency list.  (vlm=0.000, pixel=0.000)\n  #5  Step 0: Navigate to NPM homepage.  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              30\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 30 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [17, 16] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • LLM Hit@k guard: causal action step 16 over observer pixel leader step 17 (step 16 already #1).\n  • Deterministic promote: step 16 (text_causal) skipped — already #1.\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n  • Hybrid Hit@k guard: causal action step 16 over observer pixel leader step 17 — promoted to #1 (was step 17).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 16\nSummary:       Navigating to the dependencies tab triggered a failed network request to fetch react-router.json (ERR_CONNECTION_RESET), preventing the dependency list from loading.\nFailure chain: The failed fetch at step 16 caused console errors observed at the verification step 17, leading to the test's failure to verify the dependencies list visibility.\nDownstream:    [17]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 17\nSummary:\n  Step 17 (score=0.70): Error dialog appears\n\n  Per-step visual scores:\n    Step  17  score=0.70  Error dialog appears  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step  16  score=0.00  identical  [in final top-5]\n    Step  18  score=0.00  identical  [in final top-5]\n    Step  26  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 17 (score=0.70): Error dialog appears\n\nEVALUATION\n----------------------------------------\nActual fault step: 16\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              16           1           0           0  ← ACTUAL FAULT\n  2              17         N/A         N/A           1\n  3              26         N/A         N/A          10\n  4              18         N/A         N/A           2\n  5               0         N/A         N/A          16\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.8\n=============================================================="
 }

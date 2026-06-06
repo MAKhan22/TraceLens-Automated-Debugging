@@ -1,0 +1,162 @@
+[
+  {
+    "trace_id": "ersel/opencart_purchase_40",
+    "actual_fault_step": 21,
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 2,
+    "rank_distance": 1,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 24,
+        "step_distance": 3
+      },
+      {
+        "rank": 2,
+        "step_id": 21,
+        "step_distance": 0
+      },
+      {
+        "rank": 3,
+        "step_id": 22,
+        "step_distance": 1
+      },
+      {
+        "rank": 4,
+        "step_id": 23,
+        "step_distance": 2
+      },
+      {
+        "rank": 5,
+        "step_id": 0,
+        "step_distance": 21
+      }
+    ],
+    "mad@5": 5.4,
+    "top1_step_distance": 3,
+    "vlm_status": "ok",
+    "exclude_from_aggregate": false
+  },
+  {
+    "trace_id": "ersel/opencart_wishlist_35",
+    "actual_fault_step": 22,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 22,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 24,
+        "step_distance": 2
+      },
+      {
+        "rank": 3,
+        "step_id": 0,
+        "step_distance": 22
+      },
+      {
+        "rank": 4,
+        "step_id": 25,
+        "step_distance": 3
+      },
+      {
+        "rank": 5,
+        "step_id": 23,
+        "step_distance": 1
+      }
+    ],
+    "mad@5": 5.6,
+    "top1_step_distance": 0,
+    "vlm_status": "ok",
+    "exclude_from_aggregate": false
+  },
+  {
+    "trace_id": "ersel/opencart_manufacturer_404_35",
+    "actual_fault_step": 23,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 23,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 0,
+        "step_distance": 23
+      },
+      {
+        "rank": 3,
+        "step_id": 10,
+        "step_distance": 13
+      },
+      {
+        "rank": 4,
+        "step_id": 24,
+        "step_distance": 1
+      },
+      {
+        "rank": 5,
+        "step_id": 1,
+        "step_distance": 22
+      }
+    ],
+    "mad@5": 11.8,
+    "top1_step_distance": 0,
+    "vlm_status": "ok",
+    "exclude_from_aggregate": false
+  },
+  {
+    "trace_id": "ersel/opencart_contact_35",
+    "actual_fault_step": 16,
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
+    "step_distances": [
+      {
+        "rank": 1,
+        "step_id": 16,
+        "step_distance": 0
+      },
+      {
+        "rank": 2,
+        "step_id": 19,
+        "step_distance": 3
+      },
+      {
+        "rank": 3,
+        "step_id": 20,
+        "step_distance": 4
+      },
+      {
+        "rank": 4,
+        "step_id": 18,
+        "step_distance": 2
+      },
+      {
+        "rank": 5,
+        "step_id": 21,
+        "step_distance": 5
+      }
+    ],
+    "mad@5": 2.8,
+    "top1_step_distance": 0,
+    "vlm_status": "ok",
+    "exclude_from_aggregate": false
+  }
+]

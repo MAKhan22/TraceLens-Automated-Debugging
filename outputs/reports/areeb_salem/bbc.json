@@ -1,19 +1,134 @@
 {
   "trace_id": "areeb_salem/bbc",
-  "generated": "2026-05-21T07:55:56.254098Z",
+  "generated": "2026-05-31T10:59:57.446602Z",
   "metadata": {
     "source": "areeb_salem",
-    "fault_type": "stale_cdn_cache"
+    "fault_type": "stale_cdn_cache",
+    "ranking_decisions": [
+      "LLM anchor guard: kept strong heuristic step(s) [18, 19, 0, 5] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).",
+      "Deterministic promote: step 5 (wrong_navigation).",
+      "Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0)."
+    ],
+    "vlm_status": "ok",
+    "vlm_error": null,
+    "vlm_error_code": null,
+    "ranking_fallback": null,
+    "exclude_from_aggregate": false,
+    "ran_screenshot_scan": true,
+    "screenshots_available_count": 32
   },
+  "ranking_mode": "llm+vlm",
   "ranked_suspicious_steps": [
     {
-      "step_id": 16,
-      "action": "Scroll back to article top.",
+      "step_id": 5,
+      "action": "Open the first news article.",
+      "network_score": 0.95,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4433,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to BBC News homepage.",
+      "network_score": 0.95,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4767,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 18,
+      "action": "Navigate to a news category.",
+      "network_score": 0.85,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3,
+      "vlm_visual_score": 0.0
+    },
+    {
+      "step_id": 19,
+      "action": "Verify category page loaded.",
       "network_score": 0.7,
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.495,
+      "combined_score": 0.66,
+      "screenshots_available": true,
+      "pixel_global": 0.0379,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.038,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4,
+      "vlm_visual_score": 0.1
+    },
+    {
+      "step_id": 10,
+      "action": "Scroll through more article paragraphs.",
+      "network_score": 0.7,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.36,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 5,
+      "vlm_visual_score": 0.0
+    }
+  ],
+  "heuristic_steps": [
+    {
+      "step_id": 18,
+      "action": "Navigate to a news category.",
+      "network_score": 0.85,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.72,
       "rank": 1
     },
     {
@@ -23,8 +138,43 @@
       "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.495,
+      "combined_score": 0.66,
+      "screenshots_available": true,
+      "pixel_global": 0.0379,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0379,
+      "rank_score": 0.66,
       "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to BBC News homepage.",
+      "network_score": 0.95,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4767,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.4767,
+      "rank": 3
+    },
+    {
+      "step_id": 5,
+      "action": "Open the first news article.",
+      "network_score": 0.95,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4433,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.4433,
+      "rank": 4
     },
     {
       "step_id": 10,
@@ -33,78 +183,295 @@
       "console_score": 0.1,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.27,
+      "combined_score": 0.36,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "rank_score": 0.36,
+      "rank": 5
+    }
+  ],
+  "heuristic_pixel_steps": [
+    {
+      "step_id": 18,
+      "action": "Navigate to a news category.",
+      "network_score": 0.85,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.46799999999999997,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.468,
+      "rank": 1
+    },
+    {
+      "step_id": 19,
+      "action": "Verify category page loaded.",
+      "network_score": 0.7,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4422650000000001,
+      "screenshots_available": true,
+      "pixel_global": 0.0379,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.038,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.442265,
+      "rank": 2
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to BBC News homepage.",
+      "network_score": 0.95,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.309855,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.309855,
       "rank": 3
     },
     {
-      "step_id": 15,
-      "action": "Verify related article links visible.",
+      "step_id": 5,
+      "action": "Open the first news article.",
+      "network_score": 0.95,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.28814500000000004,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.288145,
+      "rank": 4
+    },
+    {
+      "step_id": 10,
+      "action": "Scroll through more article paragraphs.",
       "network_score": 0.7,
       "console_score": 0.1,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.27,
-      "rank": 4
+      "combined_score": 0.23399999999999999,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank_score": 0.234,
+      "rank": 5
+    }
+  ],
+  "heuristic_visual_steps": null,
+  "llm_ranked_steps": [
+    {
+      "step_id": 5,
+      "action": "Open the first news article.",
+      "network_score": 0.95,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4433,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 1
+    },
+    {
+      "step_id": 0,
+      "action": "Navigate to BBC News homepage.",
+      "network_score": 0.95,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.4767,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 2
     },
     {
       "step_id": 18,
       "action": "Navigate to a news category.",
+      "network_score": 0.85,
+      "console_score": 0.1,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 3
+    },
+    {
+      "step_id": 19,
+      "action": "Verify category page loaded.",
+      "network_score": 0.7,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.66,
+      "screenshots_available": true,
+      "pixel_global": 0.0379,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.038,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "rank": 4
+    },
+    {
+      "step_id": 10,
+      "action": "Scroll through more article paragraphs.",
       "network_score": 0.7,
       "console_score": 0.1,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.27,
+      "combined_score": 0.36,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
       "rank": 5
     }
   ],
-  "technical_diagnosis": {
-    "root_cause_step_id": 16,
-    "root_cause_summary": "Iframe script loading issues trigger a chain of ad rendering failures and console warnings.",
-    "downstream_steps": [
-      19,
-      10,
-      15,
-      18
-    ],
-    "failure_chain": "The root cause at step 16 leads to ad rendering issues, which in turn cause verification failures at step 19, and propagate to other steps due to the inability to access ad HTML content, resulting in a cascade of console warnings and errors."
+  "screenshot_analysis": {
+    "steps_scanned": 32,
+    "first_persistent_divergence": null,
+    "divergence_score": 0.0,
+    "attributed_root_step": null,
+    "visual_causal_score": 0.0,
+    "visible_at_step": null,
+    "reason": null,
+    "has_signal": false
   },
-  "stakeholder_summary": "When our system tried to load a crucial part of the webpage, it couldn't find what it needed, kind of like trying to open a door that no longer exists. This happened during a specific step in the process where we prepare to show ads. As a result, the ads didn't display properly, and this caused a chain reaction of problems that affected several other parts of the system. The visible impact was that the ads didn't show up as expected, and we should check if the missing part is correctly set up and accessible to fix the issue.",
+  "technical_diagnosis": {
+    "root_cause_step_id": 0,
+    "root_cause_summary": "The navigation to the BBC News homepage loaded an incorrect page (likely an ad iframe) instead of the expected homepage, causing the test to operate on the wrong context.",
+    "downstream_steps": [
+      5,
+      18,
+      19,
+      10
+    ],
+    "failure_chain": "Loading the wrong homepage caused subsequent steps (opening an article, navigating a category, verifying the category page, and scrolling) to interact with unexpected content, leading to failed fetches, 503 errors, stale-cache warnings, and missing asset requests observed later in the trace."
+  },
+  "stakeholder_summary": "The test tried to go to the BBC News home page, but it landed on the wrong page — like opening a door that leads to an advertisement instead of the main lobby. Because it was in the wrong place, later steps such as opening an article or checking a section couldn’t find what they expected, so the test showed errors and missing items. The mistake happened right at the beginning, when the home page was loaded. Making sure the correct page appears before proceeding would prevent the problem.",
+  "visual_analysis": {
+    "visual_root_cause_step_id": 19,
+    "visual_summary": "Step 19 (score=0.10): Cached content banner present in FAIL",
+    "visual_scores": [
+      {
+        "step_id": 18,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 19,
+        "visual_score": 0.1,
+        "visual_note": "Cached content banner present in FAIL"
+      },
+      {
+        "step_id": 0,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 5,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      },
+      {
+        "step_id": 10,
+        "visual_score": 0.0,
+        "visual_note": "identical"
+      }
+    ],
+    "steps_with_screenshots": 5
+  },
   "evaluation": {
     "actual_fault_step": 18,
     "hit@1": 0,
-    "hit@3": 0,
+    "hit@3": 1,
     "hit@5": 1,
-    "rank_position": 5,
-    "rank_distance": 4,
+    "rank_position": 3,
+    "rank_distance": 2,
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 16,
-        "step_distance": 2
+        "step_id": 5,
+        "step_distance": 13
       },
       {
         "rank": 2,
+        "step_id": 0,
+        "step_distance": 18
+      },
+      {
+        "rank": 3,
+        "step_id": 18,
+        "step_distance": 0
+      },
+      {
+        "rank": 4,
         "step_id": 19,
         "step_distance": 1
       },
       {
-        "rank": 3,
+        "rank": 5,
         "step_id": 10,
         "step_distance": 8
-      },
-      {
-        "rank": 4,
-        "step_id": 15,
-        "step_distance": 3
-      },
-      {
-        "rank": 5,
-        "step_id": 18,
-        "step_distance": 0
       }
     ],
-    "mad@5": 2.8,
-    "top1_step_distance": 2
+    "mad@5": 8.0,
+    "top1_step_distance": 13
   },
-  "_text_report": "============================================================\nTraceLens Diagnosis Report: areeb_salem/bbc\n============================================================\n\nRANKED SUSPICIOUS STEPS\n----------------------------------------\n  #1  Step 16: Scroll back to article top.  [network anomaly, console error]  (score=0.495)\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.495)\n  #3  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.270)\n  #4  Step 15: Verify related article links visible.  [network anomaly]  (score=0.270)\n  #5  Step 18: Navigate to a news category.  [network anomaly]  (score=0.270)\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step: 16\nSummary:      Iframe script loading issues trigger a chain of ad rendering failures and console warnings.\nFailure chain:The root cause at step 16 leads to ad rendering issues, which in turn cause verification failures at step 19, and propagate to other steps due to the inability to access ad HTML content, resulting in a cascade of console warnings and errors.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen our system tried to load a crucial part of the webpage, it couldn't find what it needed, kind of like trying to open a door that no longer exists. This happened during a specific step in the process where we prepare to show ads. As a result, the ads didn't display properly, and this caused a chain reaction of problems that affected several other parts of the system. The visible impact was that the ads didn't show up as expected, and we should check if the missing part is correctly set up and accessible to fix the issue.\n\nEVALUATION\n----------------------------------------\nHit@1: 0  |  Hit@3: 0  |  Hit@5: 1\nRank position of actual fault: 5\nRank distance: 4\nTop-1 step distance: 2\nMAD@5: 2.8\n============================================================"
+  "_text_report": "==============================================================\nTraceLens Diagnosis Report: areeb_salem/bbc\nRanking mode: llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660)\n  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477)\n  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.443)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.442, pixel=0.038)\n  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.310, pixel=0.000)\n  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.288, pixel=0.000)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.234, pixel=0.000)\n\nLLM TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 5: Open the first news article.  [network anomaly]  (score=0.443, pixel=0.000)\n  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477, pixel=0.000)\n  #3  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT\n  #4  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660, pixel=0.038)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360, pixel=0.000)\n\nVLM + LLM TOP 5 (text + pixel + visual causal + VLM + LLM rank prior)\n----------------------------------------\n  #1  Step 5: Open the first news article.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (vlm=0.000, pixel=0.000)\n  #3  Step 18: Navigate to a news category.  [network anomaly]  (vlm=0.000, pixel=0.000) ← ACTUAL FAULT\n  #4  Step 19: Verify category page loaded.  [network anomaly, console error]  (vlm=0.100, pixel=0.038)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (vlm=0.000, pixel=0.000)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n  Steps with pass/fail PNG pairs: 32 (pixel/visual-causal skipped on steps marked [no screenshots])\n\nRANKING DECISIONS (rules applied)\n----------------------------------------\n  • LLM anchor guard: kept strong heuristic step(s) [18, 19, 0, 5] in top-5 (action change, wrong navigation, high text score, pixel score ≥ 0.65, or visual-causal root).\n  • Deterministic promote: step 5 (wrong_navigation).\n  • Hybrid final = 40% unified visual score (VLM + pixel + visual-causal) + 60% LLM rank position. Steps without screenshots skip pixel (score treated as 0).\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 0\nSummary:       The navigation to the BBC News homepage loaded an incorrect page (likely an ad iframe) instead of the expected homepage, causing the test to operate on the wrong context.\nFailure chain: Loading the wrong homepage caused subsequent steps (opening an article, navigating a category, verifying the category page, and scrolling) to interact with unexpected content, leading to failed fetches, 503 errors, stale-cache warnings, and missing asset requests observed later in the trace.\nDownstream:    [5, 18, 19, 10]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 19\nSummary:\n  Step 19 (score=0.10): Cached content banner present in FAIL\n\n  Per-step visual scores:\n    Step  19  score=0.10  Cached content banner present in FAIL  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   5  score=0.00  identical  [in final top-5]\n    Step  10  score=0.00  identical  [in final top-5]\n    Step  18  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nStep 19 (score=0.10): Cached content banner present in FAIL\n\nEVALUATION\n----------------------------------------\nActual fault step: 18\nHit@1=0  Hit@3=1  Hit@5=1\nRank position of actual fault: 3\nOverall rank distance (|actual_rank - 1|): 2\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               5         N/A         N/A          13\n  2               0         N/A         N/A          18\n  3              18           1           2           0  ← ACTUAL FAULT\n  4              19         N/A         N/A           1\n  5              10         N/A         N/A           8\n\nTop-1 step distance: 13\nMAD@5 (mean step-dist over top-5): 8.0\n=============================================================="
 }
