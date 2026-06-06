@@ -37,7 +37,8 @@ model:
   base_url:    "https://openrouter.ai/api/v1"
   llm_model:   "openai/gpt-oss-120b:free"
   api_key_env: "OPENROUTER_API_KEY"
-  temperature: 0.1
+  temperature: 0.0
+  prompt_cache: true
 ```
 
 | Field | Description |
@@ -45,7 +46,8 @@ model:
 | `base_url` | API endpoint. Use `https://openrouter.ai/api/v1` for OpenRouter, `https://api.groq.com/openai/v1` for Groq, or `https://generativelanguage.googleapis.com/v1beta/openai/` for Gemini. |
 | `llm_model` | Model identifier as accepted by the provider. See table below. |
 | `api_key_env` | Name of the environment variable that holds the API key (read from `.env`). Changing this lets you switch providers without editing code. |
-| `temperature` | LLM sampling temperature. `0.1` keeps outputs deterministic and JSON-safe. Do not go above `0.3` for structured output tasks. |
+| `temperature` | LLM sampling temperature. **`0.0`** (active default) for greedy, most reproducible rerank/diagnosis JSON. Use `0.1` for slight variation. Do not go above `0.3` for structured output tasks. OpenRouter free-tier routing can still vary across runs. |
+| `prompt_cache` | When `true` and `base_url` is OpenRouter, static prompt files are sent with `cache_control: ephemeral` and per-trace JSON is uncached; `session_id` = `source/trace_id` for sticky routing. Set `false` for non-OpenRouter providers. See README §5. |
 
 ### Supported / tested providers
 
@@ -89,7 +91,7 @@ vlm:
   base_url:    "https://openrouter.ai/api/v1"
   vlm_model:   "google/gemma-4-31b-it:free"
   api_key_env: "OPENROUTER_API_KEY"
-  temperature: 0.1
+  temperature: 0.0
   per_step: true
   ensemble_vlm_weight: 0.4
   top_k_for_vlm: 5
@@ -100,7 +102,7 @@ vlm:
 | `base_url` | OpenRouter | Same OpenAI-compatible endpoint as the LLM. VLM and LLM can share one API key. |
 | `vlm_model` | `google/gemma-4-31b-it:free` | OpenRouter vision model. Paid alternative: `qwen/qwen2.5-vl-72b-instruct`. |
 | `api_key_env` | `OPENROUTER_API_KEY` | Env var read from `.env`. |
-| `temperature` | `0.1` | Keep low for structured JSON output. |
+| `temperature` | `0.0` | Greedy sampling for structured JSON output (match LLM setting). |
 | `per_step` | `true` | One API call per screenshot pair (more reliable than batching all pairs). |
 | `ensemble_vlm_weight` | `0.4` | Used when both `--llm` and `--vlm`. 60% LLM position score + 40% VLM visual score. |
 | `top_k_for_vlm` | `5` | Top-ranked steps whose pass/fail screenshot pairs are sent to the VLM. |

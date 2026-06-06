@@ -1,0 +1,101 @@
+==============================================================
+TraceLens v2 Diagnosis Report: areeb_salem/npm
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 17: Verify dependencies list visible.  [console error]  (score=0.333)
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.327)
+  #4  Step 18: Scroll through dependency list.  (score=0.033)
+  #5  Step 0: Navigate to NPM homepage.  (score=0.000)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 17: Verify dependencies list visible.  [console error]  (score=0.506, pixel=0.827)
+  #2  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (score=0.212, pixel=0.000)
+  #4  Step 18: Scroll through dependency list.  (score=0.022, pixel=0.000)
+  #5  Step 0: Navigate to NPM homepage.  (score=0.000, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)
+----------------------------------------
+  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 18: Scroll through dependency list.  (score=0.033, pixel=0.000)
+  #3  Step 2: Search for react-router package.  (score=0.000, pixel=0.000)
+  #4  Step 5: Open the first package result.  (score=0.000, pixel=0.000)
+  #5  Step 8: Scroll to the README section.  (score=0.000, pixel=0.000)
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 16: Navigate to dependencies tab.  [network anomaly]  (fusion=0.508; causal_action=1.00, llm_prior=1.00, text=0.72) ← ACTUAL FAULT
+  #2  Step 18: Scroll through dependency list.  (fusion=0.177; llm_prior=0.93, text=0.03)
+  #3  Step 26: Navigate back to search results.  [network anomaly]  (fusion=0.165; llm_prior=0.57, text=0.33)
+  #4  Step 17: Verify dependencies list visible.  [console error]  (fusion=0.162; llm_prior=0.07, observer_symptom=0.30, pixel=0.30, text=0.33, vlm_prior=0.20)
+  #5  Step 2: Search for react-router package.  (fusion=0.158; llm_prior=0.86)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              30
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: causal_root, causal_llm_leader.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 16
+Summary:       Navigation to the dependencies tab triggered a failed network request to fetch react-router metadata, causing a connection reset.
+Failure chain: The failed fetch at step 16 caused console errors in the verification step 17, indicating the dependencies list could not be loaded, which propagates to any subsequent steps that rely on that list.
+Downstream:    [17]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 17
+Summary:
+  Step 17 (score=0.70): Error dialog displayed
+
+  Per-step visual scores:
+    Step  17  score=0.70  Error dialog displayed  [in final top-5]
+    Step   0  score=0.00  identical  [analyzed only]
+    Step  16  score=0.00  identical  [in final top-5]
+    Step  18  score=0.00  identical  [in final top-5]
+    Step  26  score=0.00  identical  [in final top-5]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+When the user opened the Dependencies tab, the system tried to pull in the information it needs to show the list but the connection dropped, so the data didn’t arrive. This happened right after the tab was selected, before the list could be displayed. As a result, the following check that verifies the list is present showed an error, and the dependencies list remained empty or failed to load. Checking that the link or source for that information is still available should resolve the issue.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 16
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              16           1           0           0  ← ACTUAL FAULT
+  2              18         N/A         N/A           2
+  3              26         N/A         N/A          10
+  4              17         N/A         N/A           1
+  5               2         N/A         N/A          14
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 5.4
+==============================================================

@@ -298,6 +298,12 @@ def run_trace_v2(
 
     pool_steps = _ranking_pool(ranker, llm_scored, heuristic_text_only)
     has_visual = ran_screenshot_scan or bool(vlm_prior) or used_pixel_boost
+    vlm_root_step_id = vlm_output.get("visual_root_cause_step_id")
+    if vlm_root_step_id is not None:
+        try:
+            vlm_root_step_id = int(vlm_root_step_id)
+        except (TypeError, ValueError):
+            vlm_root_step_id = None
 
     final_ranked, fusion_notes, _channels = rank_by_fusion(
         pool_steps,
@@ -307,6 +313,7 @@ def run_trace_v2(
         has_visual=has_visual,
         llm_prior=llm_prior,
         vlm_prior=vlm_prior,
+        vlm_root_step_id=vlm_root_step_id,
         strong_observer_pixel=strong_px,
         top_k=ranker.top_k,
     )

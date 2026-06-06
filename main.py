@@ -609,7 +609,7 @@ def main():
         vlm = VlmReasoner(
             api_key=vlm_api_key,
             model=vlm_cfg.get("vlm_model", "google/gemma-4-31b-it:free"),
-            temperature=vlm_cfg.get("temperature", 0.1),
+            temperature=vlm_cfg.get("temperature", 0.0),
             base_url=vlm_cfg.get("base_url", "https://openrouter.ai/api/v1"),
             per_step=vlm_cfg.get("per_step", True),
         )

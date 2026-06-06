@@ -46,7 +46,8 @@ model:
   base_url:    "https://openrouter.ai/api/v1"
   llm_model:   "nvidia/nemotron-3-super-120b-a12b:free"
   api_key_env: "OPENROUTER_API_KEY"
-  temperature: 0.1
+  # temperature: 0.1
+  temperature: 0.0
   # OpenRouter: cache static prompt files; per-trace session_id improves sticky routing
   prompt_cache: true
 
@@ -81,7 +82,8 @@ vlm:
   base_url:    "https://api.groq.com/openai/v1"
   vlm_model:   "meta-llama/llama-4-scout-17b-16e-instruct"
   api_key_env: "GROQ_API_KEY"   # same key as LLM
-  temperature: 0.1
+  # temperature: 0.1
+  temperature: 0.0
 
   # One API call per screenshot pair (more reliable than batching 5 pairs)
   per_step: true

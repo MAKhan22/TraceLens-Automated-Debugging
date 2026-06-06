@@ -19,9 +19,17 @@ class FusionWeights:
     observer_symptom: float = 0.20
     visual_causal: float = 0.14
     pixel: float = 0.12
-    llm_prior: float = 0.24
-    vlm_prior: float = 0.24
+    llm_prior: float = 0.28
+    vlm_prior: float = 0.18
     downstream_penalty: float = 0.05
+    downstream_text_exempt: float = 0.25  # skip penalty when step has log/text signal
+    observer_after_causal_cap: float = 0.55
+    observer_after_causal_min_text: float = 0.5
+    observer_vlm_cap: float = 0.2
+    vlm_root_llm_min: float = 0.75
+    causal_llm_bonus: float = 0.06
+    vlm_root_bonus: float = 0.05
+    action_llm_bonus: float = 0.05
 
     @classmethod
     def from_config(cls, cfg: dict) -> FusionWeights:
@@ -71,8 +79,18 @@ def fusion_score(
     if total_w <= 0:
         return 0.0
     fused = score / total_w
-    if ch.downstream_of_vc and "visual_causal" in active:
+    if (
+        ch.downstream_of_vc
+        and "visual_causal" in active
+        and ch.text < weights.downstream_text_exempt
+    ):
         fused -= weights.downstream_penalty
+    if ch.is_causal_root and ch.llm_prior >= 0.98:
+        fused += weights.causal_llm_bonus
+    if ch.is_vlm_root and ch.vlm_prior >= 0.65:
+        fused += weights.vlm_root_bonus
+    if ch.action_changed and ch.llm_prior >= 0.98:
+        fused += weights.action_llm_bonus
     return max(0.0, min(1.0, fused))
 
 
@@ -104,6 +122,7 @@ def rank_by_fusion(
     has_visual: bool,
     llm_prior: dict[int, float] | None = None,
     vlm_prior: dict[int, float] | None = None,
+    vlm_root_step_id: int | None = None,
     strong_observer_pixel: float = 0.95,
     top_k: int = 5,
 ) -> tuple[list[dict], list[str], dict[int, StepChannels]]:
@@ -114,7 +133,12 @@ def rank_by_fusion(
         pool_steps,
         llm_prior=llm_prior,
         vlm_prior=vlm_prior,
+        vlm_root_step_id=vlm_root_step_id,
         strong_observer_pixel=strong_observer_pixel,
+        observer_after_causal_cap=weights.observer_after_causal_cap,
+        observer_after_causal_min_text=weights.observer_after_causal_min_text,
+        observer_vlm_cap=weights.observer_vlm_cap,
+        vlm_root_llm_min=weights.vlm_root_llm_min,
     )
     active = _active_channels(use_llm, use_vlm, has_visual)
 

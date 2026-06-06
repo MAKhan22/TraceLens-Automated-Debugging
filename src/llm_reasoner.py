@@ -291,7 +291,7 @@ class LlmReasoner:
         self,
         api_key: str | None = None,
         model: str = "meta-llama/llama-3.3-70b-instruct:free",
-        temperature: float = 0.1,
+        temperature: float = 0.0,
         base_url: str = "https://openrouter.ai/api/v1",
         enable_prompt_cache: bool | None = None,
     ):

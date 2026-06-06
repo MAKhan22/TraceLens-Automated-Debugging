@@ -41,7 +41,7 @@ import re
 from difflib import SequenceMatcher
 
 from src.navigation_signals import compute_navigation_signals
-from src.causal_signals import errors_on_next_observer_step, is_noise_console
+from src.causal_signals import errors_on_next_observer_step, is_noise_console, is_noise_network
 
 
 # ── constants ─────────────────────────────────────────────────────────────────
@@ -66,7 +66,18 @@ def _status_severity(status) -> float:
     return 0.0
 
 
+def _filter_network_logs(logs: list) -> list:
+    """Drop ad/telemetry/placeholder URLs that should not drive heuristics."""
+    return [
+        e for e in logs
+        if not is_noise_network(e.get("url", ""), e.get("error") or "")
+    ]
+
+
 def _score_network(pass_logs: list, fail_logs: list) -> float:
+    pass_logs = _filter_network_logs(pass_logs)
+    fail_logs = _filter_network_logs(fail_logs)
+
     if not pass_logs and not fail_logs:
         return 0.0
 

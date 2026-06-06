@@ -1,0 +1,101 @@
+==============================================================
+TraceLens v2 Diagnosis Report: areeb_salem/bbc
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660)
+  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477)
+  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.443)
+  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.442, pixel=0.038)
+  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.310, pixel=0.000)
+  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.288, pixel=0.000)
+  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.234, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)
+----------------------------------------
+  #1  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477, pixel=0.000)
+  #2  Step 5: Open the first news article.  [network anomaly]  (score=0.443, pixel=0.000)
+  #3  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
+  #4  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360, pixel=0.000)
+  #5  Step 15: Verify related article links visible.  [network anomaly]  (score=0.360, pixel=0.000)
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 18: Navigate to a news category.  [network anomaly]  (fusion=0.422; causal_action=1.00, llm_prior=0.86, text=0.72) ← ACTUAL FAULT
+  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (fusion=0.351; llm_prior=1.00, navigation=1.00, text=0.48)
+  #3  Step 5: Open the first news article.  [network anomaly]  (fusion=0.332; llm_prior=0.93, navigation=1.00, text=0.44)
+  #4  Step 10: Scroll through more article paragraphs.  [network anomaly]  (fusion=0.211; llm_prior=0.79, text=0.36)
+  #5  Step 15: Verify related article links visible.  [network anomaly]  (fusion=0.198; llm_prior=0.71, text=0.36)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              32
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: causal_root.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 0
+Summary:       At step 0 the navigation to the BBC News homepage loaded an incorrect safeframe/ad frame instead of the expected page, altering the page context for all subsequent actions.
+Failure chain: The wrong navigation at step 0 placed the test in an unexpected iframe context, causing later steps (opening article, scrolling, verifying links, navigating categories) to interact with the wrong DOM, resulting in missing expected elements and eventual test failures.
+Downstream:    [5, 10, 15, 18]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 19
+Summary:
+  Step 19 (score=0.10): Cached content banner present in FAIL
+
+  Per-step visual scores:
+    Step  19  score=0.10  Cached content banner present in FAIL  [analyzed only]
+    Step   0  score=0.00  identical  [in final top-5]
+    Step   5  score=0.00  identical  [in final top-5]
+    Step  10  score=0.00  identical  [in final top-5]
+    Step  18  score=0.00  identical  [in final top-5]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+At the very beginning of the test, it opened the wrong page instead of the BBC News homepage, like typing the wrong web address into a browser. Because the test started on the wrong page, every later action — such as opening an article, scrolling down, checking links, and browsing different sections — was looking at the wrong content. As a result, the expected items weren’t found and the test eventually failed. To fix this, we should verify that the first step loads the correct BBC News homepage before moving on to the rest of the steps.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 18
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              18           1           0           0  ← ACTUAL FAULT
+  2               0         N/A         N/A          18
+  3               5         N/A         N/A          13
+  4              10         N/A         N/A           8
+  5              15         N/A         N/A           3
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 8.4
+==============================================================

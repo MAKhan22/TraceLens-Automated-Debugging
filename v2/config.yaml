@@ -10,9 +10,17 @@ v2:
     observer_symptom: 0.20
     visual_causal: 0.14
     pixel: 0.12
-    llm_prior: 0.24
-    vlm_prior: 0.24
+    llm_prior: 0.28   # 60% of model channels (matches v1 ensemble 60/40)
+    vlm_prior: 0.18   # 40% of model channels
     downstream_penalty: 0.05
+    downstream_text_exempt: 0.25  # no vc-downstream penalty when text signal is this strong
+    observer_after_causal_cap: 0.55
+    observer_after_causal_min_text: 0.5
+    observer_vlm_cap: 0.2
+    vlm_root_llm_min: 0.75
+    causal_llm_bonus: 0.06
+    vlm_root_bonus: 0.05
+    action_llm_bonus: 0.05
   strong_observer_pixel: 0.95
 
 outputs:

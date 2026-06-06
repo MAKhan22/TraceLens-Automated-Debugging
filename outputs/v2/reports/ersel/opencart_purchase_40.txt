@@ -1,0 +1,115 @@
+==============================================================
+TraceLens v2 Diagnosis Report: ersel/opencart_purchase_40
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 24: Verify search results contain products  [verification failed]  (score=0.295)
+  #2  Step 21: Type 'xyznonexistent123' in search box  (score=0.045) ← ACTUAL FAULT
+  #3  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)
+  #4  Step 1: Wait for element logo  (score=0.000)
+  #5  Step 2: Click Desktops category in nav menu  (score=0.000)
+
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 21: Type 'xyznonexistent123' in search box  [visual causal (symptom_on_next_step, visible@22, score=0.73)]  (score=0.733, visual_causal=0.733) ← ACTUAL FAULT
+  #2  Step 24: Verify search results contain products  [verification failed]  (score=0.295)
+  #3  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)
+  #4  Step 1: Wait for element logo  (score=0.000)
+  #5  Step 2: Click Desktops category in nav menu  (score=0.000)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 21: Type 'xyznonexistent123' in search box  [visual causal (symptom_on_next_step, visible@22, score=0.73)]  (score=0.477, visual_causal=0.733, pixel=0.003) ← ACTUAL FAULT
+  #2  Step 24: Verify search results contain products  [verification failed]  (score=0.260, pixel=0.195)
+  #3  Step 0: Navigate to https://demo.opencart.com/  (score=0.000, pixel=0.001)
+  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)
+  #5  Step 2: Click Desktops category in nav menu  (score=0.000, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 21: Type 'xyznonexistent123' in search box  [visual causal (symptom_on_next_step, visible@22, score=0.73)]  (score=0.045, visual_causal=0.733, pixel=0.003) ← ACTUAL FAULT
+  #2  Step 24: Verify search results contain products  [verification failed]  (score=0.295, pixel=0.195)
+  #3  Step 0: Navigate to https://demo.opencart.com/  (score=0.000, pixel=0.001)
+  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)
+  #5  Step 2: Click Desktops category in nav menu  (score=0.000, pixel=0.000)
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 24: Verify search results contain products  [verification failed]  (fusion=0.559; causal_action=0.70, llm_prior=0.94, observer_symptom=0.75, pixel=0.73, text=0.29, vlm_prior=0.70)
+  #2  Step 21: Type 'xyznonexistent123' in search box  [visual causal (symptom_on_next_step, visible@22, score=0.73)]  (fusion=0.559; causal_action=1.00, llm_prior=1.00, observer_symptom=0.24, pixel=0.02, text=0.04, visual_causal=0.73, vlm_prior=0.70) ← ACTUAL FAULT
+  #3  Step 22: Click search button  (fusion=0.214; llm_prior=0.06, observer_symptom=0.85, pixel=0.73, vlm_prior=0.70)
+  #4  Step 23: Wait for element content  (fusion=0.190; observer_symptom=0.75, pixel=0.73, vlm_prior=0.70)
+  #5  Step 0: Navigate to https://demo.opencart.com/  (fusion=0.176; llm_prior=0.88, pixel=0.19)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              35
+First persistent divergence: step 22 (score=0.733)
+Attributed root step:        step 21 (visual_causal=0.733)
+Visible symptom step:        step 22
+Reason:                      symptom_on_next_step
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: vlm+pixel_symptom.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 21
+Summary:       The test typed an invalid search term 'xyznonexistent123' instead of 'iphone', causing the search to return no matching products.
+Failure chain: Typing the wrong term (step 21) results in a search that yields zero products; the subsequent verification step (step 24) expects to see 'iPhone' in the results and therefore fails.
+Downstream:    [24]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 21
+Summary:
+  Step 22 (score=0.70): Search results page with different search query
+  Step 23 (score=0.70): Search query and results changed
+  Step 24 (score=0.70): Search results show no products
+
+  Per-step visual scores:
+    Step  21  score=0.70  Attributed from step 22: Search results page with different search query  [in final top-5]
+    Step  22  score=0.70  Search results page with different search query  [in final top-5]
+    Step  23  score=0.70  Search query and results changed  [in final top-5]
+    Step  24  score=0.70  Search results show no products  [in final top-5]
+    Step   0  score=0.00  identical security verification page  [in final top-5]
+    Step  20  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+During the test, the wrong word was typed into the search box, so the search came back empty. Because the test was looking for an iPhone to appear in the results, it found nothing and marked the test as failed. This happened at the point where the test checks that the search shows the expected product. To avoid this, make sure the test uses the correct search term (like “iphone”) before running the check.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 21
+Hit@1=0  Hit@3=1  Hit@5=1
+Rank position of actual fault: 2
+Overall rank distance (|actual_rank - 1|): 1
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              24         N/A         N/A           3
+  2              21           1           1           0  ← ACTUAL FAULT
+  3              22         N/A         N/A           1
+  4              23         N/A         N/A           2
+  5               0         N/A         N/A          21
+
+Top-1 step distance: 3
+MAD@5 (mean step-dist over top-5): 5.4
+==============================================================

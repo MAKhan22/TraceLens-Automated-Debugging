@@ -1,0 +1,113 @@
+==============================================================
+TraceLens v2 Diagnosis Report: efe_irem/wikipedia
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 0: Visit wikipedia.org  [console error]  (score=0.300)
+  #2  Step 2: Click the search field  [console error]  (score=0.300)
+  #3  Step 1: Wait for the homepage to load  (score=0.000)
+  #4  Step 3: Type query "Turkey"  (score=0.000)
+  #5  Step 4: Submit search (Enter)  (score=0.000)
+
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT
+  #2  Step 0: Visit wikipedia.org  [console error]  (score=0.300)
+  #3  Step 2: Click the search field  [console error]  (score=0.300)
+  #4  Step 1: Wait for the homepage to load  (score=0.000)
+  #5  Step 3: Type query "Turkey"  (score=0.000)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 0: Visit wikipedia.org  [console error]  (score=0.195, pixel=0.000)
+  #3  Step 2: Click the search field  [console error]  (score=0.195, pixel=0.000)
+  #4  Step 1: Wait for the homepage to load  (score=0.000, pixel=0.000)
+  #5  Step 3: Type query "Turkey"  (score=0.000, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=0.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 2: Click the search field  [console error]  (score=0.300, pixel=0.000)
+  #3  Step 5: Wait for Turkey article to load  (score=0.000, pixel=0.875)
+  #4  Step 14: Open Talk tab  (score=0.000, pixel=0.875)
+  #5  Step 6: Open first wikilink in the first paragraph with a link  (score=0.000, pixel=0.000)
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (fusion=0.528; llm_prior=1.00, observer_symptom=0.50, pixel=1.00, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT
+  #2  Step 5: Wait for Turkey article to load  (fusion=0.342; llm_prior=0.86, observer_symptom=0.88, pixel=0.88)
+  #3  Step 2: Click the search field  [console error]  (fusion=0.226; llm_prior=0.93, text=0.30)
+  #4  Step 14: Open Talk tab  (fusion=0.221; llm_prior=0.79, observer_symptom=0.44, pixel=0.88)
+  #5  Step 6: Open first wikilink in the first paragraph with a link  (fusion=0.132; llm_prior=0.71)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              31
+First persistent divergence: step 13 (score=1.000)
+Attributed root step:        step 13 (visual_causal=1.000)
+Reason:                      earliest_divergence
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 13
+Summary:       Visual divergence occurred when jumping to Etymology via the table of contents, indicating a navigation or rendering issue at that action.
+Failure chain: The incorrect handling of the table of contents click caused the page to render differently, leading to subsequent steps (such as opening the Talk tab) operating on an altered page state, which produced the observed warnings and failures.
+Downstream:    [14]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 13
+Summary:
+  Step 13 (score=0.90): navigated to wrong section
+
+  Per-step visual scores:
+    Step  13  score=0.90  navigated to wrong section  [in final top-5]
+    Step   0  score=0.00  identical  [analyzed only]
+    Step   1  score=0.00  identical  [analyzed only]
+    Step   2  score=0.00  identical  [in final top-5]
+    Step  11  score=0.00  identical  [analyzed only]
+    Step  12  score=0.00  identical  [analyzed only]
+    Step  14  score=0.00  identical  [in final top-5]
+    Step  15  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+When the user clicked the Etymology link in the table of contents, the page did not show the expected content. Instead, the display looked altered, as if the wrong section had been loaded. This change confused later steps, such as trying to open the Talk tab, which then behaved oddly and triggered warnings. To fix it, verify that the table of contents link correctly points to the Etymology section and that the section loads properly.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 13
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              13           1           0           0  ← ACTUAL FAULT
+  2               5         N/A         N/A           8
+  3               2         N/A         N/A          11
+  4              14         N/A         N/A           1
+  5               6         N/A         N/A           7
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 5.4
+==============================================================

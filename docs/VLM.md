@@ -2,7 +2,7 @@
 
 This document explains how TraceLens uses **Vision-Language Models (VLMs)** to compare pass/fail screenshots, how that integrates with the text-based LLM pipeline, and how to run and tune it.
 
-For a full breakdown of CLI flags, what runs in each mode, and pixel boost vs visual causal vs VLM, see [`MODES.md`](MODES.md).
+For a full breakdown of CLI flags, what runs in each mode, and pixel boost vs visual causal vs VLM, see [`MODES.md`](MODES.md). For the shared Hit@1 guard precedence (LLM and VLM), see [`RANKING_ARBITRATION.md`](RANKING_ARBITRATION.md).
 
 ---
 
@@ -135,7 +135,7 @@ vlm:
   base_url:    "https://openrouter.ai/api/v1"
   vlm_model:   "google/gemma-4-31b-it:free"
   api_key_env: "OPENROUTER_API_KEY"   # same key as LLM
-  temperature: 0.1
+  temperature: 0.0
   per_step: true
 
   ensemble_vlm_weight: 0.4   # blend weight when both --llm and --vlm (60% LLM + 40% VLM)

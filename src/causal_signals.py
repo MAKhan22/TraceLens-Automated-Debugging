@@ -33,7 +33,8 @@ _NETWORK_NOISE = re.compile(
     r"doubleclick|googlesyndication|googlevideo\.com|googleapis\.com/gsi|"
     r"webcontentassessor|safeframe|manifest\.json|/v4/reset|"
     r"analytics|telemetry|beacon|datadog|AdBlockerSentinel|"
-    r"fonts\.googleapis|generate_204|videoplayback\?|accounts\.google\.com",
+    r"fonts\.googleapis|generate_204|videoplayback\?|accounts\.google\.com|"
+    r"https?://(?:[a-z0-9-]+\.)?example\.com(?:[:/]|$)",
     re.I,
 )
 

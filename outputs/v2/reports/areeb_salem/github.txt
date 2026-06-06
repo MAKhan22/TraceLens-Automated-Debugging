@@ -1,0 +1,101 @@
+==============================================================
+TraceLens v2 Diagnosis Report: areeb_salem/github
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720)
+  #2  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567)
+  #3  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360)
+  #4  Step 23: Verify pull request file changes section.  [console error]  (score=0.333) ← ACTUAL FAULT
+  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.333)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT
+  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.468, pixel=0.000)
+  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.368, pixel=0.000)
+  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.234, pixel=0.000)
+  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.217, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)
+----------------------------------------
+  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720, pixel=0.000)
+  #2  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360, pixel=0.000)
+  #3  Step 4: Navigate to the Code tab.  [network anomaly]  (score=0.327, pixel=0.000)
+  #4  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567, pixel=0.000)
+  #5  Step 23: Verify pull request file changes section.  [console error]  (score=0.333, pixel=1.000) ← ACTUAL FAULT
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (fusion=0.508; causal_action=1.00, llm_prior=1.00, text=0.72)
+  #2  Step 23: Verify pull request file changes section.  [console error]  (fusion=0.280; llm_prior=0.71, observer_symptom=0.30, pixel=0.30, text=0.33, vlm_prior=0.20) ← ACTUAL FAULT
+  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (fusion=0.249; llm_prior=0.79, text=0.57)
+  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (fusion=0.237; llm_prior=0.93, text=0.36)
+  #5  Step 4: Navigate to the Code tab.  [network anomaly]  (fusion=0.218; llm_prior=0.86, text=0.33)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              34
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: causal_root, causal_llm_leader.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 22
+Summary:       Scrolling through the pull request description left the diff viewer in a null state, causing the DiffRenderer to crash when the file changes section was verified.
+Failure chain: The scroll action at step 22 failed to properly initialize or maintain the diffViewerInstance, resulting in a null reference error at step 23 when the verification step attempted to render the diff, which manifested as console errors and test failure.
+Downstream:    [23]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 23
+Summary:
+  Step 23 (score=0.70): FAIL shows error dialog
+
+  Per-step visual scores:
+    Step  23  score=0.70  FAIL shows error dialog  [in final top-5]
+    Step  20  score=0.00  identical  [in final top-5]
+    Step  22  score=0.00  screenshots are identical  [in final top-5]
+    Step  30  score=0.00  identical  [in final top-5]
+    Step  31  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+During the test, when the script scrolled through the pull‑request description, the area that displays the file changes was not kept ready. As a result, when the next step tried to show those changes to verify them, the display was missing and the system could not finish the action. This caused the test to stop and show an error message indicating that the verification step failed. Checking that the scrolling step leaves the change‑display area properly initialized should prevent the problem.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 23
+Hit@1=0  Hit@3=1  Hit@5=1
+Rank position of actual fault: 2
+Overall rank distance (|actual_rank - 1|): 1
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              22         N/A         N/A           1
+  2              23           1           1           0  ← ACTUAL FAULT
+  3              20         N/A         N/A           3
+  4              30         N/A         N/A           7
+  5               4         N/A         N/A          19
+
+Top-1 step distance: 1
+MAD@5 (mean step-dist over top-5): 6.0
+==============================================================

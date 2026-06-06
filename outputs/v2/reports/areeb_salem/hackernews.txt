@@ -1,0 +1,101 @@
+==============================================================
+TraceLens v2 Diagnosis Report: areeb_salem/hackernews
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 12: Open the comment thread for the top story.  [network anomaly]  (score=0.720) ← ACTUAL FAULT
+  #2  Step 13: Verify comments page loaded.  [console error]  (score=0.333)
+  #3  Step 6: Open the top story article.  (score=0.140)
+  #4  Step 22: Open a second story article.  (score=0.140)
+  #5  Step 24: Scroll through second article.  (score=0.140)
+
+HEURISTIC TOP 5 (text + pixel)
+----------------------------------------
+  #1  Step 13: Verify comments page loaded.  [console error]  (score=0.509, pixel=0.835)
+  #2  Step 12: Open the comment thread for the top story.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT
+  #3  Step 6: Open the top story article.  (score=0.091, pixel=0.000)
+  #4  Step 22: Open a second story article.  (score=0.091, pixel=0.000)
+  #5  Step 24: Scroll through second article.  (score=0.091, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)
+----------------------------------------
+  #1  Step 12: Open the comment thread for the top story.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
+  #2  Step 6: Open the top story article.  (score=0.140, pixel=0.000)
+  #3  Step 22: Open a second story article.  (score=0.140, pixel=0.000)
+  #4  Step 24: Scroll through second article.  (score=0.140, pixel=0.000)
+  #5  Step 16: Scroll through nested replies.  (score=0.067, pixel=0.000)
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 12: Open the comment thread for the top story.  [network anomaly]  (fusion=0.508; causal_action=1.00, llm_prior=1.00, text=0.72) ← ACTUAL FAULT
+  #2  Step 6: Open the top story article.  (fusion=0.197; llm_prior=0.93, text=0.14)
+  #3  Step 13: Verify comments page loaded.  [console error]  (fusion=0.188; llm_prior=0.21, observer_symptom=0.30, pixel=0.30, text=0.33, vlm_prior=0.20)
+  #4  Step 22: Open a second story article.  (fusion=0.184; llm_prior=0.86, text=0.14)
+  #5  Step 24: Scroll through second article.  (fusion=0.171; llm_prior=0.79, text=0.14)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              30
+No persistent pass/fail screenshot divergence above threshold.
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: causal_root, causal_llm_leader.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 12
+Summary:       Opening the comment thread triggered a failed Firebase request for kids.json (net::ERR_FAILED), causing the comment tree to receive empty data.
+Failure chain: The failed Firebase load at step 12 led to console errors and an empty kids array observed at step 13's verification, causing the comment thread verification to fail while other steps remained unaffected.
+Downstream:    [13]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 13
+Summary:
+  Step 13 (score=0.70): Comments section not loaded
+
+  Per-step visual scores:
+    Step  13  score=0.70  Comments section not loaded  [in final top-5]
+    Step   6  score=0.00  identical  [in final top-5]
+    Step  12  score=0.00  identical  [in final top-5]
+    Step  22  score=0.00  identical  [in final top-5]
+    Step  24  score=0.00  identical  [in final top-5]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+When the app tried to load the comments for a thread, it couldn't retrieve the needed data, so it received nothing back. This happened at the step where the comment list is being built. As a result, the comment section stayed empty and the verification step failed, while the rest of the process continued normally. Checking that the data source is correctly available should fix the issue.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 12
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              12           1           0           0  ← ACTUAL FAULT
+  2               6         N/A         N/A           6
+  3              13         N/A         N/A           1
+  4              22         N/A         N/A          10
+  5              24         N/A         N/A          12
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 5.8
+==============================================================

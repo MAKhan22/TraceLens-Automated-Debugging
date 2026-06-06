@@ -73,7 +73,15 @@ Shared signal improvements (both v1 and v2):
 - **Placeholder network noise** — `example.com` distractor URLs filtered in heuristic scoring (`src/anomaly_detector.py` + `src/causal_signals.py`).
 - **Consecutive-click visual attribution** — TOC-style faults stay on the diverging click; type→click chains still walk back (`src/visual_signals.py`).
 
-Tests: `tests/test_visual_and_noise.py`.
+Tests: `tests/test_visual_and_noise.py`, `tests/test_v2_fusion.py`.
+
+Fusion tuning (also in `v2/config.yaml`):
+
+- `llm_prior` / `vlm_prior` — ~60/40 split (0.28 / 0.18)
+- `downstream_text_exempt` — skip visual-downstream penalty when `text >= 0.25` (saucedemo login)
+- `observer_after_causal_cap` — cap verify-step observer/pixel/VLM when prior step is causal root and LLM ranks cause higher
+- VLM root on observer verify step (inferred from trace + VLM output) — boost VLM-named verify root instead of capping it
+- `causal_llm_bonus` / `action_llm_bonus` — small fusion nudge when LLM ranks causal or action-changed step #1
 
 Reports include **TECHNICAL ROOT CAUSE** (LLM `diagnose`) and **PLAIN LANGUAGE SUMMARY** (LLM `stakeholder_summary`). Both require `--llm`.
 
@@ -86,8 +94,8 @@ v2:
   fusion:
     causal_action: 0.20
     observer_symptom: 0.20
-    llm_prior: 0.24
-    vlm_prior: 0.24
+    llm_prior: 0.28   # ~60% of LLM+VLM channel budget (v1-style)
+    vlm_prior: 0.18   # ~40%
 ```
 
 Metrics land in `outputs/v2/metrics/runs/v2_*_run_<timestamp>.json`.

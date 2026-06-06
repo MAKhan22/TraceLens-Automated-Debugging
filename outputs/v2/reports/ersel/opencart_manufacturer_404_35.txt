@@ -1,0 +1,111 @@
+==============================================================
+TraceLens v2 Diagnosis Report: ersel/opencart_manufacturer_404_35
+Ranking mode: v2:llm+vlm
+==============================================================
+
+HEURISTIC TOP 5 (text signals only)
+----------------------------------------
+  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT
+  #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)
+  #3  Step 1: Wait for element logo  (score=0.000)
+  #4  Step 2: Scroll homepage  (score=0.000)
+  #5  Step 3: Desktops menu  (score=0.000)
+
+HEURISTIC TOP 5 (text + visual causal)
+----------------------------------------
+  #1  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.192, visual_causal=0.192)
+  #2  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT
+  #3  Step 1: Wait for element logo  (score=0.000)
+  #4  Step 2: Scroll homepage  (score=0.000)
+  #5  Step 3: Desktops menu  (score=0.000)
+
+HEURISTIC TOP 5 (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.125, visual_causal=0.192, pixel=0.000)
+  #2  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.061, pixel=0.090) ← ACTUAL FAULT
+  #3  Step 2: Scroll homepage  (score=0.000, pixel=0.001)
+  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)
+  #5  Step 3: Desktops menu  (score=0.000, pixel=0.000)
+
+LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+----------------------------------------
+  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045, pixel=0.090) ← ACTUAL FAULT
+  #2  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.000, visual_causal=0.192, pixel=0.000)
+  #3  Step 10: Scroll to bottom  (score=0.000, pixel=0.690)
+  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)
+  #5  Step 2: Scroll homepage  (score=0.000, pixel=0.001)
+
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
+----------------------------------------
+  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (fusion=0.513; causal_action=1.00, llm_prior=1.00, observer_symptom=0.37, pixel=0.73, text=0.04, vlm_prior=0.70) ← ACTUAL FAULT
+  #2  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (fusion=0.319; llm_prior=0.93, observer_symptom=0.24, pixel=0.19, visual_causal=0.19, vlm_prior=0.70)
+  #3  Step 10: Scroll to bottom  (fusion=0.208; llm_prior=0.86, observer_symptom=0.34, pixel=0.69)
+  #4  Step 24: Wait for element content  (fusion=0.104; observer_symptom=0.73, pixel=0.73)
+  #5  Step 1: Wait for element logo  (fusion=0.095; llm_prior=0.79)
+
+SCREENSHOT ANALYSIS (pass/fail after images)
+----------------------------------------
+Steps scanned:              33
+First persistent divergence: step 0 (score=0.192)
+Attributed root step:        step 0 (visual_causal=0.192)
+Reason:                      earliest_divergence
+  (Runs with --vlm or --llm --vlm on traces that have screenshots.)
+
+FUSION DECISIONS (channels and weights)
+----------------------------------------
+  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
+  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
+  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
+  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: action_changed_llm_leader.
+  • LLM diagnosis is explanatory only — ranking frozen after fusion.
+  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+
+TECHNICAL ROOT CAUSE
+----------------------------------------
+Primary step:  Step 23
+Summary:       The test navigated to a non‑existent manufacturer URL (manufacturer_id=999999) instead of the expected manufacturer list page.
+Failure chain: Navigating to the invalid manufacturer ID resulted in a different (likely empty or error) page, causing subsequent waits for elements to fail and producing visual divergence in later steps.
+Downstream:    [24]
+
+VISUAL ANALYSIS (VLM)
+----------------------------------------
+Visual root cause: Step 23
+Summary:
+  Step 23 (score=0.70): FAIL shows error page
+
+  Per-step visual scores:
+    Step   0  score=0.70  Attributed from step 23: FAIL shows error page  [in final top-5]
+    Step  23  score=0.70  FAIL shows error page  [in final top-5]
+    Step   1  score=0.00  identical  [in final top-5]
+    Step   2  score=0.00  identical  [analyzed only]
+    Step   3  score=0.00  identical  [analyzed only]
+
+  Note: VLM summary lists only steps with meaningful visual differences
+  (identical/noise responses from per-step API calls are filtered out).
+  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.
+
+PLAIN LANGUAGE SUMMARY
+----------------------------------------
+The test tried to open a manufacturer’s page that doesn’t actually exist — like searching for a shop that closed down. This happened early in the test, when it was supposed to go to the list of manufacturers but instead landed on a blank or error page. Because that page was missing the expected items, later parts of the test couldn’t find what they were looking for and the screenshots started to look different, causing the test to fail. To prevent this, we should verify that the manufacturer number being used is valid before navigating to its page.
+
+EVALUATION
+----------------------------------------
+Actual fault step: 23
+Hit@1=1  Hit@3=1  Hit@5=1
+Rank position of actual fault: 1
+Overall rank distance (|actual_rank - 1|): 0
+
+Per-rank breakdown:
+  Pred.Rank    Step   True Rank   rank_dist   step_dist
+  (our rank)          (1=fault)  |pred-true|  |step-actual|
+  ----------  -----  ----------  ----------  ----------
+  1              23           1           0           0  ← ACTUAL FAULT
+  2               0         N/A         N/A          23
+  3              10         N/A         N/A          13
+  4              24         N/A         N/A           1
+  5               1         N/A         N/A          22
+
+Top-1 step distance: 0
+MAD@5 (mean step-dist over top-5): 11.8
+==============================================================

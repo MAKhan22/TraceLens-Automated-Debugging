@@ -101,15 +101,19 @@ def attribute_visual_root(
     if action_type in ("type", "keyboard_press") and text_score <= max_action_score:
         return divergence_sid, divergence_sid, "earliest_localized_divergence"
 
-    # Divergence on click/submit → walk back to silent type/click on previous step
+    # Walk back to a silent action when the break appears on the next step.
+    # Skip for consecutive clicks: the diverging click is the fault (broken anchor),
+    # not the prior click. Type→click chains still walk back (bad input → search).
     prev = by_id.get(divergence_sid - 1)
     if prev is not None:
         prev_fail = prev.get("fail_step") or {}
         prev_type = prev_fail.get("action_type") or ""
         prev_text = float(prev.get("combined_score") or 0)
         prev_self = _effective(pixel_scores, divergence_sid - 1)
+        consecutive_clicks = action_type == "click" and prev_type == "click"
         if (
-            prev_type in _ACTION_TYPES
+            not consecutive_clicks
+            and prev_type in _ACTION_TYPES
             and prev_text <= max_action_score
             and prev_self <= max_self_pixel
         ):

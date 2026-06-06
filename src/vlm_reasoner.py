@@ -93,7 +93,7 @@ class VlmReasoner:
         self,
         api_key: str | None = None,
         model: str = "google/gemma-4-31b-it:free",
-        temperature: float = 0.1,
+        temperature: float = 0.0,
         base_url: str = "https://openrouter.ai/api/v1",
         per_step: bool = True,
     ):
