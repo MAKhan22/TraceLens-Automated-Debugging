@@ -1,8 +1,14 @@
 {
-  "run_id": "20260606_090602",
-  "timestamp": "2026-06-06T09:06:02.769344+00:00",
-  "mode": "v2:heuristic",
+  "run_id": "20260609_134127",
+  "timestamp": "2026-06-09T13:41:27.084737+00:00",
+  "mode": "v2:heuristic no-pixel",
   "pipeline_version": "v2",
+  "run_flags": {
+    "use_llm": false,
+    "use_vlm": false,
+    "use_pixel": false,
+    "no_pixel": true
+  },
   "filter_source": null,
   "filter_trace": null,
   "n_traces_run": 22,
@@ -902,23 +908,24 @@
       "exclude_from_aggregate": false
     }
   ],
-  "fusion_weights": {
-    "text": 0.28,
-    "navigation": 0.12,
-    "causal_action": 0.2,
-    "observer_symptom": 0.2,
-    "visual_causal": 0.14,
-    "pixel": 0.12,
-    "llm_prior": 0.28,
-    "vlm_prior": 0.18,
-    "downstream_penalty": 0.05,
-    "downstream_text_exempt": 0.25,
-    "observer_after_causal_cap": 0.55,
-    "observer_after_causal_min_text": 0.5,
-    "observer_vlm_cap": 0.2,
-    "vlm_root_llm_min": 0.75,
-    "causal_llm_bonus": 0.06,
-    "vlm_root_bonus": 0.05,
-    "action_llm_bonus": 0.05
+  "fusion_config": {
+    "active_channels": [
+      "causal_action",
+      "navigation",
+      "observer_symptom",
+      "text"
+    ],
+    "score_channels": {
+      "causal_action": 0.2,
+      "navigation": 0.12,
+      "observer_symptom": 0.2,
+      "text": 0.28
+    },
+    "tuning": {
+      "downstream_penalty": 0.05,
+      "downstream_text_exempt": 0.25,
+      "observer_after_causal_cap": 0.55,
+      "observer_after_causal_min_text": 0.5
+    }
   }
 }
