@@ -1,36 +1,48 @@
 {
   "trace_id": "ersel/opencart_manufacturer_404_35",
-  "generated": "2026-06-06T08:54:34.764045Z",
+  "generated": "2026-06-09T15:00:01.680282Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "ersel",
     "fault_type": "404_invalid_manufacturer",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "Top-1 channel hints: action_changed_llm_leader.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
+      "Top-1 channel hints: action_changed_llm_leader."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -39,7 +51,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 23,
@@ -57,7 +69,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.5131,
+      "fusion_score": 0.3822,
       "fusion_channels": {
         "text": 0.045,
         "navigation": 0.0,
@@ -65,8 +77,7 @@
         "observer_symptom": 0.367,
         "visual_causal": 0.0,
         "pixel": 0.733,
-        "llm_prior": 1.0,
-        "vlm_prior": 0.7
+        "vlm_prior": 0.9
       },
       "rank": 1
     },
@@ -86,47 +97,17 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 0,
       "visual_causal_reason": "earliest_divergence",
-      "fusion_score": 0.319,
+      "fusion_score": 0.2217,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.245,
+        "observer_symptom": 0.315,
         "visual_causal": 0.192,
         "pixel": 0.192,
-        "llm_prior": 0.929,
-        "vlm_prior": 0.7
+        "vlm_prior": 0.9
       },
       "rank": 2
-    },
-    {
-      "step_id": 10,
-      "action": "Scroll to bottom",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.2206,
-      "pixel_localized": 0.6902,
-      "pixel_score": 0.6902,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "fusion_score": 0.2078,
-      "fusion_channels": {
-        "text": 0.0,
-        "navigation": 0.0,
-        "causal_action": 0.0,
-        "observer_symptom": 0.345,
-        "visual_causal": 0.0,
-        "pixel": 0.69,
-        "llm_prior": 0.857,
-        "vlm_prior": 0.0
-      },
-      "rank": 3
     },
     {
       "step_id": 24,
@@ -144,7 +125,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.1044,
+      "fusion_score": 0.1392,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -152,36 +133,62 @@
         "observer_symptom": 0.733,
         "visual_causal": 0.0,
         "pixel": 0.733,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
-      "rank": 4
+      "rank": 3
     },
     {
-      "step_id": 1,
-      "action": "Wait for element logo",
+      "step_id": 10,
+      "action": "Scroll to bottom",
       "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
       "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
+      "pixel_global": 0.2206,
+      "pixel_localized": 0.6902,
+      "pixel_score": 0.6902,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.0947,
+      "fusion_score": 0.0725,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.0,
+        "observer_symptom": 0.345,
         "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.786,
+        "pixel": 0.69,
+        "vlm_prior": 0.0
+      },
+      "rank": 4
+    },
+    {
+      "step_id": 25,
+      "action": "Scroll after manufacturer navigation",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.0009,
+      "pixel_localized": 0.6902,
+      "pixel_score": 0.6902,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "fusion_score": 0.0725,
+      "fusion_channels": {
+        "text": 0.0,
+        "navigation": 0.0,
+        "causal_action": 0.0,
+        "observer_symptom": 0.345,
+        "visual_causal": 0.0,
+        "pixel": 0.69,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -458,98 +465,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 23,
-      "action": "Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer/info&manufacturer_id=999999",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.3,
-      "intent_score": 0.0,
-      "combined_score": 0.045,
-      "screenshots_available": true,
-      "pixel_global": 0.0897,
-      "pixel_localized": 0.7333,
-      "pixel_score": 0.09,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 1
-    },
-    {
-      "step_id": 0,
-      "action": "Navigate to https://demo.opencart.com/",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0003,
-      "pixel_localized": 0.1922,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.192,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 0,
-      "visual_causal_reason": "earliest_divergence",
-      "rank": 2
-    },
-    {
-      "step_id": 10,
-      "action": "Scroll to bottom",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.2206,
-      "pixel_localized": 0.6902,
-      "pixel_score": 0.6902,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 1,
-      "action": "Wait for element logo",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 2,
-      "action": "Scroll homepage",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0014,
-      "pixel_localized": 0.0353,
-      "pixel_score": 0.001,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 33,
     "first_persistent_divergence": 0,
@@ -561,22 +477,20 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 23,
-    "root_cause_summary": "The test navigated to a non‑existent manufacturer URL (manufacturer_id=999999) instead of the expected manufacturer list page.",
-    "downstream_steps": [
-      24
-    ],
-    "failure_chain": "Navigating to the invalid manufacturer ID resulted in a different (likely empty or error) page, causing subsequent waits for elements to fail and producing visual divergence in later steps."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "The test tried to open a manufacturer’s page that doesn’t actually exist — like searching for a shop that closed down. This happened early in the test, when it was supposed to go to the list of manufacturers but instead landed on a blank or error page. Because that page was missing the expected items, later parts of the test couldn’t find what they were looking for and the screenshots started to look different, causing the test to fail. To prevent this, we should verify that the manufacturer number being used is valid before navigating to its page.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 23,
-    "visual_summary": "Step 23 (score=0.70): FAIL shows error page",
+    "visual_summary": "Step 23 (score=0.90): Error page instead of brand page",
     "visual_scores": [
       {
         "step_id": 0,
-        "visual_score": 0.7,
-        "visual_note": "Attributed from step 23: FAIL shows error page"
+        "visual_score": 0.9,
+        "visual_note": "Attributed from step 23: Error page instead of brand page"
       },
       {
         "step_id": 1,
@@ -590,8 +504,8 @@
       },
       {
         "step_id": 23,
-        "visual_score": 0.7,
-        "visual_note": "FAIL shows error page"
+        "visual_score": 0.9,
+        "visual_note": "Error page instead of brand page"
       },
       {
         "step_id": 3,
@@ -621,22 +535,22 @@
       },
       {
         "rank": 3,
-        "step_id": 10,
-        "step_distance": 13
-      },
-      {
-        "rank": 4,
         "step_id": 24,
         "step_distance": 1
       },
       {
+        "rank": 4,
+        "step_id": 10,
+        "step_distance": 13
+      },
+      {
         "rank": 5,
-        "step_id": 1,
-        "step_distance": 22
+        "step_id": 25,
+        "step_distance": 2
       }
     ],
-    "mad@5": 11.8,
+    "mad@5": 7.8,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: ersel/opencart_manufacturer_404_35\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)\n  #3  Step 1: Wait for element logo  (score=0.000)\n  #4  Step 2: Scroll homepage  (score=0.000)\n  #5  Step 3: Desktops menu  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.192, visual_causal=0.192)\n  #2  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT\n  #3  Step 1: Wait for element logo  (score=0.000)\n  #4  Step 2: Scroll homepage  (score=0.000)\n  #5  Step 3: Desktops menu  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.125, visual_causal=0.192, pixel=0.000)\n  #2  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.061, pixel=0.090) ← ACTUAL FAULT\n  #3  Step 2: Scroll homepage  (score=0.000, pixel=0.001)\n  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)\n  #5  Step 3: Desktops menu  (score=0.000, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045, pixel=0.090) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.000, visual_causal=0.192, pixel=0.000)\n  #3  Step 10: Scroll to bottom  (score=0.000, pixel=0.690)\n  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)\n  #5  Step 2: Scroll homepage  (score=0.000, pixel=0.001)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (fusion=0.513; causal_action=1.00, llm_prior=1.00, observer_symptom=0.37, pixel=0.73, text=0.04, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (fusion=0.319; llm_prior=0.93, observer_symptom=0.24, pixel=0.19, visual_causal=0.19, vlm_prior=0.70)\n  #3  Step 10: Scroll to bottom  (fusion=0.208; llm_prior=0.86, observer_symptom=0.34, pixel=0.69)\n  #4  Step 24: Wait for element content  (fusion=0.104; observer_symptom=0.73, pixel=0.73)\n  #5  Step 1: Wait for element logo  (fusion=0.095; llm_prior=0.79)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              33\nFirst persistent divergence: step 0 (score=0.192)\nAttributed root step:        step 0 (visual_causal=0.192)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: action_changed_llm_leader.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 23\nSummary:       The test navigated to a non‑existent manufacturer URL (manufacturer_id=999999) instead of the expected manufacturer list page.\nFailure chain: Navigating to the invalid manufacturer ID resulted in a different (likely empty or error) page, causing subsequent waits for elements to fail and producing visual divergence in later steps.\nDownstream:    [24]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 23\nSummary:\n  Step 23 (score=0.70): FAIL shows error page\n\n  Per-step visual scores:\n    Step   0  score=0.70  Attributed from step 23: FAIL shows error page  [in final top-5]\n    Step  23  score=0.70  FAIL shows error page  [in final top-5]\n    Step   1  score=0.00  identical  [in final top-5]\n    Step   2  score=0.00  identical  [analyzed only]\n    Step   3  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nThe test tried to open a manufacturer’s page that doesn’t actually exist — like searching for a shop that closed down. This happened early in the test, when it was supposed to go to the list of manufacturers but instead landed on a blank or error page. Because that page was missing the expected items, later parts of the test couldn’t find what they were looking for and the screenshots started to look different, causing the test to fail. To prevent this, we should verify that the manufacturer number being used is valid before navigating to its page.\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              23           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          23\n  3              10         N/A         N/A          13\n  4              24         N/A         N/A           1\n  5               1         N/A         N/A          22\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 11.8\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: ersel/opencart_manufacturer_404_35\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  (score=0.000)\n  #3  Step 1: Wait for element logo  (score=0.000)\n  #4  Step 2: Scroll homepage  (score=0.000)\n  #5  Step 3: Desktops menu  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.192, visual_causal=0.192)\n  #2  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.045) ← ACTUAL FAULT\n  #3  Step 1: Wait for element logo  (score=0.000)\n  #4  Step 2: Scroll homepage  (score=0.000)\n  #5  Step 3: Desktops menu  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (score=0.125, visual_causal=0.192, pixel=0.000)\n  #2  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (score=0.061, pixel=0.090) ← ACTUAL FAULT\n  #3  Step 2: Scroll homepage  (score=0.000, pixel=0.001)\n  #4  Step 1: Wait for element logo  (score=0.000, pixel=0.000)\n  #5  Step 3: Desktops menu  (score=0.000, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 23: Navigate to https://demo.opencart.com/en-gb?route=product/manufacturer  (fusion=0.382; causal_action=1.00, observer_symptom=0.37, pixel=0.73, text=0.04, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 0: Navigate to https://demo.opencart.com/  [visual causal (earliest_divergence, score=0.19)]  (fusion=0.222; observer_symptom=0.32, pixel=0.19, visual_causal=0.19, vlm_prior=0.90)\n  #3  Step 24: Wait for element content  (fusion=0.139; observer_symptom=0.73, pixel=0.73)\n  #4  Step 10: Scroll to bottom  (fusion=0.072; observer_symptom=0.34, pixel=0.69)\n  #5  Step 25: Scroll after manufacturer navigation  (fusion=0.072; observer_symptom=0.34, pixel=0.69)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              33\nFirst persistent divergence: step 0 (score=0.192)\nAttributed root step:        step 0 (visual_causal=0.192)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: action_changed_llm_leader.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 23 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 23 (score=0.90): Error page instead of brand page\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 23\nSummary:\n  Step 23 (score=0.90): Error page instead of brand page\n\n  Per-step visual scores:\n    Step   0  score=0.90  Attributed from step 23: Error page instead of brand page  [in final top-5]\n    Step  23  score=0.90  Error page instead of brand page  [in final top-5]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  identical  [analyzed only]\n    Step   3  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 23 (score=0.90): Error page instead of brand page\n\nOther top suspects: #2 step 0 (visual change), #3 step 24 (screenshot diff), #4 step 10 (screenshot diff), #5 step 25 (screenshot diff)\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              23           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          23\n  3              24         N/A         N/A           1\n  4              10         N/A         N/A          13\n  5              25         N/A         N/A           2\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 7.8\n=============================================================="
 }

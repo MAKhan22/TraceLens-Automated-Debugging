@@ -1,35 +1,47 @@
 {
   "trace_id": "efe_irem/webmd",
-  "generated": "2026-06-05T21:24:06.975016Z",
+  "generated": "2026-06-09T13:54:24.355301Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "efe_irem",
     "fault_type": "404_page_not_found",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -38,7 +50,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 2,
@@ -56,7 +68,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 2,
       "visual_causal_reason": "earliest_divergence",
-      "fusion_score": 0.6357,
+      "fusion_score": 0.5534,
       "fusion_channels": {
         "text": 0.587,
         "navigation": 0.0,
@@ -64,7 +76,6 @@
         "observer_symptom": 0.5,
         "visual_causal": 1.0,
         "pixel": 1.0,
-        "llm_prior": 1.0,
         "vlm_prior": 0.9
       },
       "rank": 1
@@ -85,7 +96,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.579,
+      "fusion_score": 0.5001,
       "fusion_channels": {
         "text": 0.493,
         "navigation": 0.0,
@@ -93,7 +104,6 @@
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.929,
         "vlm_prior": 0.9
       },
       "rank": 2
@@ -114,7 +124,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.5527,
+      "fusion_score": 0.5001,
       "fusion_channels": {
         "text": 0.493,
         "navigation": 0.0,
@@ -122,7 +132,6 @@
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.786,
         "vlm_prior": 0.9
       },
       "rank": 3
@@ -143,7 +152,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.5264,
+      "fusion_score": 0.5001,
       "fusion_channels": {
         "text": 0.493,
         "navigation": 0.0,
@@ -151,36 +160,34 @@
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.643,
         "vlm_prior": 0.9
       },
       "rank": 4
     },
     {
-      "step_id": 6,
-      "action": "Click on the author of the article",
+      "step_id": 3,
+      "action": "Wait for the page to load",
       "network_score": 0.7,
-      "console_score": 0.5,
+      "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.4933,
+      "combined_score": 0.3267,
       "screenshots_available": true,
       "pixel_global": 1.0,
-      "pixel_localized": 0.9725,
+      "pixel_localized": 1.0,
       "pixel_score": 1.0,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.5001,
+      "fusion_score": 0.4625,
       "fusion_channels": {
-        "text": 0.493,
+        "text": 0.327,
         "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.5,
+        "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.857,
         "vlm_prior": 0.9
       },
       "rank": 5
@@ -457,98 +464,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 2,
-      "action": "Visit depression page directly",
-      "network_score": 0.9,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.5867,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 1.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 2,
-      "visual_causal_reason": "earliest_divergence",
-      "rank": 1
-    },
-    {
-      "step_id": 5,
-      "action": "Wait for the page to load",
-      "network_score": 0.7,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4933,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 0.9725,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 6,
-      "action": "Click on the author of the article",
-      "network_score": 0.7,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4933,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 0.9725,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 7,
-      "action": "Wait for the page to load",
-      "network_score": 0.7,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4933,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 0.9725,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 8,
-      "action": "Click on Who we are to see other authors",
-      "network_score": 0.7,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4933,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 24,
     "first_persistent_divergence": 2,
@@ -560,20 +476,15 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 2,
-    "root_cause_summary": "Visiting the depression page directly resulted in a 404 error, preventing the page from loading.",
-    "downstream_steps": [
-      5,
-      6,
-      7,
-      9
-    ],
-    "failure_chain": "The initial page request returned a 404, so the depression page never loaded; subsequent wait steps observed missing assets and failed to reach expected content, causing the test to fail."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "When the test tried to go straight to the depression page, the system could not find that page, like trying to open a door that isn’t there. Because the page never appeared, the later steps that wait for certain parts of the page to show up never got what they were looking for. As a result, the test could not continue and ended with a failure, and the expected content never appeared on screen. To fix this, we should verify that the address for the depression page is correct and that the page actually exists.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 2,
-    "visual_summary": "Step 2 (score=0.90): Error page instead of depression resource center\nStep 3 (score=0.90): Error page displayed\nStep 4 (score=0.90): Error page displayed instead of expected content\nStep 5 (score=0.90): Error page instead of expected content\nStep 6 (score=0.90): FAIL shows 404 error page",
+    "visual_summary": "Step 2 (score=0.90): Error page instead of depression resource center\nStep 3 (score=0.90): Error page displayed instead of expected content\nStep 4 (score=0.90): Error 404 page displayed instead of expected content\nStep 5 (score=0.90): Error page shown instead of expected content\nStep 6 (score=0.90): Error page displayed instead of author info",
     "visual_scores": [
       {
         "step_id": 0,
@@ -593,37 +504,37 @@
       {
         "step_id": 3,
         "visual_score": 0.9,
-        "visual_note": "Error page displayed"
+        "visual_note": "Error page displayed instead of expected content"
       },
       {
         "step_id": 4,
         "visual_score": 0.9,
-        "visual_note": "Error page displayed instead of expected content"
+        "visual_note": "Error 404 page displayed instead of expected content"
       },
       {
         "step_id": 5,
         "visual_score": 0.9,
-        "visual_note": "Error page instead of expected content"
+        "visual_note": "Error page shown instead of expected content"
       },
       {
         "step_id": 6,
         "visual_score": 0.9,
-        "visual_note": "FAIL shows 404 error page"
+        "visual_note": "Error page displayed instead of author info"
       },
       {
         "step_id": 7,
         "visual_score": 0.9,
-        "visual_note": "FAIL shows 404 error page"
+        "visual_note": "FAIL shows 404 error page, PASS shows author bio page"
       },
       {
         "step_id": 8,
         "visual_score": 0.9,
-        "visual_note": "FAIL shows 404 error page"
+        "visual_note": "FAIL shows 404 error page, PASS shows senior medical staff page"
       },
       {
         "step_id": 9,
         "visual_score": 0.9,
-        "visual_note": "FAIL shows 404 error page"
+        "visual_note": "FAIL shows 404 error page, PASS shows About WebMD page"
       }
     ],
     "steps_with_screenshots": 10
@@ -658,12 +569,12 @@
       },
       {
         "rank": 5,
-        "step_id": 6,
-        "step_distance": 4
+        "step_id": 3,
+        "step_distance": 1
       }
     ],
-    "mad@5": 3.8,
+    "mad@5": 3.2,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/webmd\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error]  (score=0.587) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.671, pixel=1.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=0.587, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493, pixel=1.000)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493, pixel=1.000)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493, pixel=1.000)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493, pixel=1.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (fusion=0.636; llm_prior=1.00, observer_symptom=0.50, pixel=1.00, text=0.59, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (fusion=0.579; llm_prior=0.93, observer_symptom=1.00, pixel=1.00, text=0.49, vlm_prior=0.90)\n  #3  Step 7: Wait for the page to load  [network anomaly, console error]  (fusion=0.553; llm_prior=0.79, observer_symptom=1.00, pixel=1.00, text=0.49, vlm_prior=0.90)\n  #4  Step 9: Wait for the page to load  [network anomaly, console error]  (fusion=0.526; llm_prior=0.64, observer_symptom=1.00, pixel=1.00, text=0.49, vlm_prior=0.90)\n  #5  Step 6: Click on the author of the article  [network anomaly, console error]  (fusion=0.500; llm_prior=0.86, observer_symptom=0.50, pixel=1.00, text=0.49, vlm_prior=0.90)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              24\nFirst persistent divergence: step 2 (score=1.000)\nAttributed root step:        step 2 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 2\nSummary:       Visiting the depression page directly resulted in a 404 error, preventing the page from loading.\nFailure chain: The initial page request returned a 404, so the depression page never loaded; subsequent wait steps observed missing assets and failed to reach expected content, causing the test to fail.\nDownstream:    [5, 6, 7, 9]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 2\nSummary:\n  Step 2 (score=0.90): Error page instead of depression resource center\n  Step 3 (score=0.90): Error page displayed\n  Step 4 (score=0.90): Error page displayed instead of expected content\n  Step 5 (score=0.90): Error page instead of expected content\n  Step 6 (score=0.90): FAIL shows 404 error page\n\n  Per-step visual scores:\n    Step   2  score=0.90  Error page instead of depression resource center  [in final top-5]\n    Step   3  score=0.90  Error page displayed  [analyzed only]\n    Step   4  score=0.90  Error page displayed instead of expected content  [analyzed only]\n    Step   5  score=0.90  Error page instead of expected content  [in final top-5]\n    Step   6  score=0.90  FAIL shows 404 error page  [in final top-5]\n    Step   7  score=0.90  FAIL shows 404 error page  [in final top-5]\n    Step   8  score=0.90  FAIL shows 404 error page  [analyzed only]\n    Step   9  score=0.90  FAIL shows 404 error page  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen the test tried to go straight to the depression page, the system could not find that page, like trying to open a door that isn’t there. Because the page never appeared, the later steps that wait for certain parts of the page to show up never got what they were looking for. As a result, the test could not continue and ended with a failure, and the expected content never appeared on screen. To fix this, we should verify that the address for the depression page is correct and that the page actually exists.\n\nEVALUATION\n----------------------------------------\nActual fault step: 2\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               2           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           3\n  3               7         N/A         N/A           5\n  4               9         N/A         N/A           7\n  5               6         N/A         N/A           4\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 3.8\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/webmd\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error]  (score=0.587) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.493)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.493)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.493)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #3  Step 6: Click on the author of the article  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #4  Step 7: Wait for the page to load  [network anomaly, console error]  (score=0.671, pixel=1.000)\n  #5  Step 8: Click on Who we are to see other authors  [network anomaly, console error]  (score=0.671, pixel=1.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 2: Visit depression page directly  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (fusion=0.553; observer_symptom=0.50, pixel=1.00, text=0.59, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 5: Wait for the page to load  [network anomaly, console error]  (fusion=0.500; observer_symptom=1.00, pixel=1.00, text=0.49, vlm_prior=0.90)\n  #3  Step 7: Wait for the page to load  [network anomaly, console error]  (fusion=0.500; observer_symptom=1.00, pixel=1.00, text=0.49, vlm_prior=0.90)\n  #4  Step 9: Wait for the page to load  [network anomaly, console error]  (fusion=0.500; observer_symptom=1.00, pixel=1.00, text=0.49, vlm_prior=0.90)\n  #5  Step 3: Wait for the page to load  [network anomaly]  (fusion=0.463; observer_symptom=1.00, pixel=1.00, text=0.33, vlm_prior=0.90)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              24\nFirst persistent divergence: step 2 (score=1.000)\nAttributed root step:        step 2 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 2 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 2 (score=0.90): Error page instead of depression resource center\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 2\nSummary:\n  Step 2 (score=0.90): Error page instead of depression resource center\n  Step 3 (score=0.90): Error page displayed instead of expected content\n  Step 4 (score=0.90): Error 404 page displayed instead of expected content\n  Step 5 (score=0.90): Error page shown instead of expected content\n  Step 6 (score=0.90): Error page displayed instead of author info\n\n  Per-step visual scores:\n    Step   2  score=0.90  Error page instead of depression resource center  [in final top-5]\n    Step   3  score=0.90  Error page displayed instead of expected content  [in final top-5]\n    Step   4  score=0.90  Error 404 page displayed instead of expected content  [analyzed only]\n    Step   5  score=0.90  Error page shown instead of expected content  [in final top-5]\n    Step   6  score=0.90  Error page displayed instead of author info  [analyzed only]\n    Step   7  score=0.90  FAIL shows 404 error page, PASS shows author bio page  [in final top-5]\n    Step   8  score=0.90  FAIL shows 404 error page, PASS shows senior medical staff page  [analyzed only]\n    Step   9  score=0.90  FAIL shows 404 error page, PASS shows About WebMD page  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 2 (score=0.90): Error page instead of depression resource center\n  Step 3 (score=0.90): Error page displayed instead of expected content\n  Step 4 (score=0.90): Error 404 page displayed instead of expected content\n  Step 5 (score=0.90): Error page shown instead of expected content\n  Step 6 (score=0.90): Error page displayed instead of author info\n\nOther top suspects: #2 step 5 (console error), #3 step 7 (console error), #4 step 9 (console error), #5 step 3 (network error)\n\nEVALUATION\n----------------------------------------\nActual fault step: 2\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               2           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           3\n  3               7         N/A         N/A           5\n  4               9         N/A         N/A           7\n  5               3         N/A         N/A           1\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 3.2\n=============================================================="
 }

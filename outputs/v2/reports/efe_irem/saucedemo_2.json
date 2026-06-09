@@ -1,35 +1,47 @@
 {
   "trace_id": "efe_irem/saucedemo_2",
-  "generated": "2026-06-05T16:47:54.754097Z",
+  "generated": "2026-06-09T13:50:40.521167Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "efe_irem",
     "fault_type": "missing_input_zipcode",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -38,7 +50,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 27,
@@ -56,7 +68,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 27,
       "visual_causal_reason": "earliest_localized_divergence",
-      "fusion_score": 0.4608,
+      "fusion_score": 0.339,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -64,39 +76,9 @@
         "observer_symptom": 0.359,
         "visual_causal": 0.718,
         "pixel": 0.718,
-        "llm_prior": 1.0,
         "vlm_prior": 0.9
       },
       "rank": 1
-    },
-    {
-      "step_id": 6,
-      "action": "Type the password: secret_sauce",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.3,
-      "intent_score": 0.0,
-      "combined_score": 0.06,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "fusion_score": 0.2528,
-      "fusion_channels": {
-        "text": 0.06,
-        "navigation": 0.0,
-        "causal_action": 0.7,
-        "observer_symptom": 0.0,
-        "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.812,
-        "vlm_prior": 0.0
-      },
-      "rank": 2
     },
     {
       "step_id": 29,
@@ -114,7 +96,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2514,
+      "fusion_score": 0.3195,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -122,48 +104,74 @@
         "observer_symptom": 0.925,
         "visual_causal": 0.0,
         "pixel": 0.925,
-        "llm_prior": 0.0,
         "vlm_prior": 0.9
       },
-      "rank": 3
+      "rank": 2
     },
     {
-      "step_id": 1,
-      "action": "Wait for the page to load",
-      "network_score": 0.56,
+      "step_id": 28,
+      "action": "Click Continue",
+      "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.2613,
+      "combined_score": 0.0,
       "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
+      "pixel_global": 0.4823,
+      "pixel_localized": 0.9255,
+      "pixel_score": 0.9255,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2093,
+      "fusion_score": 0.2303,
       "fusion_channels": {
-        "text": 0.261,
+        "text": 0.0,
         "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.0,
+        "observer_symptom": 0.463,
         "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.875,
+        "pixel": 0.925,
+        "vlm_prior": 0.8
+      },
+      "rank": 3
+    },
+    {
+      "step_id": 31,
+      "action": "Verify that the order has been dispatched",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 0.9255,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "fusion_score": 0.2081,
+      "fusion_channels": {
+        "text": 0.0,
+        "navigation": 0.0,
+        "causal_action": 0.0,
+        "observer_symptom": 1.0,
+        "visual_causal": 0.0,
+        "pixel": 1.0,
         "vlm_prior": 0.0
       },
       "rank": 4
     },
     {
-      "step_id": 2,
-      "action": "Verify that the login screen is visible",
-      "network_score": 0.7,
+      "step_id": 6,
+      "action": "Type the password: secret_sauce",
+      "network_score": 0.0,
       "console_score": 0.0,
-      "action_score": 0.0,
+      "action_score": 0.3,
       "intent_score": 0.0,
-      "combined_score": 0.3267,
+      "combined_score": 0.06,
       "screenshots_available": true,
       "pixel_global": 0.0,
       "pixel_localized": 0.0,
@@ -172,15 +180,14 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.1983,
+      "fusion_score": 0.1748,
       "fusion_channels": {
-        "text": 0.327,
+        "text": 0.06,
         "navigation": 0.0,
-        "causal_action": 0.0,
+        "causal_action": 1.0,
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.75,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -457,98 +464,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 27,
-      "action": "Type 34890",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0046,
-      "pixel_localized": 0.7176,
-      "pixel_score": 0.005,
-      "visual_causal_score": 0.718,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 27,
-      "visual_causal_reason": "earliest_localized_divergence",
-      "rank": 1
-    },
-    {
-      "step_id": 0,
-      "action": "Visit saucedemo.com",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 1,
-      "action": "Wait for the page to load",
-      "network_score": 0.56,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.2613,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 6,
-      "action": "Type the password: secret_sauce",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.3,
-      "intent_score": 0.0,
-      "combined_score": 0.06,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 2,
-      "action": "Verify that the login screen is visible",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 32,
     "first_persistent_divergence": 27,
@@ -560,17 +476,15 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 27,
-    "root_cause_summary": "Typing the zipcode '34890' caused a divergence in the UI state, leading to incorrect page rendering.",
-    "downstream_steps": [
-      29
-    ],
-    "failure_chain": "The incorrect zipcode entry altered the application state, which resulted in a visual divergence observed at the subsequent wait-for-load step (step 29), causing downstream verification or navigation failures."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "When the user typed the zipcode 34890, the system’s internal settings got mixed up, like entering a wrong address into a GPS and getting the wrong map. This mix‑up happened right after the zipcode field, before the next screen finished loading. As a result, the page showed the wrong information or seemed to freeze, so the user couldn’t move forward. To fix it, we should verify that the zipcode entry is checked and that the system clears its old settings before loading the next step.",
+  "stakeholder_summary": "",
   "visual_analysis": {
-    "visual_root_cause_step_id": 28,
-    "visual_summary": "Step 28 (score=0.90): wrong page, different content\nStep 29 (score=0.90): Wrong page, different content",
+    "visual_root_cause_step_id": 29,
+    "visual_summary": "Step 29 (score=0.90): Different page, wrong fields and error dialog\nStep 28 (score=0.80): wrong page, different content",
     "visual_scores": [
       {
         "step_id": 25,
@@ -580,27 +494,27 @@
       {
         "step_id": 26,
         "visual_score": 0.0,
-        "visual_note": "Identical"
+        "visual_note": "identical"
       },
       {
         "step_id": 27,
         "visual_score": 0.9,
-        "visual_note": "Attributed from step 28: wrong page, different content"
+        "visual_note": "Attributed from step 29: Different page, wrong fields and error dialog"
       },
       {
         "step_id": 28,
-        "visual_score": 0.9,
+        "visual_score": 0.8,
         "visual_note": "wrong page, different content"
       },
       {
         "step_id": 29,
         "visual_score": 0.9,
-        "visual_note": "Wrong page, different content"
+        "visual_note": "Different page, wrong fields and error dialog"
       },
       {
         "step_id": 2,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical login screen"
       },
       {
         "step_id": 1,
@@ -610,7 +524,7 @@
       {
         "step_id": 6,
         "visual_score": 0.0,
-        "visual_note": "Identical UI state"
+        "visual_note": "Identical"
       }
     ],
     "steps_with_screenshots": 8
@@ -630,27 +544,27 @@
       },
       {
         "rank": 2,
-        "step_id": 6,
-        "step_distance": 21
-      },
-      {
-        "rank": 3,
         "step_id": 29,
         "step_distance": 2
       },
       {
+        "rank": 3,
+        "step_id": 28,
+        "step_distance": 1
+      },
+      {
         "rank": 4,
-        "step_id": 1,
-        "step_distance": 26
+        "step_id": 31,
+        "step_distance": 4
       },
       {
         "rank": 5,
-        "step_id": 2,
-        "step_distance": 25
+        "step_id": 6,
+        "step_distance": 21
       }
     ],
-    "mad@5": 14.8,
+    "mad@5": 5.6,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/saucedemo_2\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #2  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #3  Step 6: Type the password: secret_sauce  (score=0.060)\n  #4  Step 0: Visit saucedemo.com  (score=0.000)\n  #5  Step 3: Click on the username field  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.718, visual_causal=0.718) ← ACTUAL FAULT\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #4  Step 6: Type the password: secret_sauce  (score=0.060)\n  #5  Step 0: Visit saucedemo.com  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.468, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.212, pixel=0.000)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)\n  #4  Step 6: Type the password: secret_sauce  (score=0.039, pixel=0.000)\n  #5  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.000, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT\n  #2  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261, pixel=0.000)\n  #4  Step 6: Type the password: secret_sauce  (score=0.060, pixel=0.000)\n  #5  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.461; llm_prior=1.00, observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 6: Type the password: secret_sauce  (fusion=0.253; causal_action=0.70, llm_prior=0.81, text=0.06)\n  #3  Step 29: Wait for the page to load  (fusion=0.251; observer_symptom=0.93, pixel=0.93, vlm_prior=0.90)\n  #4  Step 1: Wait for the page to load  [network anomaly]  (fusion=0.209; llm_prior=0.88, text=0.26)\n  #5  Step 2: Verify that the login screen is visible  [network anomaly]  (fusion=0.198; llm_prior=0.75, text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nFirst persistent divergence: step 27 (score=0.718)\nAttributed root step:        step 27 (visual_causal=0.718)\nReason:                      earliest_localized_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 27\nSummary:       Typing the zipcode '34890' caused a divergence in the UI state, leading to incorrect page rendering.\nFailure chain: The incorrect zipcode entry altered the application state, which resulted in a visual divergence observed at the subsequent wait-for-load step (step 29), causing downstream verification or navigation failures.\nDownstream:    [29]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 28\nSummary:\n  Step 28 (score=0.90): wrong page, different content\n  Step 29 (score=0.90): Wrong page, different content\n\n  Per-step visual scores:\n    Step  27  score=0.90  Attributed from step 28: wrong page, different content  [in final top-5]\n    Step  28  score=0.90  wrong page, different content  [analyzed only]\n    Step  29  score=0.90  Wrong page, different content  [in final top-5]\n    Step   1  score=0.00  identical  [in final top-5]\n    Step   2  score=0.00  identical  [in final top-5]\n    Step   6  score=0.00  Identical UI state  [in final top-5]\n    Step  25  score=0.00  identical  [analyzed only]\n    Step  26  score=0.00  Identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen the user typed the zipcode 34890, the system’s internal settings got mixed up, like entering a wrong address into a GPS and getting the wrong map. This mix‑up happened right after the zipcode field, before the next screen finished loading. As a result, the page showed the wrong information or seemed to freeze, so the user couldn’t move forward. To fix it, we should verify that the zipcode entry is checked and that the system clears its old settings before loading the next step.\n\nEVALUATION\n----------------------------------------\nActual fault step: 27\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              27           1           0           0  ← ACTUAL FAULT\n  2               6         N/A         N/A          21\n  3              29         N/A         N/A           2\n  4               1         N/A         N/A          26\n  5               2         N/A         N/A          25\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 14.8\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/saucedemo_2\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #2  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #3  Step 6: Type the password: secret_sauce  (score=0.060)\n  #4  Step 0: Visit saucedemo.com  (score=0.000)\n  #5  Step 3: Click on the username field  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.718, visual_causal=0.718) ← ACTUAL FAULT\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #4  Step 6: Type the password: secret_sauce  (score=0.060)\n  #5  Step 0: Visit saucedemo.com  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.468, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT\n  #2  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.212, pixel=0.000)\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)\n  #4  Step 6: Type the password: secret_sauce  (score=0.039, pixel=0.000)\n  #5  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.339; observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 29: Wait for the page to load  (fusion=0.320; observer_symptom=0.93, pixel=0.93, vlm_prior=0.90)\n  #3  Step 28: Click Continue  (fusion=0.230; observer_symptom=0.46, pixel=0.93, vlm_prior=0.80)\n  #4  Step 31: Verify that the order has been dispatched  (fusion=0.208; observer_symptom=1.00, pixel=1.00)\n  #5  Step 6: Type the password: secret_sauce  (fusion=0.175; causal_action=1.00, text=0.06)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nFirst persistent divergence: step 27 (score=0.718)\nAttributed root step:        step 27 (visual_causal=0.718)\nReason:                      earliest_localized_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 29 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 29 (score=0.90): Different page, wrong fields and error dialog\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 29\nSummary:\n  Step 29 (score=0.90): Different page, wrong fields and error dialog\n  Step 28 (score=0.80): wrong page, different content\n\n  Per-step visual scores:\n    Step  27  score=0.90  Attributed from step 29: Different page, wrong fields and error dialog  [in final top-5]\n    Step  29  score=0.90  Different page, wrong fields and error dialog  [in final top-5]\n    Step  28  score=0.80  wrong page, different content  [in final top-5]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  Identical login screen  [analyzed only]\n    Step   6  score=0.00  Identical  [in final top-5]\n    Step  25  score=0.00  identical  [analyzed only]\n    Step  26  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 29 (score=0.90): Different page, wrong fields and error dialog\n  Step 28 (score=0.80): wrong page, different content\n\nOther top suspects: #2 step 29 (screenshot diff), #3 step 28 (screenshot diff), #4 step 31 (screenshot diff), #5 step 6 (heuristic score)\n\nEVALUATION\n----------------------------------------\nActual fault step: 27\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              27           1           0           0  ← ACTUAL FAULT\n  2              29         N/A         N/A           2\n  3              28         N/A         N/A           1\n  4              31         N/A         N/A           4\n  5               6         N/A         N/A          21\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.6\n=============================================================="
 }

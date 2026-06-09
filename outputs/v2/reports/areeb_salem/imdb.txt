@@ -1,6 +1,6 @@
 ==============================================================
 TraceLens v2 Diagnosis Report: areeb_salem/imdb
-Ranking mode: v2:llm+vlm
+Ranking mode: v2:vlm
 ==============================================================
 
 HEURISTIC TOP 5 (text signals only)
@@ -19,21 +19,13 @@ HEURISTIC TOP 5 (text + pixel)
   #4  Step 28: Open a recommended movie.  [network anomaly]  (score=0.234, pixel=0.000)
   #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (score=0.212, pixel=0.000)
 
-LLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 14: Scroll through actor filmography.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
-  #2  Step 15: Verify filmography section visible.  [network anomaly, console error]  (score=0.660, pixel=1.000)
-  #3  Step 6: Verify movie title page loaded.  [network anomaly]  (score=0.360, pixel=0.000)
-  #4  Step 28: Open a recommended movie.  [network anomaly]  (score=0.360, pixel=0.000)
-  #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (score=0.327, pixel=0.000)
-
-FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
-----------------------------------------
-  #1  Step 14: Scroll through actor filmography.  [network anomaly]  (fusion=0.508; causal_action=1.00, llm_prior=1.00, text=0.72) ← ACTUAL FAULT
-  #2  Step 15: Verify filmography section visible.  [network anomaly, console error]  (fusion=0.380; llm_prior=0.93, observer_symptom=0.30, pixel=0.30, text=0.66, vlm_prior=0.20)
-  #3  Step 6: Verify movie title page loaded.  [network anomaly]  (fusion=0.224; llm_prior=0.86, text=0.36)
-  #4  Step 28: Open a recommended movie.  [network anomaly]  (fusion=0.211; llm_prior=0.79, text=0.36)
-  #5  Step 1: Verify IMDb homepage loaded.  [network anomaly]  (fusion=0.192; llm_prior=0.71, text=0.33)
+  #1  Step 15: Verify filmography section visible.  [network anomaly, console error]  (fusion=0.509; observer_symptom=1.00, pixel=1.00, text=0.66, vlm_prior=0.70)
+  #2  Step 14: Scroll through actor filmography.  [network anomaly]  (fusion=0.324; causal_action=1.00, text=0.72) ← ACTUAL FAULT
+  #3  Step 28: Open a recommended movie.  [network anomaly]  (fusion=0.081; text=0.36)
+  #4  Step 6: Verify movie title page loaded.  [network anomaly]  (fusion=0.081; text=0.36)
+  #5  Step 8: Scroll to the movie synopsis.  [network anomaly]  (fusion=0.074; text=0.33)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
 ----------------------------------------
@@ -43,30 +35,28 @@ No persistent pass/fail screenshot divergence above threshold.
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
-  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • Top-1 channel hints: causal_root, causal_llm_leader.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: strong_observer_pixel.
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 14
-Summary:       Scrolling through the actor filmography triggered a failed request to the filmosections endpoint (HTTP 500), resulting in an empty credits list.
-Failure chain: The scroll action at step 14 caused a 500 error when loading the filmosections API, which led to the verification step 15 observing console errors and failing to detect the expected filmography section.
-Downstream:    [15]
+Primary step:  Step 15 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 15 (score=0.70): Filmography section not visible, shows 'No known credits' instead
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 15
 Summary:
-  Step 15 (score=0.70): Filmography section is missing
+  Step 15 (score=0.70): Filmography section not visible, shows 'No known credits' instead
 
   Per-step visual scores:
-    Step  15  score=0.70  Filmography section is missing  [in final top-5]
-    Step   1  score=0.00  identical  [in final top-5]
+    Step  15  score=0.70  Filmography section not visible, shows 'No known credits' instead  [in final top-5]
+    Step   1  score=0.00  identical  [analyzed only]
     Step   6  score=0.00  identical  [in final top-5]
     Step  14  score=0.00  identical  [in final top-5]
     Step  28  score=0.00  identical  [in final top-5]
@@ -77,25 +67,30 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When the user scrolled down to see more movies for an actor, the app tried to pull up the film information but got no response, leaving the credits blank. This happened right during the scrolling step, which is where the test expects the film section to appear. Because the section was empty, the following verification step could not find the expected content and marked the test as failed. To fix it, we should check that the part of the app responsible for loading the movie data works correctly when the user scrolls.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 15 (score=0.70): Filmography section not visible, shows 'No known credits' instead
+
+Other top suspects: #2 step 14 (network error), #3 step 28 (network error), #4 step 6 (network error), #5 step 8 (network error)
 
 EVALUATION
 ----------------------------------------
 Actual fault step: 14
-Hit@1=1  Hit@3=1  Hit@5=1
-Rank position of actual fault: 1
-Overall rank distance (|actual_rank - 1|): 0
+Hit@1=0  Hit@3=1  Hit@5=1
+Rank position of actual fault: 2
+Overall rank distance (|actual_rank - 1|): 1
 
 Per-rank breakdown:
   Pred.Rank    Step   True Rank   rank_dist   step_dist
   (our rank)          (1=fault)  |pred-true|  |step-actual|
   ----------  -----  ----------  ----------  ----------
-  1              14           1           0           0  ← ACTUAL FAULT
-  2              15         N/A         N/A           1
-  3               6         N/A         N/A           8
-  4              28         N/A         N/A          14
-  5               1         N/A         N/A          13
+  1              15         N/A         N/A           1
+  2              14           1           1           0  ← ACTUAL FAULT
+  3              28         N/A         N/A          14
+  4               6         N/A         N/A           8
+  5               8         N/A         N/A           6
 
-Top-1 step distance: 0
-MAD@5 (mean step-dist over top-5): 7.2
+Top-1 step distance: 1
+MAD@5 (mean step-dist over top-5): 5.8
 ==============================================================

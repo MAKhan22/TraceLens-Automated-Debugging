@@ -1,35 +1,48 @@
 {
   "trace_id": "areeb_salem/producthunt",
-  "generated": "2026-06-05T14:05:08.369177Z",
+  "generated": "2026-06-09T15:25:07.509390Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "areeb_salem",
     "fault_type": "auth_gated_action",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
+      "Top-1 channel hints: action_changed_llm_leader."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -38,7 +51,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 16,
@@ -56,15 +69,14 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 16,
       "visual_causal_reason": "earliest_divergence",
-      "fusion_score": 0.6603,
+      "fusion_score": 0.6481,
       "fusion_channels": {
         "text": 0.42,
         "navigation": 0.0,
-        "causal_action": 0.7,
+        "causal_action": 1.0,
         "observer_symptom": 0.5,
         "visual_causal": 1.0,
         "pixel": 1.0,
-        "llm_prior": 0.929,
         "vlm_prior": 0.7
       },
       "rank": 1
@@ -85,15 +97,14 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4782,
+      "fusion_score": 0.4845,
       "fusion_channels": {
         "text": 0.06,
         "navigation": 0.0,
-        "causal_action": 0.7,
+        "causal_action": 1.0,
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.714,
         "vlm_prior": 0.7
       },
       "rank": 2
@@ -114,7 +125,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.3014,
+      "fusion_score": 0.1436,
       "fusion_channels": {
         "text": 0.636,
         "navigation": 0.0,
@@ -122,7 +133,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 1.0,
         "vlm_prior": 0.0
       },
       "rank": 3
@@ -143,7 +153,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2319,
+      "fusion_score": 0.1069,
       "fusion_channels": {
         "text": 0.473,
         "navigation": 0.0,
@@ -151,36 +161,34 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.786,
         "vlm_prior": 0.0
       },
       "rank": 4
     },
     {
-      "step_id": 5,
-      "action": "Verify product cards with upvote counts.",
-      "network_score": 0.7,
-      "console_score": 0.0,
+      "step_id": 0,
+      "action": "Navigate to Product Hunt homepage.",
+      "network_score": 0.3,
+      "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3267,
+      "combined_score": 0.4733,
       "screenshots_available": true,
-      "pixel_global": 0.0001,
+      "pixel_global": 0.0,
       "pixel_localized": 0.0,
       "pixel_score": 0.0,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2181,
+      "fusion_score": 0.1069,
       "fusion_channels": {
-        "text": 0.327,
+        "text": 0.473,
         "navigation": 0.0,
         "causal_action": 0.0,
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.857,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -457,98 +465,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 6,
-      "action": "Open the first product page.",
-      "network_score": 0.72,
-      "console_score": 0.9,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.636,
-      "screenshots_available": true,
-      "pixel_global": 0.0001,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 1
-    },
-    {
-      "step_id": 16,
-      "action": "Click the upvote button on the product.",
-      "network_score": 0.0,
-      "console_score": 0.9,
-      "action_score": 0.6,
-      "intent_score": 0.0,
-      "combined_score": 0.42,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 1.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 16,
-      "visual_causal_reason": "earliest_divergence",
-      "rank": 2
-    },
-    {
-      "step_id": 5,
-      "action": "Verify product cards with upvote counts.",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 0.0001,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 13,
-      "action": "Scroll to comments section.",
-      "network_score": 0.3,
-      "console_score": 1.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4733,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 17,
-      "action": "Verify upvote action result.",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.3,
-      "intent_score": 0.0,
-      "combined_score": 0.06,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 28,
     "first_persistent_divergence": 16,
@@ -560,17 +477,15 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 16,
-    "root_cause_summary": "At step 16 the test clicked the upvote button instead of verifying product metadata, causing a divergence in UI state.",
-    "downstream_steps": [
-      17
-    ],
-    "failure_chain": "The erroneous click altered the application state (e.g., attempted upvote without proper data), leading to the verification of upvote action result at step 17 to fail, while earlier GraphQL 403 errors are side effects unrelated to the UI divergence."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "At step 16 the test pressed the upvote button instead of first checking the product details. This happened early in the test flow, before the test tried to confirm that the upvote actually worked. Because the wrong button was pressed, the screen ended up in an unexpected state, so the later check at step 17 failed and the test reported an error about the upvote not working. To fix it, make sure the test verifies the product details before clicking the upvote button.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 16,
-    "visual_summary": "Step 16 (score=0.70): Overlaid sign-in popup\nStep 17 (score=0.70): Dialog appeared on top of the content",
+    "visual_summary": "Step 16 (score=0.70): Modal overlay appeared\nStep 17 (score=0.70): Overlayed sign up dialog appeared",
     "visual_scores": [
       {
         "step_id": 14,
@@ -580,17 +495,17 @@
       {
         "step_id": 15,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical"
       },
       {
         "step_id": 16,
         "visual_score": 0.7,
-        "visual_note": "Overlaid sign-in popup"
+        "visual_note": "Modal overlay appeared"
       },
       {
         "step_id": 17,
         "visual_score": 0.7,
-        "visual_note": "Dialog appeared on top of the content"
+        "visual_note": "Overlayed sign up dialog appeared"
       },
       {
         "step_id": 18,
@@ -605,12 +520,12 @@
       {
         "step_id": 0,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical homepage layout and content"
       },
       {
         "step_id": 13,
         "visual_score": 0.0,
-        "visual_note": "Identical UI state"
+        "visual_note": "Identical screenshot"
       }
     ],
     "steps_with_screenshots": 8
@@ -645,12 +560,12 @@
       },
       {
         "rank": 5,
-        "step_id": 5,
-        "step_distance": 11
+        "step_id": 0,
+        "step_distance": 16
       }
     ],
-    "mad@5": 5.0,
+    "mad@5": 6.0,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/producthunt\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636)\n  #2  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.473)\n  #3  Step 13: Scroll to comments section.  [console error]  (score=0.473)\n  #4  Step 16: Click the upvote button on the product.  [console error, action divergence]  (score=0.420) ← ACTUAL FAULT\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636)\n  #3  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.473)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.473)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.413, pixel=0.000)\n  #3  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.308, pixel=0.000)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.308, pixel=0.000)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.212, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636, pixel=0.000)\n  #2  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=0.420, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #3  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327, pixel=0.000)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.473, pixel=0.000)\n  #5  Step 17: Verify upvote action result.  (score=0.060, pixel=1.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (fusion=0.660; causal_action=0.70, llm_prior=0.93, observer_symptom=0.50, pixel=1.00, text=0.42, visual_causal=1.00, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 17: Verify upvote action result.  (fusion=0.478; causal_action=0.70, llm_prior=0.71, observer_symptom=1.00, pixel=1.00, text=0.06, vlm_prior=0.70)\n  #3  Step 6: Open the first product page.  [network anomaly, console error]  (fusion=0.301; llm_prior=1.00, text=0.64)\n  #4  Step 13: Scroll to comments section.  [console error]  (fusion=0.232; llm_prior=0.79, text=0.47)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (fusion=0.218; llm_prior=0.86, text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              28\nFirst persistent divergence: step 16 (score=1.000)\nAttributed root step:        step 16 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 16\nSummary:       At step 16 the test clicked the upvote button instead of verifying product metadata, causing a divergence in UI state.\nFailure chain: The erroneous click altered the application state (e.g., attempted upvote without proper data), leading to the verification of upvote action result at step 17 to fail, while earlier GraphQL 403 errors are side effects unrelated to the UI divergence.\nDownstream:    [17]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 16\nSummary:\n  Step 16 (score=0.70): Overlaid sign-in popup\n  Step 17 (score=0.70): Dialog appeared on top of the content\n\n  Per-step visual scores:\n    Step  16  score=0.70  Overlaid sign-in popup  [in final top-5]\n    Step  17  score=0.70  Dialog appeared on top of the content  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   6  score=0.00  Identical  [in final top-5]\n    Step  13  score=0.00  Identical UI state  [in final top-5]\n    Step  14  score=0.00  Identical  [analyzed only]\n    Step  15  score=0.00  identical  [analyzed only]\n    Step  18  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nAt step 16 the test pressed the upvote button instead of first checking the product details. This happened early in the test flow, before the test tried to confirm that the upvote actually worked. Because the wrong button was pressed, the screen ended up in an unexpected state, so the later check at step 17 failed and the test reported an error about the upvote not working. To fix it, make sure the test verifies the product details before clicking the upvote button.\n\nEVALUATION\n----------------------------------------\nActual fault step: 16\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              16           1           0           0  ← ACTUAL FAULT\n  2              17         N/A         N/A           1\n  3               6         N/A         N/A          10\n  4              13         N/A         N/A           3\n  5               5         N/A         N/A          11\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.0\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/producthunt\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636)\n  #2  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.473)\n  #3  Step 13: Scroll to comments section.  [console error]  (score=0.473)\n  #4  Step 16: Click the upvote button on the product.  [console error, action divergence]  (score=0.420) ← ACTUAL FAULT\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636)\n  #3  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.473)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.473)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.413, pixel=0.000)\n  #3  Step 0: Navigate to Product Hunt homepage.  [console error]  (score=0.308, pixel=0.000)\n  #4  Step 13: Scroll to comments section.  [console error]  (score=0.308, pixel=0.000)\n  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.212, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (fusion=0.648; causal_action=1.00, observer_symptom=0.50, pixel=1.00, text=0.42, visual_causal=1.00, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 17: Verify upvote action result.  (fusion=0.484; causal_action=1.00, observer_symptom=1.00, pixel=1.00, text=0.06, vlm_prior=0.70)\n  #3  Step 6: Open the first product page.  [network anomaly, console error]  (fusion=0.144; text=0.64)\n  #4  Step 13: Scroll to comments section.  [console error]  (fusion=0.107; text=0.47)\n  #5  Step 0: Navigate to Product Hunt homepage.  [console error]  (fusion=0.107; text=0.47)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              28\nFirst persistent divergence: step 16 (score=1.000)\nAttributed root step:        step 16 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: action_changed_llm_leader.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 16 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 16 (score=0.70): Modal overlay appeared\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 16\nSummary:\n  Step 16 (score=0.70): Modal overlay appeared\n  Step 17 (score=0.70): Overlayed sign up dialog appeared\n\n  Per-step visual scores:\n    Step  16  score=0.70  Modal overlay appeared  [in final top-5]\n    Step  17  score=0.70  Overlayed sign up dialog appeared  [in final top-5]\n    Step   0  score=0.00  Identical homepage layout and content  [in final top-5]\n    Step   6  score=0.00  Identical  [in final top-5]\n    Step  13  score=0.00  Identical screenshot  [in final top-5]\n    Step  14  score=0.00  Identical  [analyzed only]\n    Step  15  score=0.00  Identical  [analyzed only]\n    Step  18  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 16 (score=0.70): Modal overlay appeared\n  Step 17 (score=0.70): Overlayed sign up dialog appeared\n\nOther top suspects: #2 step 17 (screenshot diff), #3 step 6 (console error), #4 step 13 (console error), #5 step 0 (console error)\n\nEVALUATION\n----------------------------------------\nActual fault step: 16\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              16           1           0           0  ← ACTUAL FAULT\n  2              17         N/A         N/A           1\n  3               6         N/A         N/A          10\n  4              13         N/A         N/A           3\n  5               0         N/A         N/A          16\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 6.0\n=============================================================="
 }

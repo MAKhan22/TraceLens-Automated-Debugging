@@ -1,36 +1,48 @@
 {
   "trace_id": "areeb_salem/bbc",
-  "generated": "2026-06-05T13:32:01.729296Z",
+  "generated": "2026-06-09T15:19:28.971878Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "areeb_salem",
     "fault_type": "stale_cdn_cache",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "Top-1 channel hints: causal_root.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
+      "Top-1 channel hints: causal_root, causal_llm_leader."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -39,7 +51,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 18,
@@ -57,7 +69,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4221,
+      "fusion_score": 0.3239,
       "fusion_channels": {
         "text": 0.72,
         "navigation": 0.0,
@@ -65,7 +77,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.857,
         "vlm_prior": 0.0
       },
       "rank": 1
@@ -86,7 +97,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.351,
+      "fusion_score": 0.2044,
       "fusion_channels": {
         "text": 0.477,
         "navigation": 1.0,
@@ -94,7 +105,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 1.0,
         "vlm_prior": 0.0
       },
       "rank": 2
@@ -115,7 +125,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.3317,
+      "fusion_score": 0.1969,
       "fusion_channels": {
         "text": 0.443,
         "navigation": 1.0,
@@ -123,10 +133,37 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.929,
         "vlm_prior": 0.0
       },
       "rank": 3
+    },
+    {
+      "step_id": 19,
+      "action": "Verify category page loaded.",
+      "network_score": 0.7,
+      "console_score": 1.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.66,
+      "screenshots_available": true,
+      "pixel_global": 0.0379,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.038,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "fusion_score": 0.1809,
+      "fusion_channels": {
+        "text": 0.66,
+        "navigation": 0.0,
+        "causal_action": 0.0,
+        "observer_symptom": 0.085,
+        "visual_causal": 0.0,
+        "pixel": 0.038,
+        "vlm_prior": 0.1
+      },
+      "rank": 4
     },
     {
       "step_id": 10,
@@ -144,7 +181,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2111,
+      "fusion_score": 0.0813,
       "fusion_channels": {
         "text": 0.36,
         "navigation": 0.0,
@@ -152,36 +189,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.786,
-        "vlm_prior": 0.0
-      },
-      "rank": 4
-    },
-    {
-      "step_id": 15,
-      "action": "Verify related article links visible.",
-      "network_score": 0.7,
-      "console_score": 0.1,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.36,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "fusion_score": 0.1979,
-      "fusion_channels": {
-        "text": 0.36,
-        "navigation": 0.0,
-        "causal_action": 0.0,
-        "observer_symptom": 0.0,
-        "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.714,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -362,98 +369,7 @@
     }
   ],
   "heuristic_visual_steps": null,
-  "llm_ranked_steps": [
-    {
-      "step_id": 0,
-      "action": "Navigate to BBC News homepage.",
-      "network_score": 0.95,
-      "console_score": 0.1,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4767,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 1
-    },
-    {
-      "step_id": 5,
-      "action": "Open the first news article.",
-      "network_score": 0.95,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4433,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 18,
-      "action": "Navigate to a news category.",
-      "network_score": 0.85,
-      "console_score": 0.1,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.72,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 10,
-      "action": "Scroll through more article paragraphs.",
-      "network_score": 0.7,
-      "console_score": 0.1,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.36,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 15,
-      "action": "Verify related article links visible.",
-      "network_score": 0.7,
-      "console_score": 0.1,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.36,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 32,
     "first_persistent_divergence": null,
@@ -465,20 +381,15 @@
     "has_signal": false
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 0,
-    "root_cause_summary": "At step 0 the navigation to the BBC News homepage loaded an incorrect safeframe/ad frame instead of the expected page, altering the page context for all subsequent actions.",
-    "downstream_steps": [
-      5,
-      10,
-      15,
-      18
-    ],
-    "failure_chain": "The wrong navigation at step 0 placed the test in an unexpected iframe context, causing later steps (opening article, scrolling, verifying links, navigating categories) to interact with the wrong DOM, resulting in missing expected elements and eventual test failures."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "At the very beginning of the test, it opened the wrong page instead of the BBC News homepage, like typing the wrong web address into a browser. Because the test started on the wrong page, every later action — such as opening an article, scrolling down, checking links, and browsing different sections — was looking at the wrong content. As a result, the expected items weren’t found and the test eventually failed. To fix this, we should verify that the first step loads the correct BBC News homepage before moving on to the rest of the steps.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 19,
-    "visual_summary": "Step 19 (score=0.10): Cached content banner present in FAIL",
+    "visual_summary": "Step 19 (score=0.10): Cached content banner visible in FAIL",
     "visual_scores": [
       {
         "step_id": 18,
@@ -488,7 +399,7 @@
       {
         "step_id": 19,
         "visual_score": 0.1,
-        "visual_note": "Cached content banner present in FAIL"
+        "visual_note": "Cached content banner visible in FAIL"
       },
       {
         "step_id": 0,
@@ -533,17 +444,17 @@
       },
       {
         "rank": 4,
-        "step_id": 10,
-        "step_distance": 8
+        "step_id": 19,
+        "step_distance": 1
       },
       {
         "rank": 5,
-        "step_id": 15,
-        "step_distance": 3
+        "step_id": 10,
+        "step_distance": 8
       }
     ],
-    "mad@5": 8.4,
+    "mad@5": 8.0,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/bbc\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660)\n  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477)\n  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.443)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.442, pixel=0.038)\n  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.310, pixel=0.000)\n  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.288, pixel=0.000)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.234, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)\n----------------------------------------\n  #1  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477, pixel=0.000)\n  #2  Step 5: Open the first news article.  [network anomaly]  (score=0.443, pixel=0.000)\n  #3  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT\n  #4  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360, pixel=0.000)\n  #5  Step 15: Verify related article links visible.  [network anomaly]  (score=0.360, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (fusion=0.422; causal_action=1.00, llm_prior=0.86, text=0.72) ← ACTUAL FAULT\n  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (fusion=0.351; llm_prior=1.00, navigation=1.00, text=0.48)\n  #3  Step 5: Open the first news article.  [network anomaly]  (fusion=0.332; llm_prior=0.93, navigation=1.00, text=0.44)\n  #4  Step 10: Scroll through more article paragraphs.  [network anomaly]  (fusion=0.211; llm_prior=0.79, text=0.36)\n  #5  Step 15: Verify related article links visible.  [network anomaly]  (fusion=0.198; llm_prior=0.71, text=0.36)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: causal_root.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 0\nSummary:       At step 0 the navigation to the BBC News homepage loaded an incorrect safeframe/ad frame instead of the expected page, altering the page context for all subsequent actions.\nFailure chain: The wrong navigation at step 0 placed the test in an unexpected iframe context, causing later steps (opening article, scrolling, verifying links, navigating categories) to interact with the wrong DOM, resulting in missing expected elements and eventual test failures.\nDownstream:    [5, 10, 15, 18]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 19\nSummary:\n  Step 19 (score=0.10): Cached content banner present in FAIL\n\n  Per-step visual scores:\n    Step  19  score=0.10  Cached content banner present in FAIL  [analyzed only]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   5  score=0.00  identical  [in final top-5]\n    Step  10  score=0.00  identical  [in final top-5]\n    Step  18  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nAt the very beginning of the test, it opened the wrong page instead of the BBC News homepage, like typing the wrong web address into a browser. Because the test started on the wrong page, every later action — such as opening an article, scrolling down, checking links, and browsing different sections — was looking at the wrong content. As a result, the expected items weren’t found and the test eventually failed. To fix this, we should verify that the first step loads the correct BBC News homepage before moving on to the rest of the steps.\n\nEVALUATION\n----------------------------------------\nActual fault step: 18\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              18           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          18\n  3               5         N/A         N/A          13\n  4              10         N/A         N/A           8\n  5              15         N/A         N/A           3\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 8.4\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/bbc\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.720) ← ACTUAL FAULT\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.660)\n  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.477)\n  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.443)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.360)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (score=0.468, pixel=0.000) ← ACTUAL FAULT\n  #2  Step 19: Verify category page loaded.  [network anomaly, console error]  (score=0.442, pixel=0.038)\n  #3  Step 0: Navigate to BBC News homepage.  [network anomaly]  (score=0.310, pixel=0.000)\n  #4  Step 5: Open the first news article.  [network anomaly]  (score=0.288, pixel=0.000)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (score=0.234, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 18: Navigate to a news category.  [network anomaly]  (fusion=0.324; causal_action=1.00, text=0.72) ← ACTUAL FAULT\n  #2  Step 0: Navigate to BBC News homepage.  [network anomaly]  (fusion=0.204; navigation=1.00, text=0.48)\n  #3  Step 5: Open the first news article.  [network anomaly]  (fusion=0.197; navigation=1.00, text=0.44)\n  #4  Step 19: Verify category page loaded.  [network anomaly, console error]  (fusion=0.181; observer_symptom=0.09, pixel=0.04, text=0.66, vlm_prior=0.10)\n  #5  Step 10: Scroll through more article paragraphs.  [network anomaly]  (fusion=0.081; text=0.36)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: causal_root, causal_llm_leader.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 19 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 19 (score=0.10): Cached content banner visible in FAIL\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 19\nSummary:\n  Step 19 (score=0.10): Cached content banner visible in FAIL\n\n  Per-step visual scores:\n    Step  19  score=0.10  Cached content banner visible in FAIL  [in final top-5]\n    Step   0  score=0.00  identical  [in final top-5]\n    Step   5  score=0.00  identical  [in final top-5]\n    Step  10  score=0.00  identical  [in final top-5]\n    Step  18  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 19 (score=0.10): Cached content banner visible in FAIL\n\nOther top suspects: #2 step 0 (network error), #3 step 5 (network error), #4 step 19 (console error), #5 step 10 (network error)\n\nEVALUATION\n----------------------------------------\nActual fault step: 18\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              18           1           0           0  ← ACTUAL FAULT\n  2               0         N/A         N/A          18\n  3               5         N/A         N/A          13\n  4              19         N/A         N/A           1\n  5              10         N/A         N/A           8\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 8.0\n=============================================================="
 }

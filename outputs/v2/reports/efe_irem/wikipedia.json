@@ -1,35 +1,47 @@
 {
   "trace_id": "efe_irem/wikipedia",
-  "generated": "2026-06-06T02:01:08.372789Z",
+  "generated": "2026-06-09T13:58:10.113415Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "efe_irem",
     "fault_type": "broken_anchor_toc",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -38,7 +50,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 13,
@@ -56,7 +68,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 13,
       "visual_causal_reason": "earliest_divergence",
-      "fusion_score": 0.5276,
+      "fusion_score": 0.3919,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -64,8 +76,7 @@
         "observer_symptom": 0.5,
         "visual_causal": 1.0,
         "pixel": 1.0,
-        "llm_prior": 1.0,
-        "vlm_prior": 0.9
+        "vlm_prior": 0.7
       },
       "rank": 1
     },
@@ -85,7 +96,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.342,
+      "fusion_score": 0.2257,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -93,39 +104,9 @@
         "observer_symptom": 0.875,
         "visual_causal": 0.0,
         "pixel": 0.875,
-        "llm_prior": 0.857,
         "vlm_prior": 0.0
       },
       "rank": 2
-    },
-    {
-      "step_id": 2,
-      "action": "Click the search field",
-      "network_score": 0.0,
-      "console_score": 0.9,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "fusion_score": 0.2263,
-      "fusion_channels": {
-        "text": 0.3,
-        "navigation": 0.0,
-        "causal_action": 0.0,
-        "observer_symptom": 0.0,
-        "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.929,
-        "vlm_prior": 0.0
-      },
-      "rank": 3
     },
     {
       "step_id": 14,
@@ -143,7 +124,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2213,
+      "fusion_score": 0.1052,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -151,36 +132,62 @@
         "observer_symptom": 0.437,
         "visual_causal": 0.0,
         "pixel": 0.875,
-        "llm_prior": 0.786,
         "vlm_prior": 0.0
       },
-      "rank": 4
+      "rank": 3
     },
     {
-      "step_id": 6,
-      "action": "Open first wikilink in the first paragraph with a link",
+      "step_id": 16,
+      "action": "Return to Article tab",
       "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.0,
       "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
+      "pixel_global": 0.0305,
+      "pixel_localized": 0.8745,
+      "pixel_score": 0.8745,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.1316,
+      "fusion_score": 0.1052,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.0,
+        "observer_symptom": 0.437,
         "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.714,
+        "pixel": 0.875,
+        "vlm_prior": 0.0
+      },
+      "rank": 4
+    },
+    {
+      "step_id": 24,
+      "action": "Return to Article tab from history",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 0.1376,
+      "pixel_localized": 0.8745,
+      "pixel_score": 0.8745,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "fusion_score": 0.1052,
+      "fusion_channels": {
+        "text": 0.0,
+        "navigation": 0.0,
+        "causal_action": 0.0,
+        "observer_symptom": 0.437,
+        "visual_causal": 0.0,
+        "pixel": 0.875,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -457,98 +464,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 13,
-      "action": "Jump to Etymology via table of contents",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 1.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 13,
-      "visual_causal_reason": "earliest_divergence",
-      "rank": 1
-    },
-    {
-      "step_id": 2,
-      "action": "Click the search field",
-      "network_score": 0.0,
-      "console_score": 0.9,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 5,
-      "action": "Wait for Turkey article to load",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0324,
-      "pixel_localized": 0.8745,
-      "pixel_score": 0.8745,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 14,
-      "action": "Open Talk tab",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0304,
-      "pixel_localized": 0.8745,
-      "pixel_score": 0.8745,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 6,
-      "action": "Open first wikilink in the first paragraph with a link",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 31,
     "first_persistent_divergence": 13,
@@ -560,17 +476,15 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 13,
-    "root_cause_summary": "Visual divergence occurred when jumping to Etymology via the table of contents, indicating a navigation or rendering issue at that action.",
-    "downstream_steps": [
-      14
-    ],
-    "failure_chain": "The incorrect handling of the table of contents click caused the page to render differently, leading to subsequent steps (such as opening the Talk tab) operating on an altered page state, which produced the observed warnings and failures."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "When the user clicked the Etymology link in the table of contents, the page did not show the expected content. Instead, the display looked altered, as if the wrong section had been loaded. This change confused later steps, such as trying to open the Talk tab, which then behaved oddly and triggered warnings. To fix it, verify that the table of contents link correctly points to the Etymology section and that the section loads properly.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 13,
-    "visual_summary": "Step 13 (score=0.90): navigated to wrong section",
+    "visual_summary": "Step 13 (score=0.70): navigated to wrong section",
     "visual_scores": [
       {
         "step_id": 11,
@@ -584,7 +498,7 @@
       },
       {
         "step_id": 13,
-        "visual_score": 0.9,
+        "visual_score": 0.7,
         "visual_note": "navigated to wrong section"
       },
       {
@@ -635,22 +549,22 @@
       },
       {
         "rank": 3,
-        "step_id": 2,
-        "step_distance": 11
-      },
-      {
-        "rank": 4,
         "step_id": 14,
         "step_distance": 1
       },
       {
+        "rank": 4,
+        "step_id": 16,
+        "step_distance": 3
+      },
+      {
         "rank": 5,
-        "step_id": 6,
-        "step_distance": 7
+        "step_id": 24,
+        "step_distance": 11
       }
     ],
-    "mad@5": 5.4,
+    "mad@5": 4.6,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/wikipedia\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 0: Visit wikipedia.org  [console error]  (score=0.300)\n  #2  Step 2: Click the search field  [console error]  (score=0.300)\n  #3  Step 1: Wait for the homepage to load  (score=0.000)\n  #4  Step 3: Type query \"Turkey\"  (score=0.000)\n  #5  Step 4: Submit search (Enter)  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit wikipedia.org  [console error]  (score=0.300)\n  #3  Step 2: Click the search field  [console error]  (score=0.300)\n  #4  Step 1: Wait for the homepage to load  (score=0.000)\n  #5  Step 3: Type query \"Turkey\"  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit wikipedia.org  [console error]  (score=0.195, pixel=0.000)\n  #3  Step 2: Click the search field  [console error]  (score=0.195, pixel=0.000)\n  #4  Step 1: Wait for the homepage to load  (score=0.000, pixel=0.000)\n  #5  Step 3: Type query \"Turkey\"  (score=0.000, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=0.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 2: Click the search field  [console error]  (score=0.300, pixel=0.000)\n  #3  Step 5: Wait for Turkey article to load  (score=0.000, pixel=0.875)\n  #4  Step 14: Open Talk tab  (score=0.000, pixel=0.875)\n  #5  Step 6: Open first wikilink in the first paragraph with a link  (score=0.000, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (fusion=0.528; llm_prior=1.00, observer_symptom=0.50, pixel=1.00, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 5: Wait for Turkey article to load  (fusion=0.342; llm_prior=0.86, observer_symptom=0.88, pixel=0.88)\n  #3  Step 2: Click the search field  [console error]  (fusion=0.226; llm_prior=0.93, text=0.30)\n  #4  Step 14: Open Talk tab  (fusion=0.221; llm_prior=0.79, observer_symptom=0.44, pixel=0.88)\n  #5  Step 6: Open first wikilink in the first paragraph with a link  (fusion=0.132; llm_prior=0.71)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              31\nFirst persistent divergence: step 13 (score=1.000)\nAttributed root step:        step 13 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 13\nSummary:       Visual divergence occurred when jumping to Etymology via the table of contents, indicating a navigation or rendering issue at that action.\nFailure chain: The incorrect handling of the table of contents click caused the page to render differently, leading to subsequent steps (such as opening the Talk tab) operating on an altered page state, which produced the observed warnings and failures.\nDownstream:    [14]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 13\nSummary:\n  Step 13 (score=0.90): navigated to wrong section\n\n  Per-step visual scores:\n    Step  13  score=0.90  navigated to wrong section  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  identical  [in final top-5]\n    Step  11  score=0.00  identical  [analyzed only]\n    Step  12  score=0.00  identical  [analyzed only]\n    Step  14  score=0.00  identical  [in final top-5]\n    Step  15  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen the user clicked the Etymology link in the table of contents, the page did not show the expected content. Instead, the display looked altered, as if the wrong section had been loaded. This change confused later steps, such as trying to open the Talk tab, which then behaved oddly and triggered warnings. To fix it, verify that the table of contents link correctly points to the Etymology section and that the section loads properly.\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              13           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           8\n  3               2         N/A         N/A          11\n  4              14         N/A         N/A           1\n  5               6         N/A         N/A           7\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.4\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/wikipedia\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 0: Visit wikipedia.org  [console error]  (score=0.300)\n  #2  Step 2: Click the search field  [console error]  (score=0.300)\n  #3  Step 1: Wait for the homepage to load  (score=0.000)\n  #4  Step 3: Type query \"Turkey\"  (score=0.000)\n  #5  Step 4: Submit search (Enter)  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit wikipedia.org  [console error]  (score=0.300)\n  #3  Step 2: Click the search field  [console error]  (score=0.300)\n  #4  Step 1: Wait for the homepage to load  (score=0.000)\n  #5  Step 3: Type query \"Turkey\"  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Visit wikipedia.org  [console error]  (score=0.195, pixel=0.000)\n  #3  Step 2: Click the search field  [console error]  (score=0.195, pixel=0.000)\n  #4  Step 1: Wait for the homepage to load  (score=0.000, pixel=0.000)\n  #5  Step 3: Type query \"Turkey\"  (score=0.000, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 13: Jump to Etymology via table of contents  [visual causal (earliest_divergence, score=1.00)]  (fusion=0.392; observer_symptom=0.50, pixel=1.00, visual_causal=1.00, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 5: Wait for Turkey article to load  (fusion=0.226; observer_symptom=0.88, pixel=0.88)\n  #3  Step 14: Open Talk tab  (fusion=0.105; observer_symptom=0.44, pixel=0.88)\n  #4  Step 16: Return to Article tab  (fusion=0.105; observer_symptom=0.44, pixel=0.88)\n  #5  Step 24: Return to Article tab from history  (fusion=0.105; observer_symptom=0.44, pixel=0.88)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              31\nFirst persistent divergence: step 13 (score=1.000)\nAttributed root step:        step 13 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 13 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 13 (score=0.70): navigated to wrong section\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 13\nSummary:\n  Step 13 (score=0.70): navigated to wrong section\n\n  Per-step visual scores:\n    Step  13  score=0.70  navigated to wrong section  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  identical  [analyzed only]\n    Step  11  score=0.00  identical  [analyzed only]\n    Step  12  score=0.00  identical  [analyzed only]\n    Step  14  score=0.00  identical  [in final top-5]\n    Step  15  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 13 (score=0.70): navigated to wrong section\n\nOther top suspects: #2 step 5 (screenshot diff), #3 step 14 (screenshot diff), #4 step 16 (screenshot diff), #5 step 24 (screenshot diff)\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              13           1           0           0  ← ACTUAL FAULT\n  2               5         N/A         N/A           8\n  3              14         N/A         N/A           1\n  4              16         N/A         N/A           3\n  5              24         N/A         N/A          11\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 4.6\n=============================================================="
 }

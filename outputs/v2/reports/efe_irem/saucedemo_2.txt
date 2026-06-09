@@ -1,6 +1,6 @@
 ==============================================================
 TraceLens v2 Diagnosis Report: efe_irem/saucedemo_2
-Ranking mode: v2:llm+vlm
+Ranking mode: v2:vlm
 ==============================================================
 
 HEURISTIC TOP 5 (text signals only)
@@ -27,21 +27,13 @@ HEURISTIC TOP 5 (text + visual causal + pixel)
   #4  Step 6: Type the password: secret_sauce  (score=0.039, pixel=0.000)
   #5  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)
 
-LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.000, visual_causal=0.718, pixel=0.005) ← ACTUAL FAULT
-  #2  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)
-  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261, pixel=0.000)
-  #4  Step 6: Type the password: secret_sauce  (score=0.060, pixel=0.000)
-  #5  Step 2: Verify that the login screen is visible  [network anomaly]  (score=0.327, pixel=0.000)
-
-FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
-----------------------------------------
-  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.461; llm_prior=1.00, observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90) ← ACTUAL FAULT
-  #2  Step 6: Type the password: secret_sauce  (fusion=0.253; causal_action=0.70, llm_prior=0.81, text=0.06)
-  #3  Step 29: Wait for the page to load  (fusion=0.251; observer_symptom=0.93, pixel=0.93, vlm_prior=0.90)
-  #4  Step 1: Wait for the page to load  [network anomaly]  (fusion=0.209; llm_prior=0.88, text=0.26)
-  #5  Step 2: Verify that the login screen is visible  [network anomaly]  (fusion=0.198; llm_prior=0.75, text=0.33)
+  #1  Step 27: Type 34890  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.339; observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90) ← ACTUAL FAULT
+  #2  Step 29: Wait for the page to load  (fusion=0.320; observer_symptom=0.93, pixel=0.93, vlm_prior=0.90)
+  #3  Step 28: Click Continue  (fusion=0.230; observer_symptom=0.46, pixel=0.93, vlm_prior=0.80)
+  #4  Step 31: Verify that the order has been dispatched  (fusion=0.208; observer_symptom=1.00, pixel=1.00)
+  #5  Step 6: Type the password: secret_sauce  (fusion=0.175; causal_action=1.00, text=0.06)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
 ----------------------------------------
@@ -53,36 +45,34 @@ Reason:                      earliest_localized_divergence
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
-  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 27
-Summary:       Typing the zipcode '34890' caused a divergence in the UI state, leading to incorrect page rendering.
-Failure chain: The incorrect zipcode entry altered the application state, which resulted in a visual divergence observed at the subsequent wait-for-load step (step 29), causing downstream verification or navigation failures.
-Downstream:    [29]
+Primary step:  Step 29 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 29 (score=0.90): Different page, wrong fields and error dialog
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
-Visual root cause: Step 28
+Visual root cause: Step 29
 Summary:
-  Step 28 (score=0.90): wrong page, different content
-  Step 29 (score=0.90): Wrong page, different content
+  Step 29 (score=0.90): Different page, wrong fields and error dialog
+  Step 28 (score=0.80): wrong page, different content
 
   Per-step visual scores:
-    Step  27  score=0.90  Attributed from step 28: wrong page, different content  [in final top-5]
-    Step  28  score=0.90  wrong page, different content  [analyzed only]
-    Step  29  score=0.90  Wrong page, different content  [in final top-5]
-    Step   1  score=0.00  identical  [in final top-5]
-    Step   2  score=0.00  identical  [in final top-5]
-    Step   6  score=0.00  Identical UI state  [in final top-5]
+    Step  27  score=0.90  Attributed from step 29: Different page, wrong fields and error dialog  [in final top-5]
+    Step  29  score=0.90  Different page, wrong fields and error dialog  [in final top-5]
+    Step  28  score=0.80  wrong page, different content  [in final top-5]
+    Step   1  score=0.00  identical  [analyzed only]
+    Step   2  score=0.00  Identical login screen  [analyzed only]
+    Step   6  score=0.00  Identical  [in final top-5]
     Step  25  score=0.00  identical  [analyzed only]
-    Step  26  score=0.00  Identical  [analyzed only]
+    Step  26  score=0.00  identical  [analyzed only]
 
   Note: VLM summary lists only steps with meaningful visual differences
   (identical/noise responses from per-step API calls are filtered out).
@@ -90,7 +80,13 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When the user typed the zipcode 34890, the system’s internal settings got mixed up, like entering a wrong address into a GPS and getting the wrong map. This mix‑up happened right after the zipcode field, before the next screen finished loading. As a result, the page showed the wrong information or seemed to freeze, so the user couldn’t move forward. To fix it, we should verify that the zipcode entry is checked and that the system clears its old settings before loading the next step.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 29 (score=0.90): Different page, wrong fields and error dialog
+  Step 28 (score=0.80): wrong page, different content
+
+Other top suspects: #2 step 29 (screenshot diff), #3 step 28 (screenshot diff), #4 step 31 (screenshot diff), #5 step 6 (heuristic score)
 
 EVALUATION
 ----------------------------------------
@@ -104,11 +100,11 @@ Per-rank breakdown:
   (our rank)          (1=fault)  |pred-true|  |step-actual|
   ----------  -----  ----------  ----------  ----------
   1              27           1           0           0  ← ACTUAL FAULT
-  2               6         N/A         N/A          21
-  3              29         N/A         N/A           2
-  4               1         N/A         N/A          26
-  5               2         N/A         N/A          25
+  2              29         N/A         N/A           2
+  3              28         N/A         N/A           1
+  4              31         N/A         N/A           4
+  5               6         N/A         N/A          21
 
 Top-1 step distance: 0
-MAD@5 (mean step-dist over top-5): 14.8
+MAD@5 (mean step-dist over top-5): 5.6
 ==============================================================

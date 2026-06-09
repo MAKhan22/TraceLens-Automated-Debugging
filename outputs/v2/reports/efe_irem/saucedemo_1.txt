@@ -1,6 +1,6 @@
 ==============================================================
 TraceLens v2 Diagnosis Report: efe_irem/saucedemo_1
-Ranking mode: v2:llm+vlm
+Ranking mode: v2:vlm
 ==============================================================
 
 HEURISTIC TOP 5 (text signals only)
@@ -27,21 +27,13 @@ HEURISTIC TOP 5 (text + visual causal + pixel)
   #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)
   #5  Step 4: Type the username: standard_user  (score=0.022, pixel=0.000)
 
-LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.000, visual_causal=0.718, pixel=0.001)
-  #2  Step 7: Click the login button  [network anomaly]  (score=0.327, pixel=1.000) ← ACTUAL FAULT
-  #3  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)
-  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.261, pixel=0.000)
-  #5  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493, pixel=0.000)
-
-FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
-----------------------------------------
-  #1  Step 7: Click the login button  [network anomaly]  (fusion=0.482; llm_prior=0.93, observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90) ← ACTUAL FAULT
-  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.461; llm_prior=1.00, observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90)
-  #3  Step 8: Wait for the page to load  (fusion=0.346; llm_prior=0.43, observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)
-  #4  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (fusion=0.223; llm_prior=0.71, text=0.49)
-  #5  Step 10: Wait for the page to load  (fusion=0.213; llm_prior=0.29, observer_symptom=1.00, pixel=1.00)
+  #1  Step 7: Click the login button  [network anomaly]  (fusion=0.382; observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90) ← ACTUAL FAULT
+  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.339; observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90)
+  #3  Step 8: Wait for the page to load  (fusion=0.339; observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)
+  #4  Step 10: Wait for the page to load  (fusion=0.208; observer_symptom=1.00, pixel=1.00)
+  #5  Step 13: Wait for the page to load  (fusion=0.208; observer_symptom=1.00, pixel=1.00)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
 ----------------------------------------
@@ -53,35 +45,33 @@ Reason:                      earliest_localized_divergence
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
-  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 6
-Summary:       The password was entered incorrectly (or with an incorrect value) at step 6, causing the login attempt to fail.
-Failure chain: Typing the wrong password results in a 401 Unauthorized response when the login button is clicked (step 7), preventing successful navigation to the product page; subsequent wait steps (8 and 10) then fail because the expected page never loads.
-Downstream:    [7, 8, 10]
+Primary step:  Step 7 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 7 (score=0.90): Error dialog appears, wrong page
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 7
 Summary:
-  Step 7 (score=0.90): Error dialog appears, wrong page content
-  Step 8 (score=0.90): FAIL shows login page with error message, PASS shows product page
+  Step 7 (score=0.90): Error dialog appears, wrong page
+  Step 8 (score=0.90): FAIL shows login page, PASS shows product page
 
   Per-step visual scores:
-    Step   6  score=0.90  Attributed from step 7: Error dialog appears, wrong page content  [in final top-5]
-    Step   7  score=0.90  Error dialog appears, wrong page content  [in final top-5]
-    Step   8  score=0.90  FAIL shows login page with error message, PASS shows product page  [in final top-5]
+    Step   6  score=0.90  Attributed from step 7: Error dialog appears, wrong page  [in final top-5]
+    Step   7  score=0.90  Error dialog appears, wrong page  [in final top-5]
+    Step   8  score=0.90  FAIL shows login page, PASS shows product page  [in final top-5]
     Step   1  score=0.00  Identical  [analyzed only]
-    Step   2  score=0.00  identical  [in final top-5]
-    Step   4  score=0.00  identical  [analyzed only]
-    Step   5  score=0.00  Identical  [analyzed only]
+    Step   2  score=0.00  Identical login screen  [analyzed only]
+    Step   4  score=0.00  Identical UI state  [analyzed only]
+    Step   5  score=0.00  identical  [analyzed only]
 
   Note: VLM summary lists only steps with meaningful visual differences
   (identical/noise responses from per-step API calls are filtered out).
@@ -89,7 +79,13 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-The user entered the wrong password at step 6, so when they clicked the login button (step 7) the system refused to let them in — like trying to open a door with the wrong key. Because the login failed, the expected product page never appeared, causing the later wait steps (steps 8 and 10) to time out and fail. Visibly, the test stopped progressing after the login attempt and showed an error that the page didn’t load. Checking that the correct password is being typed at step 6 should resolve the issue.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 7 (score=0.90): Error dialog appears, wrong page
+  Step 8 (score=0.90): FAIL shows login page, PASS shows product page
+
+Other top suspects: #2 step 6 (visual change), #3 step 8 (screenshot diff), #4 step 10 (screenshot diff), #5 step 13 (screenshot diff)
 
 EVALUATION
 ----------------------------------------
@@ -105,9 +101,9 @@ Per-rank breakdown:
   1               7           1           0           0  ← ACTUAL FAULT
   2               6         N/A         N/A           1
   3               8         N/A         N/A           1
-  4               2         N/A         N/A           5
-  5              10         N/A         N/A           3
+  4              10         N/A         N/A           3
+  5              13         N/A         N/A           6
 
 Top-1 step distance: 0
-MAD@5 (mean step-dist over top-5): 2.0
+MAD@5 (mean step-dist over top-5): 2.2
 ==============================================================

@@ -29,7 +29,7 @@ HEURISTIC TOP 5 (text + visual causal + pixel)
 
 FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 16: Enter email: not-an-email  (fusion=0.290; causal_action=1.00, observer_symptom=0.43, pixel=0.87, text=0.04, vlm_prior=0.10) ← ACTUAL FAULT
+  #1  Step 16: Enter email: not-an-email  (fusion=0.281; causal_action=1.00, observer_symptom=0.43, pixel=0.87, text=0.04, vlm_prior=0.04) ← ACTUAL FAULT
   #2  Step 19: Wait for element content  (fusion=0.208; observer_symptom=1.00, pixel=1.00)
   #3  Step 20: Verify contact page still shows form or success region  (fusion=0.208; observer_symptom=1.00, pixel=1.00)
   #4  Step 18: Submit contact form  (fusion=0.127; observer_symptom=0.50, pixel=1.00)
@@ -45,30 +45,28 @@ Reason:                      earliest_divergence
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank failed: Expecting value: line 161 column 1 (char 880)
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
   • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
   • Top-1 channel hints: action_changed_llm_leader.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 16
-Summary:       Step 16 changed the email input from a valid address to an invalid value, causing the form to fail validation.
-Failure chain: Because the email was invalid, the form submission at step 18 did not succeed; subsequent wait, verification, and scroll steps (19‑21) observed the form still present or validation messages, leading to the test failure.
-Downstream:    [18, 19, 20, 21]
+Primary step:  Step 16 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 16 (score=0.04): Email field input change
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 16
 Summary:
-  Step 16 (score=0.10): Email address field updated
+  Step 16 (score=0.04): Email field input change
 
   Per-step visual scores:
-    Step   0  score=0.10  Attributed from step 16: Email address field updated  [analyzed only]
-    Step  16  score=0.10  Email address field updated  [in final top-5]
+    Step   0  score=0.04  Attributed from step 16: Email field input change  [analyzed only]
+    Step  16  score=0.04  Email field input change  [in final top-5]
     Step   1  score=0.00  identical  [analyzed only]
     Step   2  score=0.00  identical  [analyzed only]
     Step   3  score=0.00  identical  [analyzed only]
@@ -79,7 +77,12 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-At step 16 the test typed in an incorrect email address instead of a valid one. When it tried to send the information at step 18, the system refused the entry because the email didn’t look right. Because of that, the following steps (19‑21) kept seeing the same page or an error message, which caused the test to fail. Making sure the email field receives a proper address before the submission step would resolve the problem.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 16 (score=0.04): Email field input change
+
+Other top suspects: #2 step 19 (screenshot diff), #3 step 20 (screenshot diff), #4 step 18 (screenshot diff), #5 step 21 (screenshot diff)
 
 EVALUATION
 ----------------------------------------

@@ -1,35 +1,47 @@
 {
   "trace_id": "efe_irem/wolfram",
-  "generated": "2026-06-05T22:52:42.646699Z",
+  "generated": "2026-06-09T13:55:36.059411Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "efe_irem",
     "fault_type": "wrong_element_clicked",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -38,7 +50,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 12,
@@ -56,7 +68,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 12,
       "visual_causal_reason": "earliest_divergence",
-      "fusion_score": 0.6882,
+      "fusion_score": 0.6178,
       "fusion_channels": {
         "text": 0.443,
         "navigation": 1.0,
@@ -64,7 +76,6 @@
         "observer_symptom": 0.5,
         "visual_causal": 1.0,
         "pixel": 1.0,
-        "llm_prior": 1.0,
         "vlm_prior": 0.9
       },
       "rank": 1
@@ -85,7 +96,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4957,
+      "fusion_score": 0.4302,
       "fusion_channels": {
         "text": 0.327,
         "navigation": 0.5,
@@ -93,7 +104,6 @@
         "observer_symptom": 0.5,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.786,
         "vlm_prior": 0.9
       },
       "rank": 2
@@ -114,7 +124,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4431,
+      "fusion_score": 0.3673,
       "fusion_channels": {
         "text": 0.327,
         "navigation": 0.0,
@@ -122,65 +132,62 @@
         "observer_symptom": 0.5,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.714,
-        "vlm_prior": 0.9
+        "vlm_prior": 0.8
       },
       "rank": 3
     },
     {
-      "step_id": 18,
-      "action": "Click Pancake Theorem",
-      "network_score": 0.7,
+      "step_id": 13,
+      "action": "Wait for the Geometry topics page",
+      "network_score": 0.0,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3267,
+      "combined_score": 0.0,
       "screenshots_available": true,
-      "pixel_global": 0.4147,
+      "pixel_global": 0.3274,
       "pixel_localized": 1.0,
       "pixel_score": 1.0,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4154,
+      "fusion_score": 0.3387,
       "fusion_channels": {
-        "text": 0.327,
-        "navigation": 0.5,
+        "text": 0.0,
+        "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.5,
+        "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.929,
-        "vlm_prior": 0.0
+        "vlm_prior": 0.9
       },
       "rank": 4
     },
     {
-      "step_id": 16,
-      "action": "Click Ham Sandwich Theorem",
+      "step_id": 15,
+      "action": "Wait for the Division Problems page",
       "network_score": 0.7,
       "console_score": 0.0,
       "action_score": 0.0,
       "intent_score": 0.0,
       "combined_score": 0.3267,
       "screenshots_available": true,
-      "pixel_global": 0.9324,
+      "pixel_global": 0.3505,
       "pixel_localized": 1.0,
-      "pixel_score": 0.932,
+      "pixel_score": 0.35,
       "visual_causal_score": 0.0,
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4023,
+      "fusion_score": 0.3318,
       "fusion_channels": {
         "text": 0.327,
-        "navigation": 0.5,
+        "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.5,
+        "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.857,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -457,98 +464,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 12,
-      "action": "Click Geometry topic card",
-      "network_score": 0.95,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4433,
-      "screenshots_available": true,
-      "pixel_global": 0.3074,
-      "pixel_localized": 1.0,
-      "pixel_score": 0.307,
-      "visual_causal_score": 1.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 12,
-      "visual_causal_reason": "earliest_divergence",
-      "rank": 1
-    },
-    {
-      "step_id": 18,
-      "action": "Click Pancake Theorem",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 0.4147,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 16,
-      "action": "Click Ham Sandwich Theorem",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 0.9324,
-      "pixel_localized": 1.0,
-      "pixel_score": 0.932,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 14,
-      "action": "Click Division Problems",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 0.3505,
-      "pixel_localized": 1.0,
-      "pixel_score": 0.35,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 4,
-      "action": "Hit enter",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 20,
     "first_persistent_divergence": 12,
@@ -560,19 +476,15 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 12,
-    "root_cause_summary": "Clicking the Geometry topic card loaded the RecreationalMathematics page instead of the expected Geometry topic page, causing a wrong navigation.",
-    "downstream_steps": [
-      14,
-      16,
-      18
-    ],
-    "failure_chain": "The incorrect page load at step 12 meant that subsequent clicks on topic links (steps 14, 16, 18) could not find the expected topic pages, leading to missing requests and missing expected pages in those steps."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "When the user tapped the Geometry topic card, the system opened the RecreationalMathematics page instead of the Geometry page – like picking the wrong book from a shelf. Because they landed on the wrong page, any later clicks on other topic links could not find the pages they were supposed to show. As a result, those later steps displayed missing or blank content, which the test recorded as failures. To avoid this, we should check that the Geometry card is linked to the correct Geometry page before the test runs.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 12,
-    "visual_summary": "Step 4 (score=0.90): Different page content\nStep 12 (score=0.90): wrong topic page\nStep 13 (score=0.90): wrong page",
+    "visual_summary": "Step 12 (score=0.90): wrong page\nStep 4 (score=0.80): different page content",
     "visual_scores": [
       {
         "step_id": 10,
@@ -587,7 +499,7 @@
       {
         "step_id": 12,
         "visual_score": 0.9,
-        "visual_note": "wrong topic page"
+        "visual_note": "wrong page"
       },
       {
         "step_id": 13,
@@ -601,8 +513,8 @@
       },
       {
         "step_id": 4,
-        "visual_score": 0.9,
-        "visual_note": "Different page content"
+        "visual_score": 0.8,
+        "visual_note": "different page content"
       }
     ],
     "steps_with_screenshots": 6
@@ -632,17 +544,17 @@
       },
       {
         "rank": 4,
-        "step_id": 18,
-        "step_distance": 6
+        "step_id": 13,
+        "step_distance": 1
       },
       {
         "rank": 5,
-        "step_id": 16,
-        "step_distance": 4
+        "step_id": 15,
+        "step_distance": 3
       }
     ],
-    "mad@5": 4.0,
+    "mad@5": 2.8,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/wolfram\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly]  (score=0.443) ← ACTUAL FAULT\n  #2  Step 4: Hit enter  [network anomaly]  (score=0.327)\n  #3  Step 14: Click Division Problems  [network anomaly]  (score=0.327)\n  #4  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)\n  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 4: Hit enter  [network anomaly]  (score=0.327)\n  #3  Step 14: Click Division Problems  [network anomaly]  (score=0.327)\n  #4  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)\n  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.758, visual_causal=1.000, pixel=0.307) ← ACTUAL FAULT\n  #2  Step 4: Hit enter  [network anomaly]  (score=0.562, pixel=1.000)\n  #3  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.539, pixel=0.932)\n  #4  Step 14: Click Division Problems  [network anomaly]  (score=0.335, pixel=0.350)\n  #5  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.335, pixel=0.350)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.443, visual_causal=1.000, pixel=0.307) ← ACTUAL FAULT\n  #2  Step 18: Click Pancake Theorem  [network anomaly]  (score=0.327, pixel=1.000)\n  #3  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327, pixel=0.932)\n  #4  Step 14: Click Division Problems  [network anomaly]  (score=0.327, pixel=0.350)\n  #5  Step 4: Hit enter  [network anomaly]  (score=0.327, pixel=1.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (fusion=0.688; llm_prior=1.00, navigation=1.00, observer_symptom=0.50, pixel=1.00, text=0.44, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 14: Click Division Problems  [network anomaly]  (fusion=0.496; llm_prior=0.79, navigation=0.50, observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90)\n  #3  Step 4: Hit enter  [network anomaly]  (fusion=0.443; llm_prior=0.71, observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90)\n  #4  Step 18: Click Pancake Theorem  [network anomaly]  (fusion=0.415; llm_prior=0.93, navigation=0.50, observer_symptom=0.50, pixel=1.00, text=0.33)\n  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (fusion=0.402; llm_prior=0.86, navigation=0.50, observer_symptom=0.50, pixel=1.00, text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              20\nFirst persistent divergence: step 12 (score=1.000)\nAttributed root step:        step 12 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 12\nSummary:       Clicking the Geometry topic card loaded the RecreationalMathematics page instead of the expected Geometry topic page, causing a wrong navigation.\nFailure chain: The incorrect page load at step 12 meant that subsequent clicks on topic links (steps 14, 16, 18) could not find the expected topic pages, leading to missing requests and missing expected pages in those steps.\nDownstream:    [14, 16, 18]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 12\nSummary:\n  Step 4 (score=0.90): Different page content\n  Step 12 (score=0.90): wrong topic page\n  Step 13 (score=0.90): wrong page\n\n  Per-step visual scores:\n    Step   4  score=0.90  Different page content  [in final top-5]\n    Step  12  score=0.90  wrong topic page  [in final top-5]\n    Step  13  score=0.90  wrong page  [analyzed only]\n    Step  14  score=0.90  wrong page  [in final top-5]\n    Step  10  score=0.00  identical  [analyzed only]\n    Step  11  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nWhen the user tapped the Geometry topic card, the system opened the RecreationalMathematics page instead of the Geometry page – like picking the wrong book from a shelf. Because they landed on the wrong page, any later clicks on other topic links could not find the pages they were supposed to show. As a result, those later steps displayed missing or blank content, which the test recorded as failures. To avoid this, we should check that the Geometry card is linked to the correct Geometry page before the test runs.\n\nEVALUATION\n----------------------------------------\nActual fault step: 12\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              12           1           0           0  ← ACTUAL FAULT\n  2              14         N/A         N/A           2\n  3               4         N/A         N/A           8\n  4              18         N/A         N/A           6\n  5              16         N/A         N/A           4\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 4.0\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/wolfram\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly]  (score=0.443) ← ACTUAL FAULT\n  #2  Step 4: Hit enter  [network anomaly]  (score=0.327)\n  #3  Step 14: Click Division Problems  [network anomaly]  (score=0.327)\n  #4  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)\n  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=1.000, visual_causal=1.000) ← ACTUAL FAULT\n  #2  Step 4: Hit enter  [network anomaly]  (score=0.327)\n  #3  Step 14: Click Division Problems  [network anomaly]  (score=0.327)\n  #4  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.327)\n  #5  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (score=0.758, visual_causal=1.000, pixel=0.307) ← ACTUAL FAULT\n  #2  Step 4: Hit enter  [network anomaly]  (score=0.562, pixel=1.000)\n  #3  Step 16: Click Ham Sandwich Theorem  [network anomaly]  (score=0.539, pixel=0.932)\n  #4  Step 14: Click Division Problems  [network anomaly]  (score=0.335, pixel=0.350)\n  #5  Step 15: Wait for the Division Problems page  [network anomaly]  (score=0.335, pixel=0.350)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 12: Click Geometry topic card  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (fusion=0.618; navigation=1.00, observer_symptom=0.50, pixel=1.00, text=0.44, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 14: Click Division Problems  [network anomaly]  (fusion=0.430; navigation=0.50, observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90)\n  #3  Step 4: Hit enter  [network anomaly]  (fusion=0.367; observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.80)\n  #4  Step 13: Wait for the Geometry topics page  (fusion=0.339; observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)\n  #5  Step 15: Wait for the Division Problems page  [network anomaly]  (fusion=0.332; observer_symptom=1.00, pixel=1.00, text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              20\nFirst persistent divergence: step 12 (score=1.000)\nAttributed root step:        step 12 (visual_causal=1.000)\nReason:                      earliest_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 12 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 12 (score=0.90): wrong page\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 12\nSummary:\n  Step 12 (score=0.90): wrong page\n  Step 4 (score=0.80): different page content\n\n  Per-step visual scores:\n    Step  12  score=0.90  wrong page  [in final top-5]\n    Step  13  score=0.90  wrong page  [in final top-5]\n    Step  14  score=0.90  wrong page  [in final top-5]\n    Step   4  score=0.80  different page content  [in final top-5]\n    Step  10  score=0.00  identical  [analyzed only]\n    Step  11  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 12 (score=0.90): wrong page\n  Step 4 (score=0.80): different page content\n\nOther top suspects: #2 step 14 (network error), #3 step 4 (network error), #4 step 13 (screenshot diff), #5 step 15 (network error)\n\nEVALUATION\n----------------------------------------\nActual fault step: 12\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              12           1           0           0  ← ACTUAL FAULT\n  2              14         N/A         N/A           2\n  3               4         N/A         N/A           8\n  4              13         N/A         N/A           1\n  5              15         N/A         N/A           3\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 2.8\n=============================================================="
 }

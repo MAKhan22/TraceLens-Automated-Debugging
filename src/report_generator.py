@@ -83,6 +83,22 @@ class ReportGenerator:
     # ── formatting ────────────────────────────────────────────────────────────
 
     @staticmethod
+    def _brief_step_action(step: dict, max_words: int = 4) -> str:
+        """Few words describing what the user did on this step (for stakeholder text)."""
+        raw = (step.get("action") or "").strip()
+        if not raw:
+            fail = step.get("fail_step") or {}
+            raw = (fail.get("action") or "").strip()
+        if not raw:
+            return ReportGenerator._brief_step_reason(step)
+        words = raw.lower().strip(".:;,").split()
+        skip = {"the", "a", "an", "to", "on", "at", "in", "and", "for", "of", "with"}
+        while words and words[0] in skip:
+            words = words[1:]
+        phrase = " ".join(words[:max_words])
+        return phrase or ReportGenerator._brief_step_reason(step)
+
+    @staticmethod
     def _brief_step_reason(step: dict) -> str:
         """2–3 word label for why a step was ranked (heuristic / fusion signals)."""
         if step.get("action_score", 0) >= 0.5:
@@ -115,8 +131,8 @@ class ReportGenerator:
         for step in ranked_steps[1:5]:
             rank = step.get("rank", "?")
             sid = step.get("step_id", "?")
-            reason = cls._brief_step_reason(step)
-            parts.append(f"#{rank} step {sid} ({reason})")
+            action = cls._brief_step_action(step)
+            parts.append(f"#{rank} step {sid} ({action})")
         return "Other top suspects: " + ", ".join(parts)
 
     @classmethod

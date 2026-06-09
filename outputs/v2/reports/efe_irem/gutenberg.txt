@@ -1,6 +1,6 @@
 ==============================================================
 TraceLens v2 Diagnosis Report: efe_irem/gutenberg
-Ranking mode: v2:llm+vlm
+Ranking mode: v2:vlm
 ==============================================================
 
 HEURISTIC TOP 5 (text signals only)
@@ -27,21 +27,13 @@ HEURISTIC TOP 5 (text + visual causal + pixel)
   #4  Step 2: Click on Frequently Downloaded  (score=0.000, pixel=0.000)
   #5  Step 3: Wait for the page to load  (score=0.000, pixel=0.000)
 
-LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (score=0.720, visual_causal=1.000, pixel=0.499) ← ACTUAL FAULT
-  #2  Step 0: Visit gutenberg.org  (score=0.000, pixel=0.000)
-  #3  Step 1: Wait for the page to load  (score=0.000, pixel=0.000)
-  #4  Step 2: Click on Frequently Downloaded  (score=0.000, pixel=0.000)
-  #5  Step 3: Wait for the page to load  (score=0.000, pixel=0.000)
-
-FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
-----------------------------------------
-  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (fusion=0.660; llm_prior=1.00, observer_symptom=0.50, pixel=1.00, text=0.72, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT
-  #2  Step 9: Wait for the page to load  (fusion=0.333; llm_prior=0.36, observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)
-  #3  Step 0: Visit gutenberg.org  (fusion=0.171; llm_prior=0.93)
-  #4  Step 1: Wait for the page to load  (fusion=0.158; llm_prior=0.86)
-  #5  Step 2: Click on Frequently Downloaded  (fusion=0.145; llm_prior=0.79)
+  #1  Step 8: Click on Read Now to read the book  [network anomaly, console error, visual causal (earliest_divergence, score=1.00)]  (fusion=0.584; observer_symptom=0.50, pixel=1.00, text=0.72, visual_causal=1.00, vlm_prior=0.90) ← ACTUAL FAULT
+  #2  Step 9: Wait for the page to load  (fusion=0.339; observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)
+  #3  Step 0: Visit gutenberg.org  (fusion=0.000; n/a)
+  #4  Step 2: Click on Frequently Downloaded  (fusion=0.000; n/a)
+  #5  Step 6: Click on the top book in the list  (fusion=0.000; n/a)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
 ----------------------------------------
@@ -53,34 +45,31 @@ Reason:                      earliest_divergence
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
-  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 8
-Summary:       Clicking 'Read Now' triggered a 403‑blocked image request, causing missing assets and visual divergence.
-Failure chain: The failed image load at step 8 prevented expected resources from loading, altering the page state observed in the subsequent wait step (step 9) and leading to the test failure.
-Downstream:    [9]
+Primary step:  Step 8 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 8 (score=0.90): Error message instead of book content
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 8
 Summary:
   Step 8 (score=0.90): Error message instead of book content
-  Step 9 (score=0.90): Error page instead of expected content
 
   Per-step visual scores:
     Step   8  score=0.90  Error message instead of book content  [in final top-5]
-    Step   9  score=0.90  Error page instead of expected content  [in final top-5]
+    Step   9  score=0.90  Error message instead of book content  [in final top-5]
     Step   0  score=0.00  identical  [in final top-5]
-    Step   1  score=0.00  Identical  [in final top-5]
-    Step   6  score=0.00  identical  [analyzed only]
-    Step   7  score=0.00  identical  [analyzed only]
+    Step   1  score=0.00  identical  [analyzed only]
+    Step   6  score=0.00  identical  [in final top-5]
+    Step   7  score=0.00  Identical  [analyzed only]
     Step  10  score=0.00  identical  [analyzed only]
 
   Note: VLM summary lists only steps with meaningful visual differences
@@ -89,7 +78,12 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When the user clicked the “Read Now” button, the system tried to load a picture that was blocked from appearing, so the page didn’t get all of its pieces. This happened right after the click, while the page was still settling down. Because the picture was missing, the page looked different than the test expected, and the test marked it as a failure. Checking why that image is being blocked and allowing it to load should fix the problem.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 8 (score=0.90): Error message instead of book content
+
+Other top suspects: #2 step 9 (screenshot diff), #3 step 0 (weak signal), #4 step 2 (weak signal), #5 step 6 (weak signal)
 
 EVALUATION
 ----------------------------------------
@@ -105,9 +99,9 @@ Per-rank breakdown:
   1               8           1           0           0  ← ACTUAL FAULT
   2               9         N/A         N/A           1
   3               0         N/A         N/A           8
-  4               1         N/A         N/A           7
-  5               2         N/A         N/A           6
+  4               2         N/A         N/A           6
+  5               6         N/A         N/A           2
 
 Top-1 step distance: 0
-MAD@5 (mean step-dist over top-5): 4.4
+MAD@5 (mean step-dist over top-5): 3.4
 ==============================================================

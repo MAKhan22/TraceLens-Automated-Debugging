@@ -1,36 +1,48 @@
 {
   "trace_id": "areeb_salem/youtube",
-  "generated": "2026-06-05T14:28:11.087525Z",
+  "generated": "2026-06-09T16:40:08.375360Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "areeb_salem",
     "fault_type": "metadata_pipeline_bug",
     "ranking_decisions": [
-      "LLM rerank failed: Error code: 400 - {'error': {'message': \"This endpoint's maximum context length is 262144 tokens. However, you requested about 277480 tokens (277480 of text input). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.\", 'code': 400, 'metadata': {'provider_name': None}}, 'user_id': 'user_3EGMJgWewjnvuVu56MrGVD09UUm'}",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
       "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "Top-1 channel hints: strong_observer_pixel.",
-      "LLM diagnosis failed: Error code: 400 - {'error': {'message': \"This endpoint's maximum context length is 262144 tokens. However, you requested about 267505 tokens (267505 of text input). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.\", 'code': 400, 'metadata': {'provider_name': None}}, 'user_id': 'user_3EGMJgWewjnvuVu56MrGVD09UUm'}"
+      "Top-1 channel hints: strong_observer_pixel."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -65,7 +77,6 @@
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.7
       },
       "rank": 1
@@ -94,7 +105,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 2
@@ -123,7 +133,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 3
@@ -152,7 +161,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 4
@@ -181,7 +189,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -387,7 +394,7 @@
       {
         "step_id": 12,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical"
       },
       {
         "step_id": 0,
@@ -402,7 +409,7 @@
       {
         "step_id": 5,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical"
       },
       {
         "step_id": 6,
@@ -449,5 +456,5 @@
     "mad@5": 5.0,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/youtube\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 12: Scroll to comments section.  [network anomaly]  (score=0.720)\n  #2  Step 0: Navigate to YouTube homepage.  [console error]  (score=0.473)\n  #3  Step 13: Verify comments section loaded.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #4  Step 5: Open the first video result.  [network anomaly]  (score=0.327)\n  #5  Step 6: Verify video page loaded.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 13: Verify comments section loaded.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 12: Scroll to comments section.  [network anomaly]  (score=0.468, pixel=0.000)\n  #3  Step 0: Navigate to YouTube homepage.  [console error]  (score=0.308, pixel=0.000)\n  #4  Step 5: Open the first video result.  [network anomaly]  (score=0.212, pixel=0.000)\n  #5  Step 6: Verify video page loaded.  [network anomaly]  (score=0.212, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 13: Verify comments section loaded.  [console error]  (fusion=0.435; observer_symptom=1.00, pixel=1.00, text=0.33, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 12: Scroll to comments section.  [network anomaly]  (fusion=0.324; causal_action=1.00, text=0.72)\n  #3  Step 0: Navigate to YouTube homepage.  [console error]  (fusion=0.107; text=0.47)\n  #4  Step 5: Open the first video result.  [network anomaly]  (fusion=0.074; text=0.33)\n  #5  Step 10: Expand the video description.  [network anomaly]  (fusion=0.074; text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              29\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank failed: Error code: 400 - {'error': {'message': \"This endpoint's maximum context length is 262144 tokens. However, you requested about 277480 tokens (277480 of text input). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.\", 'code': 400, 'metadata': {'provider_name': None}}, 'user_id': 'user_3EGMJgWewjnvuVu56MrGVD09UUm'}\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: strong_observer_pixel.\n  • LLM diagnosis failed: Error code: 400 - {'error': {'message': \"This endpoint's maximum context length is 262144 tokens. However, you requested about 267505 tokens (267505 of text input). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.\", 'code': 400, 'metadata': {'provider_name': None}}, 'user_id': 'user_3EGMJgWewjnvuVu56MrGVD09UUm'}\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 13 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 13 (score=0.70): Comments section not loaded, error dialog shown\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 13\nSummary:\n  Step 13 (score=0.70): Comments section not loaded, error dialog shown\n\n  Per-step visual scores:\n    Step  13  score=0.70  Comments section not loaded, error dialog shown  [in final top-5]\n    Step   0  score=0.00  Identical homepage  [in final top-5]\n    Step   5  score=0.00  identical  [in final top-5]\n    Step   6  score=0.00  identical  [analyzed only]\n    Step  12  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 13 (score=0.70): Comments section not loaded, error dialog shown\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              13           1           0           0  ← ACTUAL FAULT\n  2              12         N/A         N/A           1\n  3               0         N/A         N/A          13\n  4               5         N/A         N/A           8\n  5              10         N/A         N/A           3\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.0\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/youtube\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 12: Scroll to comments section.  [network anomaly]  (score=0.720)\n  #2  Step 0: Navigate to YouTube homepage.  [console error]  (score=0.473)\n  #3  Step 13: Verify comments section loaded.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #4  Step 5: Open the first video result.  [network anomaly]  (score=0.327)\n  #5  Step 6: Verify video page loaded.  [network anomaly]  (score=0.327)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 13: Verify comments section loaded.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 12: Scroll to comments section.  [network anomaly]  (score=0.468, pixel=0.000)\n  #3  Step 0: Navigate to YouTube homepage.  [console error]  (score=0.308, pixel=0.000)\n  #4  Step 5: Open the first video result.  [network anomaly]  (score=0.212, pixel=0.000)\n  #5  Step 6: Verify video page loaded.  [network anomaly]  (score=0.212, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 13: Verify comments section loaded.  [console error]  (fusion=0.435; observer_symptom=1.00, pixel=1.00, text=0.33, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 12: Scroll to comments section.  [network anomaly]  (fusion=0.324; causal_action=1.00, text=0.72)\n  #3  Step 0: Navigate to YouTube homepage.  [console error]  (fusion=0.107; text=0.47)\n  #4  Step 5: Open the first video result.  [network anomaly]  (fusion=0.074; text=0.33)\n  #5  Step 10: Expand the video description.  [network anomaly]  (fusion=0.074; text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              29\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: strong_observer_pixel.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 13 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 13 (score=0.70): Comments section not loaded, error dialog shown\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 13\nSummary:\n  Step 13 (score=0.70): Comments section not loaded, error dialog shown\n\n  Per-step visual scores:\n    Step  13  score=0.70  Comments section not loaded, error dialog shown  [in final top-5]\n    Step   0  score=0.00  Identical homepage  [in final top-5]\n    Step   5  score=0.00  Identical  [in final top-5]\n    Step   6  score=0.00  identical  [analyzed only]\n    Step  12  score=0.00  Identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 13 (score=0.70): Comments section not loaded, error dialog shown\n\nOther top suspects: #2 step 12 (network error), #3 step 0 (console error), #4 step 5 (network error), #5 step 10 (network error)\n\nEVALUATION\n----------------------------------------\nActual fault step: 13\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              13           1           0           0  ← ACTUAL FAULT\n  2              12         N/A         N/A           1\n  3               0         N/A         N/A          13\n  4               5         N/A         N/A           8\n  5              10         N/A         N/A           3\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 5.0\n=============================================================="
 }

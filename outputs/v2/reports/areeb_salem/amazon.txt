@@ -31,8 +31,8 @@ FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual
 ----------------------------------------
   #1  Step 14: Scroll to customer reviews.  [network anomaly, visual causal (earliest_divergence, score=1.00)]  (fusion=0.480; observer_symptom=0.50, pixel=1.00, text=0.33, visual_causal=1.00, vlm_prior=0.80)
   #2  Step 16: Scroll through customer review text.  [network anomaly]  (fusion=0.367; observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.80)
-  #3  Step 20: Click the add to wish list button.  [console error, action divergence]  (fusion=0.249; causal_action=1.00, text=0.39) ← ACTUAL FAULT
-  #4  Step 15: Verify review ratings and count.  (fusion=0.223; observer_symptom=1.00, pixel=1.00, vlm_prior=0.10)
+  #3  Step 15: Verify review ratings and count.  (fusion=0.281; observer_symptom=1.00, pixel=1.00, vlm_prior=0.50)
+  #4  Step 20: Click the add to wish list button.  [console error, action divergence]  (fusion=0.249; causal_action=1.00, text=0.39) ← ACTUAL FAULT
   #5  Step 17: Verify individual review content.  (fusion=0.208; observer_symptom=1.00, pixel=1.00)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
@@ -45,37 +45,35 @@ Reason:                      earliest_divergence
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank failed: Expecting value: line 127 column 1 (char 693)
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
   • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 14
-Summary:       Scroll to customer reviews failed to load the review section properly, causing visual divergence and subsequent verification failures.
-Failure chain: The faulty scroll at step 14 prevented the review content from rendering, leading to mismatched screenshots (visual divergence). Later steps that scroll through or verify review text and ratings encountered missing or altered UI, causing action changes and verification errors observed in steps 16, 20, 15, and 17.
-Downstream:    [15, 16, 17, 20]
+Primary step:  Step 16 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 16 (score=0.80): Different book recommendations
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 16
 Summary:
   Step 16 (score=0.80): Different book recommendations
-  Step 14 (score=0.50): different customer reviews
+  Step 14 (score=0.50): different recommended products
 
   Per-step visual scores:
     Step  14  score=0.80  Attributed from step 16: Different book recommendations  [in final top-5]
     Step  16  score=0.80  Different book recommendations  [in final top-5]
-    Step  15  score=0.10  similar page layout and content  [in final top-5]
+    Step  15  score=0.50  different recommended products  [in final top-5]
     Step   4  score=0.00  identical  [analyzed only]
     Step   7  score=0.00  identical  [analyzed only]
     Step  12  score=0.00  identical  [analyzed only]
     Step  13  score=0.00  identical  [analyzed only]
-    Step  20  score=0.00  no visual difference  [in final top-5]
-    Step  21  score=0.00  Identical  [analyzed only]
+    Step  20  score=0.00  identical  [in final top-5]
+    Step  21  score=0.00  identical  [analyzed only]
 
   Note: VLM summary lists only steps with meaningful visual differences
   (identical/noise responses from per-step API calls are filtered out).
@@ -83,14 +81,20 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When the test tried to scroll down to see the customer‑review section, the reviews didn’t show up as they should, leaving the screen looking different from what the test expected. Because the review area was missing or altered, the later steps that attempt to read the review text and ratings couldn’t find the correct information, causing them to fail. This mismatch in what was seen versus what was expected led to the errors reported in the following steps. To fix it, verify that the page actually loads the review section when scrolled to that point.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 16 (score=0.80): Different book recommendations
+  Step 14 (score=0.50): different recommended products
+
+Other top suspects: #2 step 16 (network error), #3 step 15 (screenshot diff), #4 step 20 (wrong action), #5 step 17 (screenshot diff)
 
 EVALUATION
 ----------------------------------------
 Actual fault step: 20
-Hit@1=0  Hit@3=1  Hit@5=1
-Rank position of actual fault: 3
-Overall rank distance (|actual_rank - 1|): 2
+Hit@1=0  Hit@3=0  Hit@5=1
+Rank position of actual fault: 4
+Overall rank distance (|actual_rank - 1|): 3
 
 Per-rank breakdown:
   Pred.Rank    Step   True Rank   rank_dist   step_dist
@@ -98,8 +102,8 @@ Per-rank breakdown:
   ----------  -----  ----------  ----------  ----------
   1              14         N/A         N/A           6
   2              16         N/A         N/A           4
-  3              20           1           2           0  ← ACTUAL FAULT
-  4              15         N/A         N/A           5
+  3              15         N/A         N/A           5
+  4              20           1           3           0  ← ACTUAL FAULT
   5              17         N/A         N/A           3
 
 Top-1 step distance: 6

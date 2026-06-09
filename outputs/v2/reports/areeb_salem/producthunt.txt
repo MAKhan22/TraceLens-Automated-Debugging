@@ -1,6 +1,6 @@
 ==============================================================
 TraceLens v2 Diagnosis Report: areeb_salem/producthunt
-Ranking mode: v2:llm+vlm
+Ranking mode: v2:vlm
 ==============================================================
 
 HEURISTIC TOP 5 (text signals only)
@@ -27,21 +27,13 @@ HEURISTIC TOP 5 (text + visual causal + pixel)
   #4  Step 13: Scroll to comments section.  [console error]  (score=0.308, pixel=0.000)
   #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.212, pixel=0.000)
 
-LLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 6: Open the first product page.  [network anomaly, console error]  (score=0.636, pixel=0.000)
-  #2  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (score=0.420, visual_causal=1.000, pixel=1.000) ← ACTUAL FAULT
-  #3  Step 5: Verify product cards with upvote counts.  [network anomaly]  (score=0.327, pixel=0.000)
-  #4  Step 13: Scroll to comments section.  [console error]  (score=0.473, pixel=0.000)
-  #5  Step 17: Verify upvote action result.  (score=0.060, pixel=1.000)
-
-FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
-----------------------------------------
-  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (fusion=0.660; causal_action=0.70, llm_prior=0.93, observer_symptom=0.50, pixel=1.00, text=0.42, visual_causal=1.00, vlm_prior=0.70) ← ACTUAL FAULT
-  #2  Step 17: Verify upvote action result.  (fusion=0.478; causal_action=0.70, llm_prior=0.71, observer_symptom=1.00, pixel=1.00, text=0.06, vlm_prior=0.70)
-  #3  Step 6: Open the first product page.  [network anomaly, console error]  (fusion=0.301; llm_prior=1.00, text=0.64)
-  #4  Step 13: Scroll to comments section.  [console error]  (fusion=0.232; llm_prior=0.79, text=0.47)
-  #5  Step 5: Verify product cards with upvote counts.  [network anomaly]  (fusion=0.218; llm_prior=0.86, text=0.33)
+  #1  Step 16: Click the upvote button on the product.  [console error, action divergence, visual causal (earliest_divergence, score=1.00)]  (fusion=0.648; causal_action=1.00, observer_symptom=0.50, pixel=1.00, text=0.42, visual_causal=1.00, vlm_prior=0.70) ← ACTUAL FAULT
+  #2  Step 17: Verify upvote action result.  (fusion=0.484; causal_action=1.00, observer_symptom=1.00, pixel=1.00, text=0.06, vlm_prior=0.70)
+  #3  Step 6: Open the first product page.  [network anomaly, console error]  (fusion=0.144; text=0.64)
+  #4  Step 13: Scroll to comments section.  [console error]  (fusion=0.107; text=0.47)
+  #5  Step 0: Navigate to Product Hunt homepage.  [console error]  (fusion=0.107; text=0.47)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
 ----------------------------------------
@@ -53,35 +45,34 @@ Reason:                      earliest_divergence
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
-  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: action_changed_llm_leader.
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 16
-Summary:       At step 16 the test clicked the upvote button instead of verifying product metadata, causing a divergence in UI state.
-Failure chain: The erroneous click altered the application state (e.g., attempted upvote without proper data), leading to the verification of upvote action result at step 17 to fail, while earlier GraphQL 403 errors are side effects unrelated to the UI divergence.
-Downstream:    [17]
+Primary step:  Step 16 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 16 (score=0.70): Modal overlay appeared
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 16
 Summary:
-  Step 16 (score=0.70): Overlaid sign-in popup
-  Step 17 (score=0.70): Dialog appeared on top of the content
+  Step 16 (score=0.70): Modal overlay appeared
+  Step 17 (score=0.70): Overlayed sign up dialog appeared
 
   Per-step visual scores:
-    Step  16  score=0.70  Overlaid sign-in popup  [in final top-5]
-    Step  17  score=0.70  Dialog appeared on top of the content  [in final top-5]
-    Step   0  score=0.00  identical  [analyzed only]
+    Step  16  score=0.70  Modal overlay appeared  [in final top-5]
+    Step  17  score=0.70  Overlayed sign up dialog appeared  [in final top-5]
+    Step   0  score=0.00  Identical homepage layout and content  [in final top-5]
     Step   6  score=0.00  Identical  [in final top-5]
-    Step  13  score=0.00  Identical UI state  [in final top-5]
+    Step  13  score=0.00  Identical screenshot  [in final top-5]
     Step  14  score=0.00  Identical  [analyzed only]
-    Step  15  score=0.00  identical  [analyzed only]
+    Step  15  score=0.00  Identical  [analyzed only]
     Step  18  score=0.00  identical  [analyzed only]
 
   Note: VLM summary lists only steps with meaningful visual differences
@@ -90,7 +81,13 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-At step 16 the test pressed the upvote button instead of first checking the product details. This happened early in the test flow, before the test tried to confirm that the upvote actually worked. Because the wrong button was pressed, the screen ended up in an unexpected state, so the later check at step 17 failed and the test reported an error about the upvote not working. To fix it, make sure the test verifies the product details before clicking the upvote button.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 16 (score=0.70): Modal overlay appeared
+  Step 17 (score=0.70): Overlayed sign up dialog appeared
+
+Other top suspects: #2 step 17 (screenshot diff), #3 step 6 (console error), #4 step 13 (console error), #5 step 0 (console error)
 
 EVALUATION
 ----------------------------------------
@@ -107,8 +104,8 @@ Per-rank breakdown:
   2              17         N/A         N/A           1
   3               6         N/A         N/A          10
   4              13         N/A         N/A           3
-  5               5         N/A         N/A          11
+  5               0         N/A         N/A          16
 
 Top-1 step distance: 0
-MAD@5 (mean step-dist over top-5): 5.0
+MAD@5 (mean step-dist over top-5): 6.0
 ==============================================================

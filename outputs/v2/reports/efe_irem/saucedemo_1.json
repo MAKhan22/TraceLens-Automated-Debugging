@@ -1,35 +1,47 @@
 {
   "trace_id": "efe_irem/saucedemo_1",
-  "generated": "2026-06-05T15:04:07.558968Z",
+  "generated": "2026-06-09T13:49:06.445575Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "efe_irem",
     "fault_type": "wrong_password",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -38,7 +50,7 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
     {
       "step_id": 7,
@@ -56,7 +68,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.4825,
+      "fusion_score": 0.3818,
       "fusion_channels": {
         "text": 0.327,
         "navigation": 0.0,
@@ -64,7 +76,6 @@
         "observer_symptom": 0.5,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.929,
         "vlm_prior": 0.9
       },
       "rank": 1
@@ -85,7 +96,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": 6,
       "visual_causal_reason": "earliest_localized_divergence",
-      "fusion_score": 0.4608,
+      "fusion_score": 0.339,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -93,7 +104,6 @@
         "observer_symptom": 0.359,
         "visual_causal": 0.718,
         "pixel": 0.718,
-        "llm_prior": 1.0,
         "vlm_prior": 0.9
       },
       "rank": 2
@@ -114,7 +124,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.3461,
+      "fusion_score": 0.3387,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -122,39 +132,9 @@
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.429,
         "vlm_prior": 0.9
       },
       "rank": 3
-    },
-    {
-      "step_id": 2,
-      "action": "Verify that the login screen is visible",
-      "network_score": 0.7,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4933,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "fusion_score": 0.2225,
-      "fusion_channels": {
-        "text": 0.493,
-        "navigation": 0.0,
-        "causal_action": 0.0,
-        "observer_symptom": 0.0,
-        "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 0.714,
-        "vlm_prior": 0.0
-      },
-      "rank": 4
     },
     {
       "step_id": 10,
@@ -172,7 +152,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2132,
+      "fusion_score": 0.2081,
       "fusion_channels": {
         "text": 0.0,
         "navigation": 0.0,
@@ -180,7 +160,34 @@
         "observer_symptom": 1.0,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.286,
+        "vlm_prior": 0.0
+      },
+      "rank": 4
+    },
+    {
+      "step_id": 13,
+      "action": "Wait for the page to load",
+      "network_score": 0.0,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.0,
+      "screenshots_available": true,
+      "pixel_global": 1.0,
+      "pixel_localized": 1.0,
+      "pixel_score": 1.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "fusion_score": 0.2081,
+      "fusion_channels": {
+        "text": 0.0,
+        "navigation": 0.0,
+        "causal_action": 0.0,
+        "observer_symptom": 1.0,
+        "visual_causal": 0.0,
+        "pixel": 1.0,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -457,98 +464,7 @@
       "rank": 5
     }
   ],
-  "llm_ranked_steps": [
-    {
-      "step_id": 6,
-      "action": "Type the password",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0006,
-      "pixel_localized": 0.7176,
-      "pixel_score": 0.001,
-      "visual_causal_score": 0.718,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": 6,
-      "visual_causal_reason": "earliest_localized_divergence",
-      "rank": 1
-    },
-    {
-      "step_id": 7,
-      "action": "Click the login button",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 1.0,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 0,
-      "action": "Visit saucedemo.com",
-      "network_score": 0.0,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.0,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 1,
-      "action": "Wait for the page to load",
-      "network_score": 0.56,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.2613,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 2,
-      "action": "Verify that the login screen is visible",
-      "network_score": 0.7,
-      "console_score": 0.5,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.4933,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 32,
     "first_persistent_divergence": 6,
@@ -560,49 +476,45 @@
     "has_signal": true
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 6,
-    "root_cause_summary": "The password was entered incorrectly (or with an incorrect value) at step 6, causing the login attempt to fail.",
-    "downstream_steps": [
-      7,
-      8,
-      10
-    ],
-    "failure_chain": "Typing the wrong password results in a 401 Unauthorized response when the login button is clicked (step 7), preventing successful navigation to the product page; subsequent wait steps (8 and 10) then fail because the expected page never loads."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "The user entered the wrong password at step 6, so when they clicked the login button (step 7) the system refused to let them in — like trying to open a door with the wrong key. Because the login failed, the expected product page never appeared, causing the later wait steps (steps 8 and 10) to time out and fail. Visibly, the test stopped progressing after the login attempt and showed an error that the page didn’t load. Checking that the correct password is being typed at step 6 should resolve the issue.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 7,
-    "visual_summary": "Step 7 (score=0.90): Error dialog appears, wrong page content\nStep 8 (score=0.90): FAIL shows login page with error message, PASS shows product page",
+    "visual_summary": "Step 7 (score=0.90): Error dialog appears, wrong page\nStep 8 (score=0.90): FAIL shows login page, PASS shows product page",
     "visual_scores": [
       {
         "step_id": 4,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical UI state"
       },
       {
         "step_id": 5,
         "visual_score": 0.0,
-        "visual_note": "Identical"
+        "visual_note": "identical"
       },
       {
         "step_id": 6,
         "visual_score": 0.9,
-        "visual_note": "Attributed from step 7: Error dialog appears, wrong page content"
+        "visual_note": "Attributed from step 7: Error dialog appears, wrong page"
       },
       {
         "step_id": 7,
         "visual_score": 0.9,
-        "visual_note": "Error dialog appears, wrong page content"
+        "visual_note": "Error dialog appears, wrong page"
       },
       {
         "step_id": 8,
         "visual_score": 0.9,
-        "visual_note": "FAIL shows login page with error message, PASS shows product page"
+        "visual_note": "FAIL shows login page, PASS shows product page"
       },
       {
         "step_id": 2,
         "visual_score": 0.0,
-        "visual_note": "identical"
+        "visual_note": "Identical login screen"
       },
       {
         "step_id": 1,
@@ -637,17 +549,17 @@
       },
       {
         "rank": 4,
-        "step_id": 2,
-        "step_distance": 5
+        "step_id": 10,
+        "step_distance": 3
       },
       {
         "rank": 5,
-        "step_id": 10,
-        "step_distance": 3
+        "step_id": 13,
+        "step_distance": 6
       }
     ],
-    "mad@5": 2.0,
+    "mad@5": 2.2,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/saucedemo_1\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493)\n  #2  Step 7: Click the login button  [network anomaly]  (score=0.327) ← ACTUAL FAULT\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #4  Step 4: Type the username: standard_user  (score=0.033)\n  #5  Step 0: Visit saucedemo.com  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.718, visual_causal=0.718)\n  #2  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493)\n  #3  Step 7: Click the login button  [network anomaly]  (score=0.327) ← ACTUAL FAULT\n  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #5  Step 4: Type the username: standard_user  (score=0.033)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 7: Click the login button  [network anomaly]  (score=0.562, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.467, visual_causal=0.718, pixel=0.001)\n  #3  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.321, pixel=0.000)\n  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)\n  #5  Step 4: Type the username: standard_user  (score=0.022, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.000, visual_causal=0.718, pixel=0.001)\n  #2  Step 7: Click the login button  [network anomaly]  (score=0.327, pixel=1.000) ← ACTUAL FAULT\n  #3  Step 0: Visit saucedemo.com  (score=0.000, pixel=0.000)\n  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.261, pixel=0.000)\n  #5  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 7: Click the login button  [network anomaly]  (fusion=0.482; llm_prior=0.93, observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.461; llm_prior=1.00, observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90)\n  #3  Step 8: Wait for the page to load  (fusion=0.346; llm_prior=0.43, observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)\n  #4  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (fusion=0.223; llm_prior=0.71, text=0.49)\n  #5  Step 10: Wait for the page to load  (fusion=0.213; llm_prior=0.29, observer_symptom=1.00, pixel=1.00)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nFirst persistent divergence: step 6 (score=0.718)\nAttributed root step:        step 6 (visual_causal=0.718)\nReason:                      earliest_localized_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 6\nSummary:       The password was entered incorrectly (or with an incorrect value) at step 6, causing the login attempt to fail.\nFailure chain: Typing the wrong password results in a 401 Unauthorized response when the login button is clicked (step 7), preventing successful navigation to the product page; subsequent wait steps (8 and 10) then fail because the expected page never loads.\nDownstream:    [7, 8, 10]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 7\nSummary:\n  Step 7 (score=0.90): Error dialog appears, wrong page content\n  Step 8 (score=0.90): FAIL shows login page with error message, PASS shows product page\n\n  Per-step visual scores:\n    Step   6  score=0.90  Attributed from step 7: Error dialog appears, wrong page content  [in final top-5]\n    Step   7  score=0.90  Error dialog appears, wrong page content  [in final top-5]\n    Step   8  score=0.90  FAIL shows login page with error message, PASS shows product page  [in final top-5]\n    Step   1  score=0.00  Identical  [analyzed only]\n    Step   2  score=0.00  identical  [in final top-5]\n    Step   4  score=0.00  identical  [analyzed only]\n    Step   5  score=0.00  Identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nThe user entered the wrong password at step 6, so when they clicked the login button (step 7) the system refused to let them in — like trying to open a door with the wrong key. Because the login failed, the expected product page never appeared, causing the later wait steps (steps 8 and 10) to time out and fail. Visibly, the test stopped progressing after the login attempt and showed an error that the page didn’t load. Checking that the correct password is being typed at step 6 should resolve the issue.\n\nEVALUATION\n----------------------------------------\nActual fault step: 7\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               7           1           0           0  ← ACTUAL FAULT\n  2               6         N/A         N/A           1\n  3               8         N/A         N/A           1\n  4               2         N/A         N/A           5\n  5              10         N/A         N/A           3\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 2.0\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: efe_irem/saucedemo_1\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493)\n  #2  Step 7: Click the login button  [network anomaly]  (score=0.327) ← ACTUAL FAULT\n  #3  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #4  Step 4: Type the username: standard_user  (score=0.033)\n  #5  Step 0: Visit saucedemo.com  (score=0.000)\n\nHEURISTIC TOP 5 (text + visual causal)\n----------------------------------------\n  #1  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.718, visual_causal=0.718)\n  #2  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.493)\n  #3  Step 7: Click the login button  [network anomaly]  (score=0.327) ← ACTUAL FAULT\n  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.261)\n  #5  Step 4: Type the username: standard_user  (score=0.033)\n\nHEURISTIC TOP 5 (text + visual causal + pixel)\n----------------------------------------\n  #1  Step 7: Click the login button  [network anomaly]  (score=0.562, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (score=0.467, visual_causal=0.718, pixel=0.001)\n  #3  Step 2: Verify that the login screen is visible  [network anomaly, console error]  (score=0.321, pixel=0.000)\n  #4  Step 1: Wait for the page to load  [network anomaly]  (score=0.170, pixel=0.000)\n  #5  Step 4: Type the username: standard_user  (score=0.022, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 7: Click the login button  [network anomaly]  (fusion=0.382; observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.90) ← ACTUAL FAULT\n  #2  Step 6: Type the password  [visual causal (earliest_localized_divergence, score=0.72)]  (fusion=0.339; observer_symptom=0.36, pixel=0.72, visual_causal=0.72, vlm_prior=0.90)\n  #3  Step 8: Wait for the page to load  (fusion=0.339; observer_symptom=1.00, pixel=1.00, vlm_prior=0.90)\n  #4  Step 10: Wait for the page to load  (fusion=0.208; observer_symptom=1.00, pixel=1.00)\n  #5  Step 13: Wait for the page to load  (fusion=0.208; observer_symptom=1.00, pixel=1.00)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              32\nFirst persistent divergence: step 6 (score=0.718)\nAttributed root step:        step 6 (visual_causal=0.718)\nReason:                      earliest_localized_divergence\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 7 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 7 (score=0.90): Error dialog appears, wrong page\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 7\nSummary:\n  Step 7 (score=0.90): Error dialog appears, wrong page\n  Step 8 (score=0.90): FAIL shows login page, PASS shows product page\n\n  Per-step visual scores:\n    Step   6  score=0.90  Attributed from step 7: Error dialog appears, wrong page  [in final top-5]\n    Step   7  score=0.90  Error dialog appears, wrong page  [in final top-5]\n    Step   8  score=0.90  FAIL shows login page, PASS shows product page  [in final top-5]\n    Step   1  score=0.00  Identical  [analyzed only]\n    Step   2  score=0.00  Identical login screen  [analyzed only]\n    Step   4  score=0.00  Identical UI state  [analyzed only]\n    Step   5  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 7 (score=0.90): Error dialog appears, wrong page\n  Step 8 (score=0.90): FAIL shows login page, PASS shows product page\n\nOther top suspects: #2 step 6 (visual change), #3 step 8 (screenshot diff), #4 step 10 (screenshot diff), #5 step 13 (screenshot diff)\n\nEVALUATION\n----------------------------------------\nActual fault step: 7\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1               7           1           0           0  ← ACTUAL FAULT\n  2               6         N/A         N/A           1\n  3               8         N/A         N/A           1\n  4              10         N/A         N/A           3\n  5              13         N/A         N/A           6\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 2.2\n=============================================================="
 }

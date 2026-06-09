@@ -1,6 +1,6 @@
 ==============================================================
 TraceLens v2 Diagnosis Report: areeb_salem/pypi
-Ranking mode: v2:llm+vlm
+Ranking mode: v2:vlm
 ==============================================================
 
 HEURISTIC TOP 5 (text signals only)
@@ -19,21 +19,13 @@ HEURISTIC TOP 5 (text + pixel)
   #4  Step 2: Search for Django package.  [network anomaly, console error]  (score=0.387, pixel=0.000)
   #5  Step 21: Verify release history visible.  [console error]  (score=0.217, pixel=0.000)
 
-LLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)
+FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)
 ----------------------------------------
-  #1  Step 7: Open the first package project page.  [network anomaly]  (score=0.720, pixel=0.000) ← ACTUAL FAULT
-  #2  Step 20: Navigate to release history tab.  [network anomaly]  (score=0.720, pixel=0.000)
-  #3  Step 2: Search for Django package.  [network anomaly, console error]  (score=0.595, pixel=0.000)
-  #4  Step 0: Navigate to PyPI homepage.  (score=0.000, pixel=0.000)
-  #5  Step 1: Verify PyPI homepage loaded.  (score=0.000, pixel=0.000)
-
-FUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)
-----------------------------------------
-  #1  Step 7: Open the first package project page.  [network anomaly]  (fusion=0.508; causal_action=1.00, llm_prior=1.00, text=0.72) ← ACTUAL FAULT
-  #2  Step 20: Navigate to release history tab.  [network anomaly]  (fusion=0.415; causal_action=0.85, llm_prior=0.93, text=0.72)
-  #3  Step 2: Search for Django package.  [network anomaly, console error]  (fusion=0.267; llm_prior=0.86, text=0.59)
-  #4  Step 8: Verify project page loaded.  [console error]  (fusion=0.162; llm_prior=0.07, observer_symptom=0.30, pixel=0.30, text=0.33, vlm_prior=0.20)
-  #5  Step 0: Navigate to PyPI homepage.  (fusion=0.145; llm_prior=0.79)
+  #1  Step 8: Verify project page loaded.  [console error]  (fusion=0.435; observer_symptom=1.00, pixel=1.00, text=0.33, vlm_prior=0.70)
+  #2  Step 7: Open the first package project page.  [network anomaly]  (fusion=0.324; causal_action=1.00, text=0.72) ← ACTUAL FAULT
+  #3  Step 20: Navigate to release history tab.  [network anomaly]  (fusion=0.300; causal_action=0.85, text=0.72)
+  #4  Step 2: Search for Django package.  [network anomaly, console error]  (fusion=0.134; text=0.59)
+  #5  Step 21: Verify release history visible.  [console error]  (fusion=0.075; text=0.33)
 
 SCREENSHOT ANALYSIS (pass/fail after images)
 ----------------------------------------
@@ -43,33 +35,31 @@ No persistent pass/fail screenshot divergence above threshold.
 
 FUSION DECISIONS (channels and weights)
 ----------------------------------------
-  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).
   • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).
   • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).
-  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
-  • Top-1 channel hints: causal_root, causal_llm_leader.
-  • LLM diagnosis is explanatory only — ranking frozen after fusion.
-  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75
+  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.
+  • Top-1 channel hints: strong_observer_pixel.
+  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05
 
 TECHNICAL ROOT CAUSE
 ----------------------------------------
-Primary step:  Step 7
-Summary:       Opening the first package project page triggered a 403 Forbidden response from PyPI/Fastly, causing the project page to fail to load.
-Failure chain: Step 7's action to open the Django project page resulted in a 403 error (likely a bot-challenge/rate-limit block), which caused step 8's verification to fail with a resource load error; any subsequent steps that rely on the project page (e.g., navigating to release history) would be affected as downstream effects.
-Downstream:    [8]
+Primary step:  Step 8 (from visual analysis — LLM diagnosis not run)
+Summary:       Step 8 (score=0.70): Bot challenge page instead of project page
+Failure chain: (not available without --llm)
+Downstream:    []
 
 VISUAL ANALYSIS (VLM)
 ----------------------------------------
 Visual root cause: Step 8
 Summary:
-  Step 8 (score=0.70): Error dialog with 'Access denied — bot challenge triggered.'
+  Step 8 (score=0.70): Bot challenge page instead of project page
 
   Per-step visual scores:
-    Step   8  score=0.70  Error dialog with 'Access denied — bot challenge triggered.'  [in final top-5]
+    Step   8  score=0.70  Bot challenge page instead of project page  [in final top-5]
     Step   2  score=0.00  identical  [in final top-5]
     Step   7  score=0.00  identical  [in final top-5]
     Step  20  score=0.00  identical  [in final top-5]
-    Step  21  score=0.00  identical  [analyzed only]
+    Step  21  score=0.00  screenshots are identical  [in final top-5]
 
   Note: VLM summary lists only steps with meaningful visual differences
   (identical/noise responses from per-step API calls are filtered out).
@@ -77,25 +67,30 @@ Summary:
 
 PLAIN LANGUAGE SUMMARY
 ----------------------------------------
-When the test tried to open the first project page, the website blocked the request, so the page never appeared. This happened at the seventh step of the test, which stopped the eighth step from being able to verify that the page loaded correctly. Because later steps depend on seeing that page, they would also fail. Checking whether the site is limiting automated access and adding a pause or adjusting the request rate could prevent the block.
+(Pass --llm for a full plain-language stakeholder summary.)
+
+Key visual finding:
+  Step 8 (score=0.70): Bot challenge page instead of project page
+
+Other top suspects: #2 step 7 (network error), #3 step 20 (network error), #4 step 2 (console error), #5 step 21 (console error)
 
 EVALUATION
 ----------------------------------------
 Actual fault step: 7
-Hit@1=1  Hit@3=1  Hit@5=1
-Rank position of actual fault: 1
-Overall rank distance (|actual_rank - 1|): 0
+Hit@1=0  Hit@3=1  Hit@5=1
+Rank position of actual fault: 2
+Overall rank distance (|actual_rank - 1|): 1
 
 Per-rank breakdown:
   Pred.Rank    Step   True Rank   rank_dist   step_dist
   (our rank)          (1=fault)  |pred-true|  |step-actual|
   ----------  -----  ----------  ----------  ----------
-  1               7           1           0           0  ← ACTUAL FAULT
-  2              20         N/A         N/A          13
-  3               2         N/A         N/A           5
-  4               8         N/A         N/A           1
-  5               0         N/A         N/A           7
+  1               8         N/A         N/A           1
+  2               7           1           1           0  ← ACTUAL FAULT
+  3              20         N/A         N/A          13
+  4               2         N/A         N/A           5
+  5              21         N/A         N/A          14
 
-Top-1 step distance: 0
-MAD@5 (mean step-dist over top-5): 5.2
+Top-1 step distance: 1
+MAD@5 (mean step-dist over top-5): 6.6
 ==============================================================

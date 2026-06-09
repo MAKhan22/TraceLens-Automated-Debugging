@@ -1,35 +1,47 @@
 {
   "trace_id": "areeb_salem/wikipedia",
-  "generated": "2026-06-05T14:12:59.165030Z",
+  "generated": "2026-06-09T15:27:05.847752Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "areeb_salem",
     "fault_type": "broken_anchor_toc",
     "ranking_decisions": [
-      "LLM rerank failed: Expecting value: line 317 column 1 (char 1738)",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -64,7 +76,6 @@
         "observer_symptom": 0.5,
         "visual_causal": 0.0,
         "pixel": 1.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.7
       },
       "rank": 1
@@ -93,7 +104,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 2
@@ -122,7 +132,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 3
@@ -151,7 +160,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 4
@@ -180,7 +188,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.0,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -373,20 +380,20 @@
     "has_signal": false
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 17,
-    "root_cause_summary": "Clicking a table‑of‑contents link targeting the missing anchor '#Applications_and_impact' caused scrollToAnchor() to fail, producing console errors.",
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
     "downstream_steps": [],
-    "failure_chain": "The failed anchor navigation prevented the intended section from loading, which likely caused subsequent steps that depend on that section to fail or produce errors."
+    "failure_chain": null
   },
-  "stakeholder_summary": "A link in the table of contents was pointing to a section called “Applications and impact” that no longer exists, so clicking it didn’t move the page to that part. This happened right after the user opened the table of contents and tried to jump to that section. Because the jump failed, the page stayed where it was and any later steps that needed to see that content showed up blank or produced error messages. To fix it, verify that the table‑of‑contents link matches an existing heading or restore the missing section.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 17,
-    "visual_summary": "Step 17 (score=0.70): FAIL shows an error message",
+    "visual_summary": "Step 17 (score=0.70): FAIL shows error message",
     "visual_scores": [
       {
         "step_id": 17,
         "visual_score": 0.7,
-        "visual_note": "FAIL shows an error message"
+        "visual_note": "FAIL shows error message"
       },
       {
         "step_id": 0,
@@ -448,5 +455,5 @@
     "mad@5": 8.8,
     "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/wikipedia\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #2  Step 0: Navigate to the Machine Learning Wikipedia article.  (score=0.000)\n  #3  Step 1: Verify article page loaded.  (score=0.000)\n  #4  Step 2: Verify article title and lead section.  (score=0.000)\n  #5  Step 3: Scroll to the table of contents.  (score=0.000)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Navigate to the Machine Learning Wikipedia article.  (score=0.000, pixel=0.000)\n  #3  Step 1: Verify article page loaded.  (score=0.000, pixel=0.000)\n  #4  Step 2: Verify article title and lead section.  (score=0.000, pixel=0.000)\n  #5  Step 3: Scroll to the table of contents.  (score=0.000, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (fusion=0.354; observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 3: Scroll to the table of contents.  (fusion=0.000; n/a)\n  #3  Step 5: Click the first section link in the table of contents.  (fusion=0.000; n/a)\n  #4  Step 7: Scroll through the section content.  (fusion=0.000; n/a)\n  #5  Step 9: Continue scrolling through the article.  (fusion=0.000; n/a)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              29\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank failed: Expecting value: line 317 column 1 (char 1738)\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 17\nSummary:       Clicking a table‑of‑contents link targeting the missing anchor '#Applications_and_impact' caused scrollToAnchor() to fail, producing console errors.\nFailure chain: The failed anchor navigation prevented the intended section from loading, which likely caused subsequent steps that depend on that section to fail or produce errors.\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 17\nSummary:\n  Step 17 (score=0.70): FAIL shows an error message\n\n  Per-step visual scores:\n    Step  17  score=0.70  FAIL shows an error message  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  identical  [analyzed only]\n    Step   3  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nA link in the table of contents was pointing to a section called “Applications and impact” that no longer exists, so clicking it didn’t move the page to that part. This happened right after the user opened the table of contents and tried to jump to that section. Because the jump failed, the page stayed where it was and any later steps that needed to see that content showed up blank or produced error messages. To fix it, verify that the table‑of‑contents link matches an existing heading or restore the missing section.\n\nEVALUATION\n----------------------------------------\nActual fault step: 17\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              17           1           0           0  ← ACTUAL FAULT\n  2               3         N/A         N/A          14\n  3               5         N/A         N/A          12\n  4               7         N/A         N/A          10\n  5               9         N/A         N/A           8\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 8.8\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/wikipedia\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #2  Step 0: Navigate to the Machine Learning Wikipedia article.  (score=0.000)\n  #3  Step 1: Verify article page loaded.  (score=0.000)\n  #4  Step 2: Verify article title and lead section.  (score=0.000)\n  #5  Step 3: Scroll to the table of contents.  (score=0.000)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 0: Navigate to the Machine Learning Wikipedia article.  (score=0.000, pixel=0.000)\n  #3  Step 1: Verify article page loaded.  (score=0.000, pixel=0.000)\n  #4  Step 2: Verify article title and lead section.  (score=0.000, pixel=0.000)\n  #5  Step 3: Scroll to the table of contents.  (score=0.000, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 17: Navigate to another section via table of contents.  [console error]  (fusion=0.354; observer_symptom=0.50, pixel=1.00, text=0.33, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 3: Scroll to the table of contents.  (fusion=0.000; n/a)\n  #3  Step 5: Click the first section link in the table of contents.  (fusion=0.000; n/a)\n  #4  Step 7: Scroll through the section content.  (fusion=0.000; n/a)\n  #5  Step 9: Continue scrolling through the article.  (fusion=0.000; n/a)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              29\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 17 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 17 (score=0.70): FAIL shows error message\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 17\nSummary:\n  Step 17 (score=0.70): FAIL shows error message\n\n  Per-step visual scores:\n    Step  17  score=0.70  FAIL shows error message  [in final top-5]\n    Step   0  score=0.00  identical  [analyzed only]\n    Step   1  score=0.00  identical  [analyzed only]\n    Step   2  score=0.00  identical  [analyzed only]\n    Step   3  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 17 (score=0.70): FAIL shows error message\n\nOther top suspects: #2 step 3 (weak signal), #3 step 5 (weak signal), #4 step 7 (weak signal), #5 step 9 (weak signal)\n\nEVALUATION\n----------------------------------------\nActual fault step: 17\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              17           1           0           0  ← ACTUAL FAULT\n  2               3         N/A         N/A          14\n  3               5         N/A         N/A          12\n  4               7         N/A         N/A          10\n  5               9         N/A         N/A           8\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 8.8\n=============================================================="
 }

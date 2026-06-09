@@ -1,36 +1,48 @@
 {
   "trace_id": "areeb_salem/github",
-  "generated": "2026-06-05T13:36:46.905900Z",
+  "generated": "2026-06-09T15:20:29.218637Z",
   "metadata": {
     "pipeline_version": "v2",
     "source": "areeb_salem",
     "fault_type": "ui_rendering_crash",
     "ranking_decisions": [
-      "LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).",
       "VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).",
       "V2 fusion rank = weighted channels, single sort (no post-hoc promotes).",
-      "Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
-      "Top-1 channel hints: causal_root, causal_llm_leader.",
-      "LLM diagnosis is explanatory only — ranking frozen after fusion."
+      "Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.",
+      "Top-1 channel hints: strong_observer_pixel."
     ],
-    "fusion_weights": {
-      "text": 0.28,
-      "navigation": 0.12,
-      "causal_action": 0.2,
-      "observer_symptom": 0.2,
-      "visual_causal": 0.14,
-      "pixel": 0.12,
-      "llm_prior": 0.28,
-      "vlm_prior": 0.18,
-      "downstream_penalty": 0.05,
-      "downstream_text_exempt": 0.25,
-      "observer_after_causal_cap": 0.55,
-      "observer_after_causal_min_text": 0.5,
-      "observer_vlm_cap": 0.2,
-      "vlm_root_llm_min": 0.75,
-      "causal_llm_bonus": 0.06,
-      "vlm_root_bonus": 0.05,
-      "action_llm_bonus": 0.05
+    "fusion_config": {
+      "active_channels": [
+        "causal_action",
+        "navigation",
+        "observer_symptom",
+        "pixel",
+        "text",
+        "visual_causal",
+        "vlm_prior"
+      ],
+      "score_channels": {
+        "causal_action": 0.2,
+        "navigation": 0.12,
+        "observer_symptom": 0.2,
+        "pixel": 0.12,
+        "text": 0.28,
+        "visual_causal": 0.14,
+        "vlm_prior": 0.18
+      },
+      "tuning": {
+        "downstream_penalty": 0.05,
+        "downstream_text_exempt": 0.25,
+        "observer_after_causal_cap": 0.55,
+        "observer_after_causal_min_text": 0.5,
+        "observer_vlm_cap": 0.2,
+        "vlm_root_bonus": 0.05
+      }
+    },
+    "run_flags": {
+      "use_llm": false,
+      "use_vlm": true,
+      "use_pixel": true
     },
     "vlm_status": "ok",
     "vlm_error": null,
@@ -39,37 +51,8 @@
     "exclude_from_aggregate": false,
     "ran_screenshot_scan": true
   },
-  "ranking_mode": "v2:llm+vlm",
+  "ranking_mode": "v2:vlm",
   "ranked_suspicious_steps": [
-    {
-      "step_id": 22,
-      "action": "Scroll through the pull request description.",
-      "network_score": 0.85,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.72,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "fusion_score": 0.5084,
-      "fusion_channels": {
-        "text": 0.72,
-        "navigation": 0.0,
-        "causal_action": 1.0,
-        "observer_symptom": 0.0,
-        "visual_causal": 0.0,
-        "pixel": 0.0,
-        "llm_prior": 1.0,
-        "vlm_prior": 0.0
-      },
-      "rank": 1
-    },
     {
       "step_id": 23,
       "action": "Verify pull request file changes section.",
@@ -86,16 +69,43 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2803,
+      "fusion_score": 0.4349,
       "fusion_channels": {
         "text": 0.333,
         "navigation": 0.0,
         "causal_action": 0.0,
-        "observer_symptom": 0.303,
+        "observer_symptom": 1.0,
         "visual_causal": 0.0,
-        "pixel": 0.303,
-        "llm_prior": 0.714,
-        "vlm_prior": 0.2
+        "pixel": 1.0,
+        "vlm_prior": 0.7
+      },
+      "rank": 1
+    },
+    {
+      "step_id": 22,
+      "action": "Scroll through the pull request description.",
+      "network_score": 0.85,
+      "console_score": 0.0,
+      "action_score": 0.0,
+      "intent_score": 0.0,
+      "combined_score": 0.72,
+      "screenshots_available": true,
+      "pixel_global": 0.0,
+      "pixel_localized": 0.0,
+      "pixel_score": 0.0,
+      "visual_causal_score": 0.0,
+      "visual_causal_next_step": null,
+      "visual_divergence_step": null,
+      "visual_causal_reason": null,
+      "fusion_score": 0.3239,
+      "fusion_channels": {
+        "text": 0.72,
+        "navigation": 0.0,
+        "causal_action": 1.0,
+        "observer_symptom": 0.0,
+        "visual_causal": 0.0,
+        "pixel": 0.0,
+        "vlm_prior": 0.0
       },
       "rank": 2
     },
@@ -115,7 +125,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2491,
+      "fusion_score": 0.128,
       "fusion_channels": {
         "text": 0.567,
         "navigation": 0.0,
@@ -123,7 +133,6 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.786,
         "vlm_prior": 0.0
       },
       "rank": 3
@@ -144,7 +153,7 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2374,
+      "fusion_score": 0.0813,
       "fusion_channels": {
         "text": 0.36,
         "navigation": 0.0,
@@ -152,19 +161,18 @@
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.929,
         "vlm_prior": 0.0
       },
       "rank": 4
     },
     {
-      "step_id": 4,
-      "action": "Navigate to the Code tab.",
-      "network_score": 0.7,
-      "console_score": 0.0,
+      "step_id": 31,
+      "action": "Verify Insights activity data loaded.",
+      "network_score": 0.0,
+      "console_score": 1.0,
       "action_score": 0.0,
       "intent_score": 0.0,
-      "combined_score": 0.3267,
+      "combined_score": 0.3333,
       "screenshots_available": true,
       "pixel_global": 0.0,
       "pixel_localized": 0.0,
@@ -173,15 +181,14 @@
       "visual_causal_next_step": null,
       "visual_divergence_step": null,
       "visual_causal_reason": null,
-      "fusion_score": 0.2181,
+      "fusion_score": 0.0753,
       "fusion_channels": {
-        "text": 0.327,
+        "text": 0.333,
         "navigation": 0.0,
         "causal_action": 0.0,
         "observer_symptom": 0.0,
         "visual_causal": 0.0,
         "pixel": 0.0,
-        "llm_prior": 0.857,
         "vlm_prior": 0.0
       },
       "rank": 5
@@ -362,98 +369,7 @@
     }
   ],
   "heuristic_visual_steps": null,
-  "llm_ranked_steps": [
-    {
-      "step_id": 22,
-      "action": "Scroll through the pull request description.",
-      "network_score": 0.85,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.72,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 1
-    },
-    {
-      "step_id": 30,
-      "action": "Navigate to the repository Insights page.",
-      "network_score": 0.7,
-      "console_score": 0.1,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.36,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 2
-    },
-    {
-      "step_id": 4,
-      "action": "Navigate to the Code tab.",
-      "network_score": 0.7,
-      "console_score": 0.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3267,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 3
-    },
-    {
-      "step_id": 20,
-      "action": "Open the first pull request.",
-      "network_score": 0.5,
-      "console_score": 1.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.5667,
-      "screenshots_available": true,
-      "pixel_global": 0.0,
-      "pixel_localized": 0.0,
-      "pixel_score": 0.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 4
-    },
-    {
-      "step_id": 23,
-      "action": "Verify pull request file changes section.",
-      "network_score": 0.0,
-      "console_score": 1.0,
-      "action_score": 0.0,
-      "intent_score": 0.0,
-      "combined_score": 0.3333,
-      "screenshots_available": true,
-      "pixel_global": 1.0,
-      "pixel_localized": 0.9412,
-      "pixel_score": 1.0,
-      "visual_causal_score": 0.0,
-      "visual_causal_next_step": null,
-      "visual_divergence_step": null,
-      "visual_causal_reason": null,
-      "rank": 5
-    }
-  ],
+  "llm_ranked_steps": null,
   "screenshot_analysis": {
     "steps_scanned": 34,
     "first_persistent_divergence": null,
@@ -465,22 +381,20 @@
     "has_signal": false
   },
   "technical_diagnosis": {
-    "root_cause_step_id": 22,
-    "root_cause_summary": "Scrolling through the pull request description left the diff viewer in a null state, causing the DiffRenderer to crash when the file changes section was verified.",
-    "downstream_steps": [
-      23
-    ],
-    "failure_chain": "The scroll action at step 22 failed to properly initialize or maintain the diffViewerInstance, resulting in a null reference error at step 23 when the verification step attempted to render the diff, which manifested as console errors and test failure."
+    "root_cause_step_id": null,
+    "root_cause_summary": null,
+    "downstream_steps": [],
+    "failure_chain": null
   },
-  "stakeholder_summary": "During the test, when the script scrolled through the pull‑request description, the area that displays the file changes was not kept ready. As a result, when the next step tried to show those changes to verify them, the display was missing and the system could not finish the action. This caused the test to stop and show an error message indicating that the verification step failed. Checking that the scrolling step leaves the change‑display area properly initialized should prevent the problem.",
+  "stakeholder_summary": "",
   "visual_analysis": {
     "visual_root_cause_step_id": 23,
-    "visual_summary": "Step 23 (score=0.70): FAIL shows error dialog",
+    "visual_summary": "Step 23 (score=0.70): FAIL shows an error dialog",
     "visual_scores": [
       {
         "step_id": 22,
         "visual_score": 0.0,
-        "visual_note": "screenshots are identical"
+        "visual_note": "no visible differences"
       },
       {
         "step_id": 20,
@@ -495,7 +409,7 @@
       {
         "step_id": 23,
         "visual_score": 0.7,
-        "visual_note": "FAIL shows error dialog"
+        "visual_note": "FAIL shows an error dialog"
       },
       {
         "step_id": 31,
@@ -507,21 +421,21 @@
   },
   "evaluation": {
     "actual_fault_step": 23,
-    "hit@1": 0,
+    "hit@1": 1,
     "hit@3": 1,
     "hit@5": 1,
-    "rank_position": 2,
-    "rank_distance": 1,
+    "rank_position": 1,
+    "rank_distance": 0,
     "step_distances": [
       {
         "rank": 1,
-        "step_id": 22,
-        "step_distance": 1
+        "step_id": 23,
+        "step_distance": 0
       },
       {
         "rank": 2,
-        "step_id": 23,
-        "step_distance": 0
+        "step_id": 22,
+        "step_distance": 1
       },
       {
         "rank": 3,
@@ -535,12 +449,12 @@
       },
       {
         "rank": 5,
-        "step_id": 4,
-        "step_distance": 19
+        "step_id": 31,
+        "step_distance": 8
       }
     ],
-    "mad@5": 6.0,
-    "top1_step_distance": 1
+    "mad@5": 3.8,
+    "top1_step_distance": 0
   },
-  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/github\nRanking mode: v2:llm+vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720)\n  #2  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567)\n  #3  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360)\n  #4  Step 23: Verify pull request file changes section.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.333)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.468, pixel=0.000)\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.368, pixel=0.000)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.234, pixel=0.000)\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.217, pixel=0.000)\n\nLLM RERANK TOP 5 (prior for fusion — not final rank) (text + pixel)\n----------------------------------------\n  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720, pixel=0.000)\n  #2  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360, pixel=0.000)\n  #3  Step 4: Navigate to the Code tab.  [network anomaly]  (score=0.327, pixel=0.000)\n  #4  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567, pixel=0.000)\n  #5  Step 23: Verify pull request file changes section.  [console error]  (score=0.333, pixel=1.000) ← ACTUAL FAULT\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + llm_prior + vlm_prior)\n----------------------------------------\n  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (fusion=0.508; causal_action=1.00, llm_prior=1.00, text=0.72)\n  #2  Step 23: Verify pull request file changes section.  [console error]  (fusion=0.280; llm_prior=0.71, observer_symptom=0.30, pixel=0.30, text=0.33, vlm_prior=0.20) ← ACTUAL FAULT\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (fusion=0.249; llm_prior=0.79, text=0.57)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (fusion=0.237; llm_prior=0.93, text=0.36)\n  #5  Step 4: Navigate to the Code tab.  [network anomaly]  (fusion=0.218; llm_prior=0.86, text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              34\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • LLM rerank mapped to fusion llm_prior channel (no anchor/Hit@k guards).\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, llm_prior, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: causal_root, causal_llm_leader.\n  • LLM diagnosis is explanatory only — ranking frozen after fusion.\n  • Fusion weights: action_llm_bonus=0.05, causal_action=0.2, causal_llm_bonus=0.06, downstream_penalty=0.05, downstream_text_exempt=0.25, llm_prior=0.28, navigation=0.12, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_symptom=0.2, observer_vlm_cap=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, vlm_root_bonus=0.05, vlm_root_llm_min=0.75\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 22\nSummary:       Scrolling through the pull request description left the diff viewer in a null state, causing the DiffRenderer to crash when the file changes section was verified.\nFailure chain: The scroll action at step 22 failed to properly initialize or maintain the diffViewerInstance, resulting in a null reference error at step 23 when the verification step attempted to render the diff, which manifested as console errors and test failure.\nDownstream:    [23]\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 23\nSummary:\n  Step 23 (score=0.70): FAIL shows error dialog\n\n  Per-step visual scores:\n    Step  23  score=0.70  FAIL shows error dialog  [in final top-5]\n    Step  20  score=0.00  identical  [in final top-5]\n    Step  22  score=0.00  screenshots are identical  [in final top-5]\n    Step  30  score=0.00  identical  [in final top-5]\n    Step  31  score=0.00  identical  [analyzed only]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\nDuring the test, when the script scrolled through the pull‑request description, the area that displays the file changes was not kept ready. As a result, when the next step tried to show those changes to verify them, the display was missing and the system could not finish the action. This caused the test to stop and show an error message indicating that the verification step failed. Checking that the scrolling step leaves the change‑display area properly initialized should prevent the problem.\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=0  Hit@3=1  Hit@5=1\nRank position of actual fault: 2\nOverall rank distance (|actual_rank - 1|): 1\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              22         N/A         N/A           1\n  2              23           1           1           0  ← ACTUAL FAULT\n  3              20         N/A         N/A           3\n  4              30         N/A         N/A           7\n  5               4         N/A         N/A          19\n\nTop-1 step distance: 1\nMAD@5 (mean step-dist over top-5): 6.0\n=============================================================="
+  "_text_report": "==============================================================\nTraceLens v2 Diagnosis Report: areeb_salem/github\nRanking mode: v2:vlm\n==============================================================\n\nHEURISTIC TOP 5 (text signals only)\n----------------------------------------\n  #1  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.720)\n  #2  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.567)\n  #3  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.360)\n  #4  Step 23: Verify pull request file changes section.  [console error]  (score=0.333) ← ACTUAL FAULT\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.333)\n\nHEURISTIC TOP 5 (text + pixel)\n----------------------------------------\n  #1  Step 23: Verify pull request file changes section.  [console error]  (score=0.567, pixel=1.000) ← ACTUAL FAULT\n  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (score=0.468, pixel=0.000)\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (score=0.368, pixel=0.000)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (score=0.234, pixel=0.000)\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (score=0.217, pixel=0.000)\n\nFUSION TOP 5 (final rank) (text + navigation + causal + symptom + pixel + visual causal + vlm_prior)\n----------------------------------------\n  #1  Step 23: Verify pull request file changes section.  [console error]  (fusion=0.435; observer_symptom=1.00, pixel=1.00, text=0.33, vlm_prior=0.70) ← ACTUAL FAULT\n  #2  Step 22: Scroll through the pull request description.  [network anomaly]  (fusion=0.324; causal_action=1.00, text=0.72)\n  #3  Step 20: Open the first pull request.  [network anomaly, console error]  (fusion=0.128; text=0.57)\n  #4  Step 30: Navigate to the repository Insights page.  [network anomaly]  (fusion=0.081; text=0.36)\n  #5  Step 31: Verify Insights activity data loaded.  [console error]  (fusion=0.075; text=0.33)\n\nSCREENSHOT ANALYSIS (pass/fail after images)\n----------------------------------------\nSteps scanned:              34\nNo persistent pass/fail screenshot divergence above threshold.\n  (Runs with --vlm or --llm --vlm on traces that have screenshots.)\n\nFUSION DECISIONS (channels and weights)\n----------------------------------------\n  • VLM scores mapped to fusion vlm_prior channel (no post-ensemble guards).\n  • V2 fusion rank = weighted channels, single sort (no post-hoc promotes).\n  • Active channels: causal_action, navigation, observer_symptom, pixel, text, visual_causal, vlm_prior.\n  • Top-1 channel hints: strong_observer_pixel.\n  • Fusion weights: causal_action=0.2, navigation=0.12, observer_symptom=0.2, pixel=0.12, text=0.28, visual_causal=0.14, vlm_prior=0.18, downstream_penalty=0.05, downstream_text_exempt=0.25, observer_after_causal_cap=0.55, observer_after_causal_min_text=0.5, observer_vlm_cap=0.2, vlm_root_bonus=0.05\n\nTECHNICAL ROOT CAUSE\n----------------------------------------\nPrimary step:  Step 23 (from visual analysis — LLM diagnosis not run)\nSummary:       Step 23 (score=0.70): FAIL shows an error dialog\nFailure chain: (not available without --llm)\nDownstream:    []\n\nVISUAL ANALYSIS (VLM)\n----------------------------------------\nVisual root cause: Step 23\nSummary:\n  Step 23 (score=0.70): FAIL shows an error dialog\n\n  Per-step visual scores:\n    Step  23  score=0.70  FAIL shows an error dialog  [in final top-5]\n    Step  20  score=0.00  identical  [in final top-5]\n    Step  22  score=0.00  no visible differences  [in final top-5]\n    Step  30  score=0.00  identical  [in final top-5]\n    Step  31  score=0.00  identical  [in final top-5]\n\n  Note: VLM summary lists only steps with meaningful visual differences\n  (identical/noise responses from per-step API calls are filtered out).\n  'Analyzed only' steps were sent to the VLM but ranked outside the final top-5.\n\nPLAIN LANGUAGE SUMMARY\n----------------------------------------\n(Pass --llm for a full plain-language stakeholder summary.)\n\nKey visual finding:\n  Step 23 (score=0.70): FAIL shows an error dialog\n\nOther top suspects: #2 step 22 (network error), #3 step 20 (console error), #4 step 30 (network error), #5 step 31 (console error)\n\nEVALUATION\n----------------------------------------\nActual fault step: 23\nHit@1=1  Hit@3=1  Hit@5=1\nRank position of actual fault: 1\nOverall rank distance (|actual_rank - 1|): 0\n\nPer-rank breakdown:\n  Pred.Rank    Step   True Rank   rank_dist   step_dist\n  (our rank)          (1=fault)  |pred-true|  |step-actual|\n  ----------  -----  ----------  ----------  ----------\n  1              23           1           0           0  ← ACTUAL FAULT\n  2              22         N/A         N/A           1\n  3              20         N/A         N/A           3\n  4              30         N/A         N/A           7\n  5              31         N/A         N/A           8\n\nTop-1 step distance: 0\nMAD@5 (mean step-dist over top-5): 3.8\n=============================================================="
 }
