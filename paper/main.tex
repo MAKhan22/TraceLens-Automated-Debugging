@@ -28,6 +28,7 @@
 \email{musab.khan@sabanciuniv.edu}
 
 \renewcommand{\shortauthors}{Musab Ahmed Khan}
+% \renewcommand{\shorttitle}{TraceLens}
 
 \begin{abstract}
 When an automated UI test regresses from pass to fail, engineers practice \emph{relative debugging}: they compare two executions of the same test to find the earliest step whose divergence explains the failure, separating root cause from downstream symptoms.
@@ -47,6 +48,22 @@ We recommend LLM-only for sharp top-1 localization and hybrid fusion when top-$k
 \keywords{relative debugging, regression diagnosis, UI testing, execution traces, fault localization, LLM, VLM}
 
 \maketitle
+
+% Running headers (sigconf twoside): short title (odd) / author (even),
+% with CS 460 Project and Sabanci University on the opposite sides.
+\makeatletter
+\fancypagestyle{standardpagestyle}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{\z@}%
+  \renewcommand{\footrulewidth}{\z@}%
+  \fancyfoot[C]{\if@ACM@printfolios\footnotesize\thepage\fi}%
+  \fancyhead[LO]{\ACM@linecountL\@headfootfont\shorttitle}%
+  \fancyhead[RO]{\ACM@linecountR\@headfootfont CS~460 Project}%
+  \fancyhead[LE]{\ACM@linecountL\@headfootfont Sabanci University}%
+  \fancyhead[RE]{\@headfootfont\@shortauthors\ACM@linecountR}%
+}
+\pagestyle{standardpagestyle}
+\makeatother
 
 %==============================================================================
 \section{Introduction}
@@ -307,15 +324,17 @@ Table~\ref{tab:benchmark} lists a representative subset; the full catalog is in 
 
 All main results use v2 (\texttt{main2.py}) with frozen run JSONs listed in \texttt{scripts/metrics\_manifest.yaml}.
 Baseline: \texttt{python main2.py}.
-LLM: Nemotron-3-Super-120B via OpenRouter ($T{=}0$).
-VLM: Llama-4-Scout-17B via Groq ($T{=}0$), ${\sim}5$ screenshot pairs per trace.
+\textbf{Models (free tier).}
+LLM: \texttt{nvidia/nemotron-3-super-120b-a12b:free} via OpenRouter ($T{=}0$).
+VLM: \texttt{meta-llama/llama-4-scout-17b-16e-instruct} via Groq ($T{=}0$), ${\sim}5$ screenshot pairs per trace.
+We chose separate free-tier providers to stay within daily quotas without paid credits; this constrains model choice and throughput relative to commercial APIs.
 
 \subsection{Results}
 
 Table~\ref{tab:main} reports aggregate v2 metrics on all 22 traces.
 
 \begin{table}[t]
-  \caption{v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt{dictionary} excluded: all-zero visual scores).}
+  \caption{v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt{dictionary} excluded: incomplete screenshot pairs for top-$K$ candidates).}
   \label{tab:main}
   \small
   \begin{tabular}{lrrrrr}
@@ -372,7 +391,7 @@ Figure~\ref{fig:heatmap} gives per-trace Hit@1; Figure~\ref{fig:source} breaks H
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figures/fig3_v2_trace_heatmap.png}
-  \caption{Per-trace Hit@1 heatmap (v2). Left band: source collection (ersel = test set).}
+  \caption{Per-trace Hit@1 heatmap (v2). Trace names colored by source (legend). Blank VLM cell: \texttt{dictionary} excluded (missing screenshots for top-$K$ steps).}
   \Description{Heatmap of Hit@1 per trace and mode.}
   \label{fig:heatmap}
 \end{figure}
@@ -430,9 +449,14 @@ Three trace schemas limit generalization without adapter code.
 
 \textbf{Conclusion validity.}
 LLM/VLM APIs with $T{=}0$ may still vary by provider routing; we report frozen run timestamps in the repository.
+Our evaluation used \textbf{free-tier} endpoints only: Nemotron~3 Super~120B on OpenRouter for text reranking and Llama~4 Scout~17B on Groq for screenshot pairs.
+Free tiers impose daily request caps, TPM throttling, and a restricted model catalog---paid alternatives (e.g., Qwen2.5-VL-72B, Gemini~2.0~Flash) may rank differently.
+Because the LLM and VLM run on \emph{different} providers and model families, we do not assume equal capability across modalities; we report their complementary contributions under a fixed, cost-bounded configuration.
 
 \textbf{Evaluation bias.}
-ersel (4 traces) uses intent fields absent elsewhere; VLM aggregate excludes \texttt{dictionary} ($n{=}21$).
+ersel (4 traces) uses intent fields absent elsewhere.
+VLM-only aggregate excludes \texttt{dictionary} ($n{=}21$): the trace artifact lacks complete pass/fail screenshot files for the heuristic top-$K$ candidates (${\sim}5$ steps), so the VLM could not analyze the ranked steps and the run is treated as unavailable (not scored as a miss).
+Hybrid mode still reports a fallback ranking for \texttt{dictionary} using text and pixel channels.
 
 %==============================================================================
 \section{Conclusion}

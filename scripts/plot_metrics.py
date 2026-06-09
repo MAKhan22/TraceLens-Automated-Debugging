@@ -51,7 +51,7 @@ CONFIGS: list[tuple[str, str]] = [
 SOURCE_META = {
     "efe_irem": {"label": "efe/irem", "color": "#0072B2", "short": "efe"},
     "areeb_salem": {"label": "areeb/salem", "color": "#D55E00", "short": "areeb"},
-    "ersel": {"label": "ersel (test set)", "color": "#009E73", "short": "ersel"},
+    "ersel": {"label": "ersel", "color": "#009E73", "short": "ersel"},
 }
 
 
@@ -150,7 +150,7 @@ def trace_source(tid: str) -> str:
 
 
 def short_trace_name(tid: str) -> str:
-    return tid.split("/", 1)[-1].replace("_", " ")[:18]
+    return tid.split("/", 1)[-1].replace("_", " ")[:22]
 
 
 def load_manifest(path: Path) -> dict:
@@ -316,15 +316,15 @@ def fig3_v2_trace_heatmap(runs: dict, out_dir: Path) -> None:
         by_id = {r["trace_id"]: r for r in (runs["v2"].get(cfg_key) or {}).get("per_trace") or []}
         for i, tid in enumerate(trace_order):
             row = by_id.get(tid)
-            if row is not None:
-                mat[i, j] = int(row.get("hit@1") or 0)
+            if row is None:
+                continue
+            if row.get("exclude_from_aggregate"):
+                continue
+            mat[i, j] = int(row.get("hit@1") or 0)
 
     cmap = ListedColormap(["#D73027", "#1A9850"])
     fig_h = max(5.5, n_t * 0.26)
-    fig = plt.figure(figsize=(7.8, fig_h))
-    gs = fig.add_gridspec(1, 2, width_ratios=[0.55, 6], wspace=0.06)
-    ax_band = fig.add_subplot(gs[0])
-    ax = fig.add_subplot(gs[1])
+    fig, ax = plt.subplots(figsize=(7.8, fig_h))
 
     im = ax.imshow(mat, aspect="auto", cmap=cmap, vmin=0, vmax=1, interpolation="nearest")
 
@@ -332,30 +332,17 @@ def fig3_v2_trace_heatmap(runs: dict, out_dir: Path) -> None:
     ax.set_xticklabels([c[1] for c in CONFIGS], rotation=35, ha="right")
     ax.set_yticks(range(n_t))
     ax.set_yticklabels([short_trace_name(t) for t in trace_order], fontsize=7)
-    ax.set_xlabel("Configuration")
-
-    # Left gutter: colored bands + source labels (no overlap with trace names)
-    ax_band.set_xlim(0, 1)
-    ax_band.set_ylim(n_t - 0.5, -0.5)
-    ax_band.axis("off")
+    for i, tid in enumerate(trace_order):
+        src = trace_source(tid)
+        if src in SOURCE_META:
+            ax.get_yticklabels()[i].set_color(SOURCE_META[src]["color"])
+            ax.get_yticklabels()[i].set_fontweight("bold")
 
     pos = 0
     for src in SOURCE_META:
         count = sum(1 for t in trace_order if trace_source(t) == src)
         if count == 0:
             continue
-        y0 = pos - 0.5
-        ax_band.add_patch(mpatches.Rectangle(
-            (0.05, y0), 0.22, count,
-            facecolor=SOURCE_META[src]["color"], alpha=0.35,
-            edgecolor=SOURCE_META[src]["color"], linewidth=1.2,
-        ))
-        mid = pos + count / 2 - 0.5
-        ax_band.text(
-            0.62, mid, _source_label(src),
-            va="center", ha="left", fontsize=7.5, fontweight="bold",
-            color=SOURCE_META[src]["color"],
-        )
         if pos > 0:
             ax.axhline(pos - 0.5, color="#BBBBBB", linewidth=0.8)
         pos += count
@@ -367,7 +354,7 @@ def fig3_v2_trace_heatmap(runs: dict, out_dir: Path) -> None:
                 ax.text(j, i, sym, ha="center", va="center", fontsize=7,
                         color="white", fontweight="bold")
 
-    ax.set_title("v2 per-trace Hit@1 (22 traces × 5 configs)")
+    ax.set_title("v2 per-trace Hit@1 (22 traces × 5 configs)", pad=8)
     cbar = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02, ticks=[0.25, 0.75])
     cbar.ax.set_yticklabels(["Miss", "Hit"])
 
@@ -375,10 +362,17 @@ def fig3_v2_trace_heatmap(runs: dict, out_dir: Path) -> None:
         mpatches.Patch(color=SOURCE_META[s]["color"], label=_source_label(s))
         for s in SOURCE_META
     ]
-    fig.legend(handles=legend_patches, loc="lower center", bbox_to_anchor=(0.55, -0.06),
-               ncol=3, frameon=False, fontsize=8)
-    fig.subplots_adjust(bottom=0.14)
-    _save(fig, out_dir, "fig3_v2_trace_heatmap")
+    fig.legend(
+        handles=legend_patches, loc="lower center", bbox_to_anchor=(0.5, -0.02),
+        ncol=3, frameon=False, fontsize=8,
+    )
+    fig.subplots_adjust(left=0.28, bottom=0.16, right=0.88)
+    fig.savefig(
+        out_dir / "fig3_v2_trace_heatmap.png",
+        facecolor="white",
+        dpi=300,
+    )
+    plt.close(fig)
 
 
 # ── Figure 4: rank distance strip (replaces scatter) ─────────────────────
