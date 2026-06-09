@@ -1,0 +1,50 @@
+% Styles for architecture TikZ figures (loaded from main.tex preamble)
+\tikzset{
+  archbox/.style={
+    draw=black!55,
+    rounded corners=2pt,
+    align=center,
+    font=\scriptsize,
+    inner xsep=5pt,
+    inner ysep=4pt,
+  },
+  % v2: blue = inputs/features, gray = pipeline, green = fusion core
+  v2blue/.style={archbox, fill=blue!14, draw=blue!35, minimum width=19mm},
+  v2gray/.style={archbox, fill=gray!12, draw=gray!45, minimum width=19mm},
+  v2green/.style={archbox, fill=green!16, draw=green!40!black, minimum width=28mm},
+  v2bus/.style={semithick, draw=black!65},
+  v2arr/.style={-{Stealth[length=1.8mm, width=1.2mm]}, semithick, draw=black!65},
+  v2legendbox/.style={
+    draw=black!35,
+    fill=white,
+    rounded corners=2pt,
+    inner xsep=8pt,
+    inner ysep=5pt,
+  },
+  % v1
+  v1gray/.style={archbox, fill=gray!12, draw=gray!45, minimum width=52mm},
+  v1red/.style={archbox, fill=red!14, draw=red!45, minimum width=52mm},
+  v1warn/.style={archbox, fill=yellow!20, draw=orange!50, minimum width=52mm},
+  v1arr/.style={-{Stealth[length=1.8mm, width=1.2mm]}, semithick, draw=black!65},
+}
+
+% Colored swatch for legend tables (no nested tikz)
+\newcommand{\archSwatch}[2]{%
+  \raisebox{-0.35ex}{\fcolorbox{#1}{#2}{\rule{0pt}{2.6mm}\hspace{6.5mm}}}%
+}
+
+\newcommand{\vTwoLegendRow}{%
+  \begin{tabular}{@{}c@{\hspace{1.5mm}}l@{\hspace{8mm}}c@{\hspace{1.5mm}}l@{\hspace{8mm}}c@{\hspace{1.5mm}}l@{}}%
+    \archSwatch{blue!35}{blue!14} & {\scriptsize Inputs \& features} &
+    \archSwatch{gray!45}{gray!12} & {\scriptsize Pipeline stages} &
+    \archSwatch{green!40!black}{green!16} & {\scriptsize Fusion ranker} \\%
+  \end{tabular}%
+}
+
+\newcommand{\vOneLegendRow}{%
+  \begin{tabular}{@{}c@{\hspace{1.5mm}}l@{\hspace{8mm}}c@{\hspace{1.5mm}}l@{\hspace{8mm}}c@{\hspace{1.5mm}}l@{}}%
+    \archSwatch{gray!45}{gray!12} & {\scriptsize Processing} &
+    \archSwatch{red!45}{red!14} & {\scriptsize Rank override} &
+    \archSwatch{orange!50}{yellow!20} & {\scriptsize Final output} \\%
+  \end{tabular}%
+}

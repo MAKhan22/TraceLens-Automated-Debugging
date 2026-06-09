@@ -1,0 +1,67 @@
+% TikZ v2 architecture — include inside \resizebox in main.tex
+\begin{tikzpicture}[node distance=4mm]
+  \node[v2blue] (pass) {Pass trace};
+  \node[v2blue, right=16mm of pass] (fail) {Fail trace};
+
+  \node[v2gray, below=7mm of $(pass)!0.5!(fail)$, minimum width=48mm] (parse)
+    {Parse and align traces};
+  \node[v2gray, below=of parse, minimum width=50mm] (signals)
+    {Relative signal extraction};
+  \node[v2blue, below=of signals, minimum width=58mm] (channels)
+    {Fusion channels\\(text, nav, causal, observer, pixel)};
+
+  \node[v2gray, below left=6mm and 9mm of channels, minimum width=22mm] (llm)
+    {LLM rerank\\(optional)};
+  \node[v2gray, below=6mm of channels, minimum width=22mm] (vc)
+    {Visual-causal\\scan};
+  \node[v2gray, below right=6mm and 9mm of channels, minimum width=22mm] (vlm)
+    {VLM pairs\\(optional)};
+
+  \node[v2green, below=7mm of $(llm)!0.5!(vlm)$, minimum width=52mm] (fusion)
+    {Weighted fusion + structural policies};
+  \node[v2green, below=of fusion, minimum width=36mm] (sort)
+    {Single sort to top-$k$};
+
+  \node[v2gray, below left=6mm and 7mm of sort, minimum width=21mm] (diag)
+    {Read-only\\diagnosis};
+  \node[v2gray, below=6mm of sort, minimum width=21mm] (eval)
+    {Evaluation\\(Hit@$k$)};
+  \node[v2gray, below right=6mm and 7mm of sort, minimum width=21mm] (report)
+    {Stakeholder\\report};
+
+  % --- arrows ---
+  \coordinate (inBus) at ($(parse.north) + (0,3.5mm)$);
+  \draw[v2bus] (pass.south |- inBus) -- (fail.south |- inBus);
+  \draw[v2arr] (pass.south) -- (pass.south |- inBus);
+  \draw[v2arr] (fail.south) -- (fail.south |- inBus);
+  \draw[v2arr] (inBus) -- (parse.north);
+
+  \draw[v2arr] (parse.south) -- (signals.north);
+  \draw[v2arr] (signals.south) -- (channels.north);
+
+  \coordinate (splitBus) at ($(channels.south)!0.38!(vc.north)$);
+  \draw[v2bus] (splitBus -| llm.north) -- (splitBus -| vlm.north);
+  \draw[v2arr] (channels.south) -- (splitBus);
+  \draw[v2arr] (splitBus -| llm.north) -- (llm.north);
+  \draw[v2arr] (splitBus) -- (vc.north);
+  \draw[v2arr] (splitBus -| vlm.north) -- (vlm.north);
+
+  \coordinate (joinBus) at ($(vc.south)!0.38!(fusion.north)$);
+  \draw[v2bus] (joinBus -| llm.south) -- (joinBus -| vlm.south);
+  \draw[v2arr] (llm.south) -- (joinBus -| llm.south);
+  \draw[v2arr] (vc.south) -- (joinBus);
+  \draw[v2arr] (vlm.south) -- (joinBus -| vlm.south);
+  \draw[v2arr] (joinBus) -- (fusion.north);
+
+  \draw[v2arr] (fusion.south) -- (sort.north);
+
+  \coordinate (outBus) at ($(sort.south)!0.38!(eval.north)$);
+  \draw[v2bus] (outBus -| diag.north) -- (outBus -| report.north);
+  \draw[v2arr] (sort.south) -- (outBus);
+  \draw[v2arr] (outBus -| diag.north) -- (diag.north);
+  \draw[v2arr] (outBus) -- (eval.north);
+  \draw[v2arr] (outBus -| report.north) -- (report.north);
+
+  % --- legend: one row, centered, boxed ---
+  \node[v2legendbox, anchor=north, below=5mm of eval.south] {\vTwoLegendRow};
+\end{tikzpicture}

@@ -1,0 +1,116 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{abramson1996relative,sosic1997guard}
+\citation{wong2016survey,agrawal1995fault}
+\citation{panichella2015test}
+\citation{mesbah2012crawling}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Running example.}{1}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Contributions.}{1}{section*.6}\protected@file@percent }
+\citation{abramson1996relative}
+\citation{sosic1997guard}
+\citation{zeller2002simplifying}
+\citation{grechanik2009recovering,panichella2015test}
+\citation{ricca2001testing,mesbah2012crawling}
+\citation{wen2020reproducing,wong2016survey}
+\citation{kang2023llm,brown2020language}
+\citation{deng2023webarena,liu2024mind2web,chen2024ui}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background and Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Background and Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Relative and delta debugging.}{2}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fault localization.}{2}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{LLMs and VLMs for software engineering.}{2}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gap.}{2}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Approach}{2}{section.3}\protected@file@percent }
+\newlabel{sec:approach}{{3}{2}{Approach}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Task formulation}{2}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:task}{{3.1}{2}{Task formulation}{subsection.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textsc  {TraceLens} v2 pipeline. Pass and fail traces are parsed, aligned, and differenced into fusion channels; optional LLM/VLM priors feed a single weighted sort. Diagnosis is read-only.\relax }}{2}{figure.caption.11}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:arch-v2}{{1}{2}{\textsc {TraceLens} v2 pipeline. Pass and fail traces are parsed, aligned, and differenced into fusion channels; optional LLM/VLM priors feed a single weighted sort. Diagnosis is read-only.\relax }{figure.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Pass--fail relative signals in \textsc  {TraceLens}.\relax }}{2}{table.caption.12}\protected@file@percent }
+\newlabel{tab:signals}{{1}{2}{Pass--fail relative signals in \textsc {TraceLens}.\relax }{table.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Relative signal extraction (heuristic baseline)}{2}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:heuristic}{{3.2}{2}{Relative signal extraction (heuristic baseline)}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Visual relative signals}{3}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:visual}{{3.3}{3}{Visual relative signals}{subsection.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}LLM relative reranking}{3}{subsection.3.4}\protected@file@percent }
+\newlabel{sec:llm}{{3.4}{3}{LLM relative reranking}{subsection.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}v2 unified fusion}{3}{subsection.3.5}\protected@file@percent }
+\newlabel{sec:fusion}{{3.5}{3}{v2 unified fusion}{subsection.3.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces v1 stacked pipeline (\texttt  {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }}{3}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:arch-v1}{{2}{3}{v1 stacked pipeline (\texttt {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {paragraph}{Mode summary.}{3}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}v1 architecture and limitations}{3}{subsection.3.6}\protected@file@percent }
+\newlabel{sec:v1}{{3.6}{3}{v1 architecture and limitations}{subsection.3.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{4}{section.4}\protected@file@percent }
+\newlabel{sec:eval}{{4}{4}{Evaluation}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Research questions}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Benchmark and setup}{4}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Results}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Case studies}{4}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:case}{{4.4}{4}{Case studies}{subsection.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces LLM vs.\ hybrid on Hit@1/3, mean rank distance, and MAD@5 (v2, 22 traces).\relax }}{4}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:tradeoff}{{3}{4}{LLM vs.\ hybrid on Hit@1/3, mean rank distance, and MAD@5 (v2, 22 traces).\relax }{figure.caption.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Hit@1/3/5 across modes; v1 vs.\ v2 evolution. Heuristic is the baseline.\relax }}{4}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:hitk}{{4}{4}{Hit@1/3/5 across modes; v1 vs.\ v2 evolution. Heuristic is the baseline.\relax }{figure.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Multi-metric radar comparison across v1 and v2 modes (Hit@1/3/5, rank distance, MAD@5).\relax }}{4}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:radar}{{5}{4}{Multi-metric radar comparison across v1 and v2 modes (Hit@1/3/5, rank distance, MAD@5).\relax }{figure.caption.19}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Representative benchmark traces (22 total). GT = ground-truth fault step (0-indexed).\relax }}{5}{table.caption.15}\protected@file@percent }
+\newlabel{tab:benchmark}{{2}{5}{Representative benchmark traces (22 total). GT = ground-truth fault step (0-indexed).\relax }{table.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt  {dictionary} excluded: all-zero visual scores).\relax }}{5}{table.caption.16}\protected@file@percent }
+\newlabel{tab:main}{{3}{5}{v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt {dictionary} excluded: all-zero visual scores).\relax }{table.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Per-trace Hit@1 heatmap (v2). Left band: source collection (ersel = test set).\relax }}{5}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:heatmap}{{6}{5}{Per-trace Hit@1 heatmap (v2). Left band: source collection (ersel = test set).\relax }{figure.caption.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Analysis by signal type}{5}{subsection.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces v2 Hit@1 by source collection and mode.\relax }}{5}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:source}{{7}{5}{v2 Hit@1 by source collection and mode.\relax }{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}v1 comparison}{5}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Threats to Validity}{5}{section.5}\protected@file@percent }
+\newlabel{sec:threats}{{5}{5}{Threats to Validity}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{5}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{5}{Conclusion}{section.6}{}}
+\bibstyle{ACM-Reference-Format}
+\bibdata{references}
+\bibcite{abramson1996relative}{{1}{1996}{{Abramson et~al\mbox  {.}}}{{}}}
+\bibcite{agrawal1995fault}{{2}{1995}{{Agrawal et~al\mbox  {.}}}{{}}}
+\bibcite{kang2023llm}{{3}{2024a}{{Authors}}{{}}}
+\bibcite{chen2024ui}{{4}{2024b}{{Authors}}{{}}}
+\bibcite{brown2020language}{{5}{2020}{{Brown et~al\mbox  {.}}}{{}}}
+\bibcite{liu2024mind2web}{{6}{2023}{{Deng et~al\mbox  {.}}}{{}}}
+\bibcite{grechanik2009recovering}{{7}{2009}{{Grechanik et~al\mbox  {.}}}{{}}}
+\bibcite{mesbah2012crawling}{{8}{2012}{{Mesbah et~al\mbox  {.}}}{{}}}
+\bibcite{panichella2015test}{{9}{2015}{{Panichella et~al\mbox  {.}}}{{}}}
+\bibcite{ricca2001testing}{{10}{2001}{{Ricca and Tonella}}{{}}}
+\bibcite{sosic1997guard}{{11}{1997}{{Sosi{\c {c}} and Abramson}}{{}}}
+\bibcite{wen2020reproducing}{{12}{2020}{{Wen et~al\mbox  {.}}}{{}}}
+\bibcite{wong2016survey}{{13}{2016}{{Wong et~al\mbox  {.}}}{{}}}
+\bibcite{deng2023webarena}{{14}{2024}{{Yao et~al\mbox  {.}}}{{}}}
+\bibcite{zeller2002simplifying}{{15}{2002}{{Zeller}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{6.25499pt}
+\newlabel{tocindent2}{10.34999pt}
+\newlabel{tocindent3}{0pt}
+\@writefile{toc}{\contentsline {section}{\numberline {A}v1 Aggregate Comparison}{6}{appendix.A}\protected@file@percent }
+\newlabel{app:v1}{{A}{6}{v1 Aggregate Comparison}{appendix.A}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces v1 vs.\ v2 Hit@1 on overlapping runs.\relax }}{6}{table.caption.23}\protected@file@percent }
+\newlabel{tab:v1v2}{{4}{6}{v1 vs.\ v2 Hit@1 on overlapping runs.\relax }{table.caption.23}{}}
+\@writefile{toc}{\contentsline {section}{References}{6}{section*.25}\protected@file@percent }
+\newlabel{TotPages}{{6}{6}{}{page.6}{}}
+\gdef \@abspage@last{6}

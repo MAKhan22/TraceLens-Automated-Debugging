@@ -1,0 +1,23 @@
+% TikZ v1 architecture — include inside \resizebox in main.tex
+\begin{tikzpicture}[node distance=3mm]
+  \node[v1gray] (s1) {Pass/fail parse and align};
+  \node[v1gray, below=of s1] (s2) {Heuristic sort};
+  \node[v1gray, below=of s2] (s3) {LLM hard rerank};
+  \node[v1red, below=of s3] (s4) {Hit@$k$ guard};
+  \node[v1red, below=of s4] (s5) {Deterministic promote};
+  \node[v1red, below=of s5] (s6) {Diagnosis promote};
+  \node[v1gray, below=of s6] (s7) {VLM ensemble};
+  \node[v1red, below=of s7] (s8) {Post-blend guard};
+  \node[v1warn, below=of s8] (s9) {Final rank and report};
+
+  \foreach \a/\b in {s1/s2, s2/s3, s3/s4, s4/s5, s5/s6, s6/s7, s7/s8, s8/s9} {
+    \draw[v1arr] (\a.south) -- (\b.north);
+  }
+
+  \node[font=\scriptsize\itshape, align=center, below=4mm of s9,
+        draw=black!30, fill=yellow!8, rounded corners=2pt, inner sep=4pt] (note) {%
+    Hybrid mode runs both override chains;\\
+    trace-specific guards can conflict.};
+
+  \node[v2legendbox, anchor=north, below=4mm of note.south] {\vOneLegendRow};
+\end{tikzpicture}

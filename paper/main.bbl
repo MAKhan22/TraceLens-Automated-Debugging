@@ -1,0 +1,208 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{15}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Abramson et~al\mbox{.}(1996)]%
+        {abramson1996relative}
+\bibfield{author}{\bibinfo{person}{David Abramson}, \bibinfo{person}{Ian
+  Foster}, \bibinfo{person}{John Michalakes}, {and} \bibinfo{person}{Rok
+  Sosi{\c{c}}}.} \bibinfo{year}{1996}\natexlab{}.
+\newblock \showarticletitle{Relative Debugging: A New Paradigm for Debugging
+  Scientific Applications}.
+\newblock \bibinfo{journal}{\emph{Commun. ACM}} \bibinfo{volume}{39},
+  \bibinfo{number}{11} (\bibinfo{year}{1996}), \bibinfo{pages}{67--77}.
+\newblock
+
+
+\bibitem[Agrawal et~al\mbox{.}(1995)]%
+        {agrawal1995fault}
+\bibfield{author}{\bibinfo{person}{Hiralal Agrawal}, \bibinfo{person}{Joseph~R.
+  Horgan}, {and} \bibinfo{person}{Si-Leung Wong}.}
+  \bibinfo{year}{1995}\natexlab{}.
+\newblock \showarticletitle{Fault Localization Using Execution Slices and
+  Dataflow Tests}.
+\newblock \bibinfo{journal}{\emph{IEEE Transactions on Software Engineering}}
+  \bibinfo{volume}{21}, \bibinfo{number}{2} (\bibinfo{year}{1995}),
+  \bibinfo{pages}{149--162}.
+\newblock
+
+
+\bibitem[Authors(2024a)]%
+        {kang2023llm}
+\bibfield{author}{\bibinfo{person}{Placeholder Authors}.}
+  \bibinfo{year}{2024}\natexlab{a}.
+\newblock \showarticletitle{Large Language Models for Software Engineering: A
+  Systematic Literature Review}. In \bibinfo{booktitle}{\emph{Proceedings of
+  the Conference Name Placeholder (Venue 'XX)}}.
+\newblock
+\newblock
+\shownote{Replace with published survey before submission}.
+
+
+\bibitem[Authors(2024b)]%
+        {chen2024ui}
+\bibfield{author}{\bibinfo{person}{Placeholder Authors}.}
+  \bibinfo{year}{2024}\natexlab{b}.
+\newblock \showarticletitle{Vision-Language Models for Graphical User Interface
+  Understanding}. In \bibinfo{booktitle}{\emph{Proceedings of the Conference
+  Name Placeholder (Venue 'XX)}}.
+\newblock
+\newblock
+\shownote{Replace with WebArena/Mind2Web or related citation}.
+
+
+\bibitem[Brown et~al\mbox{.}(2020)]%
+        {brown2020language}
+\bibfield{author}{\bibinfo{person}{Tom~B. Brown} {et~al\mbox{.}}}
+  \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Language Models are Few-Shot Learners}. In
+  \bibinfo{booktitle}{\emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}}.
+\newblock
+
+
+\bibitem[Deng et~al\mbox{.}(2023)]%
+        {liu2024mind2web}
+\bibfield{author}{\bibinfo{person}{Xiang Deng} {et~al\mbox{.}}}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Mind2Web: Towards a Generalist Agent for the Web}.
+  In \bibinfo{booktitle}{\emph{Advances in Neural Information Processing
+  Systems (NeurIPS)}}.
+\newblock
+
+
+\bibitem[Grechanik et~al\mbox{.}(2009)]%
+        {grechanik2009recovering}
+\bibfield{author}{\bibinfo{person}{Mark Grechanik}, \bibinfo{person}{Chen Fu},
+  {and} \bibinfo{person}{Qiang Xie}.} \bibinfo{year}{2009}\natexlab{}.
+\newblock \showarticletitle{Automatically Finding Performance Problems with
+  Feedback-Directed Monitoring as You Go}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the International Symposium on
+  Software Testing and Analysis (ISSTA)}}. \bibinfo{pages}{227--238}.
+\newblock
+
+
+\bibitem[Mesbah et~al\mbox{.}(2012)]%
+        {mesbah2012crawling}
+\bibfield{author}{\bibinfo{person}{Ali Mesbah} {et~al\mbox{.}}}
+  \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Crawling Ajax-Based Web Applications through
+  Dynamic Analysis of User Interface State Changes}. In
+  \bibinfo{booktitle}{\emph{ACM Transactions on the Web}},
+  Vol.~\bibinfo{volume}{6}. \bibinfo{pages}{1--30}.
+\newblock
+
+
+\bibitem[Panichella et~al\mbox{.}(2015)]%
+        {panichella2015test}
+\bibfield{author}{\bibinfo{person}{Alessandro Panichella} {et~al\mbox{.}}}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{How Developers Debug Software: The Role of Log
+  Points}. In \bibinfo{booktitle}{\emph{Proceedings of the International
+  Conference on Software Maintenance and Evolution (ICSME)}}.
+  \bibinfo{pages}{1--10}.
+\newblock
+\newblock
+\shownote{Log-based debugging representative}.
+
+
+\bibitem[Ricca and Tonella(2001)]%
+        {ricca2001testing}
+\bibfield{author}{\bibinfo{person}{Filippo Ricca} {and} \bibinfo{person}{Paolo
+  Tonella}.} \bibinfo{year}{2001}\natexlab{}.
+\newblock \showarticletitle{Analysis and Testing of Web Applications}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the International Conference on
+  Software Engineering (ICSE)}}. \bibinfo{pages}{25--34}.
+\newblock
+
+
+\bibitem[Sosi{\c{c}} and Abramson(1997)]%
+        {sosic1997guard}
+\bibfield{author}{\bibinfo{person}{Rok Sosi{\c{c}}} {and}
+  \bibinfo{person}{David Abramson}.} \bibinfo{year}{1997}\natexlab{}.
+\newblock \showarticletitle{{GUARD}: A Relative Debugger}.
+\newblock \bibinfo{journal}{\emph{Software: Practice and Experience}}
+  \bibinfo{volume}{27}, \bibinfo{number}{2} (\bibinfo{year}{1997}),
+  \bibinfo{pages}{185--206}.
+\newblock
+
+
+\bibitem[Wen et~al\mbox{.}(2020)]%
+        {wen2020reproducing}
+\bibfield{author}{\bibinfo{person}{Ming Wen} {et~al\mbox{.}}}
+  \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Historical Spectrum Based Fault Localization}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the International Conference on
+  Software Engineering (ICSE)}}. \bibinfo{pages}{1--12}.
+\newblock
+\newblock
+\shownote{Spectrum-based FL representative}.
+
+
+\bibitem[Wong et~al\mbox{.}(2016)]%
+        {wong2016survey}
+\bibfield{author}{\bibinfo{person}{W.~Eric Wong} {et~al\mbox{.}}}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{A Survey on Software Fault Localization}.
+\newblock \bibinfo{journal}{\emph{IEEE Transactions on Reliability}}
+  \bibinfo{volume}{65}, \bibinfo{number}{3} (\bibinfo{year}{2016}),
+  \bibinfo{pages}{841--867}.
+\newblock
+
+
+\bibitem[Yao et~al\mbox{.}(2024)]%
+        {deng2023webarena}
+\bibfield{author}{\bibinfo{person}{Shunyu Yao} {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{WebArena: A Realistic Web Environment for Building
+  Autonomous Agents}. In \bibinfo{booktitle}{\emph{International Conference on
+  Learning Representations (ICLR)}}.
+\newblock
+
+
+\bibitem[Zeller(2002)]%
+        {zeller2002simplifying}
+\bibfield{author}{\bibinfo{person}{Andreas Zeller}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Simplifying and Isolating Failure-Inducing Input}.
+  In \bibinfo{booktitle}{\emph{IEEE Transactions on Software Engineering}},
+  Vol.~\bibinfo{volume}{28}. \bibinfo{pages}{183--200}.
+\newblock
+
+
+\end{thebibliography}
