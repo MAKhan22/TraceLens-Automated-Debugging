@@ -1,0 +1,384 @@
+{
+  "run_id": "20260609_135810",
+  "timestamp": "2026-06-09T13:58:10.115492+00:00",
+  "mode": "v2:vlm (meta-llama/llama-4-scout-17b-16e-instruct)",
+  "pipeline_version": "v2",
+  "run_flags": {
+    "use_llm": false,
+    "use_vlm": true,
+    "use_pixel": true
+  },
+  "filter_source": "efe_irem",
+  "filter_trace": null,
+  "n_traces_run": 8,
+  "n_traces_evaluated": 7,
+  "n_traces_excluded": 1,
+  "excluded_traces": [
+    {
+      "trace_id": "efe_irem/dictionary",
+      "reason": "vlm_all_zero",
+      "error": "VLM returned all-zero visual scores \u2014 meta-llama/llama-4-scout-17b-16e-instruct did not detect any differences"
+    }
+  ],
+  "aggregate": {
+    "n_traces": 7,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "hit@5": 1.0,
+    "mean_rank_position": 1.0,
+    "mean_rank_distance": 0.0,
+    "mean_top1_step_distance": 0.0,
+    "mean_mad@5": 4.0571,
+    "found_in_top5_count": 7
+  },
+  "per_trace": [
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 10,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 13,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 2.2,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 27,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 29,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 28,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 31,
+          "step_distance": 4
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 21
+        }
+      ],
+      "mad@5": 5.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 9,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 2
+        }
+      ],
+      "mad@5": 3.4,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/dictionary",
+      "actual_fault_step": 25,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 3,
+      "rank_distance": 2,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 26,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 25,
+          "step_distance": 0
+        },
+        {
+          "rank": 4,
+          "step_id": 27,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 25
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1,
+      "vlm_status": "failed",
+      "exclude_from_aggregate": true
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 7,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 9,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 1
+        }
+      ],
+      "mad@5": 3.2,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 5,
+          "step_id": 15,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 2.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 14,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 16,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 11
+        }
+      ],
+      "mad@5": 4.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false
+    }
+  ],
+  "fusion_config": {
+    "active_channels": [
+      "causal_action",
+      "navigation",
+      "observer_symptom",
+      "pixel",
+      "text",
+      "visual_causal",
+      "vlm_prior"
+    ],
+    "score_channels": {
+      "causal_action": 0.2,
+      "navigation": 0.12,
+      "observer_symptom": 0.2,
+      "pixel": 0.12,
+      "text": 0.28,
+      "visual_causal": 0.14,
+      "vlm_prior": 0.18
+    },
+    "tuning": {
+      "downstream_penalty": 0.05,
+      "downstream_text_exempt": 0.25,
+      "observer_after_causal_cap": 0.55,
+      "observer_after_causal_min_text": 0.5,
+      "observer_vlm_cap": 0.2,
+      "vlm_root_bonus": 0.05
+    }
+  }
+}

@@ -1,0 +1,970 @@
+{
+  "run_id": "COMBINED_20260609_v2_vlm_efe_irem_areeb_salem_ersel",
+  "timestamp": "2026-06-09T16:41:47.592636+00:00",
+  "mode": "v2:vlm (meta-llama/llama-4-scout-17b-16e-instruct)",
+  "pipeline_version": "v2",
+  "run_flags": {
+    "use_llm": false,
+    "use_vlm": true,
+    "use_pixel": true
+  },
+  "filter_source": [
+    "efe_irem",
+    "areeb_salem",
+    "ersel"
+  ],
+  "filter_trace": null,
+  "n_traces_expected": 22,
+  "n_traces_run": 22,
+  "n_traces_evaluated": 21,
+  "n_traces_missing": 0,
+  "n_traces_excluded": 1,
+  "sources_breakdown": {
+    "efe_irem": {
+      "evaluated": 7,
+      "missing": [],
+      "excluded": [
+        "efe_irem/dictionary"
+      ]
+    },
+    "ersel": {
+      "evaluated": 4,
+      "missing": [],
+      "excluded": []
+    },
+    "areeb_salem": {
+      "evaluated": 10,
+      "missing": [],
+      "excluded": []
+    }
+  },
+  "missing_traces": [],
+  "excluded_traces": [
+    {
+      "trace_id": "efe_irem/dictionary",
+      "reason": "failed",
+      "source_run": "20260609_135810"
+    }
+  ],
+  "notes": "Combined v2 vlm-only runs: efe_irem from v2_vlm_run_20260609_135810.json, ersel from v2_vlm_run_20260609_150101.json, areeb_salem from v2_vlm_run_20260609_164008.json.",
+  "source_runs": {
+    "efe_irem": "outputs/v2/metrics/runs/v2_vlm_run_20260609_135810.json",
+    "ersel": "outputs/v2/metrics/runs/v2_vlm_run_20260609_150101.json",
+    "areeb_salem": "outputs/v2/metrics/runs/v2_vlm_run_20260609_164008.json"
+  },
+  "aggregate": {
+    "n_traces": 21,
+    "hit@1": 0.6667,
+    "hit@3": 0.9524,
+    "hit@5": 1.0,
+    "mean_rank_position": 1.4286,
+    "mean_rank_distance": 0.4286,
+    "mean_top1_step_distance": 0.7143,
+    "mean_mad@5": 5.0667,
+    "found_in_top5_count": 21
+  },
+  "per_trace": [
+    {
+      "trace_id": "areeb_salem/amazon",
+      "actual_fault_step": 20,
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "rank_position": 4,
+      "rank_distance": 3,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 14,
+          "step_distance": 6
+        },
+        {
+          "rank": 2,
+          "step_id": 16,
+          "step_distance": 4
+        },
+        {
+          "rank": 3,
+          "step_id": 15,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 20,
+          "step_distance": 0
+        },
+        {
+          "rank": 5,
+          "step_id": 17,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 3.6,
+      "top1_step_distance": 6,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/bbc",
+      "actual_fault_step": 18,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 18,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 18
+        },
+        {
+          "rank": 3,
+          "step_id": 5,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 19,
+          "step_distance": 1
+        },
+        {
+          "rank": 5,
+          "step_id": 10,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 8.0,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/github",
+      "actual_fault_step": 23,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 3
+        },
+        {
+          "rank": 4,
+          "step_id": 30,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 31,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 3.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/hackernews",
+      "actual_fault_step": 12,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 6
+        },
+        {
+          "rank": 4,
+          "step_id": 22,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 12
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/imdb",
+      "actual_fault_step": 14,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 15,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 28,
+          "step_distance": 14
+        },
+        {
+          "rank": 4,
+          "step_id": 6,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 8,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/npm",
+      "actual_fault_step": 16,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 26,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 18,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 2,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 5.4,
+      "top1_step_distance": 1,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/producthunt",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 17,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 6,
+          "step_distance": 10
+        },
+        {
+          "rank": 4,
+          "step_id": 13,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 16
+        }
+      ],
+      "mad@5": 6.0,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/pypi",
+      "actual_fault_step": 7,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 5
+        },
+        {
+          "rank": 5,
+          "step_id": 21,
+          "step_distance": 14
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 1,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/wikipedia",
+      "actual_fault_step": 17,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 17,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 3,
+          "step_distance": 14
+        },
+        {
+          "rank": 3,
+          "step_id": 5,
+          "step_distance": 12
+        },
+        {
+          "rank": 4,
+          "step_id": 7,
+          "step_distance": 10
+        },
+        {
+          "rank": 5,
+          "step_id": 9,
+          "step_distance": 8
+        }
+      ],
+      "mad@5": 8.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "areeb_salem/youtube",
+      "actual_fault_step": 13,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 12,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 13
+        },
+        {
+          "rank": 4,
+          "step_id": 5,
+          "step_distance": 8
+        },
+        {
+          "rank": 5,
+          "step_id": 10,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 5.0,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_164008"
+    },
+    {
+      "trace_id": "efe_irem/dictionary",
+      "actual_fault_step": 25,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 3,
+      "rank_distance": 2,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 1
+        },
+        {
+          "rank": 2,
+          "step_id": 26,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 25,
+          "step_distance": 0
+        },
+        {
+          "rank": 4,
+          "step_id": 27,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 0,
+          "step_distance": 25
+        }
+      ],
+      "mad@5": 5.8,
+      "top1_step_distance": 1,
+      "vlm_status": "failed",
+      "exclude_from_aggregate": true,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/elinguistics",
+      "actual_fault_step": 11,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 11,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 11
+        },
+        {
+          "rank": 3,
+          "step_id": 2,
+          "step_distance": 9
+        },
+        {
+          "rank": 4,
+          "step_id": 4,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 5,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 6.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/gutenberg",
+      "actual_fault_step": 8,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 8,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 9,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 2,
+          "step_distance": 6
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 2
+        }
+      ],
+      "mad@5": 3.4,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_1",
+      "actual_fault_step": 7,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 7,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 6,
+          "step_distance": 1
+        },
+        {
+          "rank": 3,
+          "step_id": 8,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 10,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 13,
+          "step_distance": 6
+        }
+      ],
+      "mad@5": 2.2,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/saucedemo_2",
+      "actual_fault_step": 27,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 27,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 29,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 28,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 31,
+          "step_distance": 4
+        },
+        {
+          "rank": 5,
+          "step_id": 6,
+          "step_distance": 21
+        }
+      ],
+      "mad@5": 5.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/webmd",
+      "actual_fault_step": 2,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 2,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 7,
+          "step_distance": 5
+        },
+        {
+          "rank": 4,
+          "step_id": 9,
+          "step_distance": 7
+        },
+        {
+          "rank": 5,
+          "step_id": 3,
+          "step_distance": 1
+        }
+      ],
+      "mad@5": 3.2,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/wikipedia",
+      "actual_fault_step": 13,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 13,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 5,
+          "step_distance": 8
+        },
+        {
+          "rank": 3,
+          "step_id": 14,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 16,
+          "step_distance": 3
+        },
+        {
+          "rank": 5,
+          "step_id": 24,
+          "step_distance": 11
+        }
+      ],
+      "mad@5": 4.6,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "efe_irem/wolfram",
+      "actual_fault_step": 12,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 12,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 14,
+          "step_distance": 2
+        },
+        {
+          "rank": 3,
+          "step_id": 4,
+          "step_distance": 8
+        },
+        {
+          "rank": 4,
+          "step_id": 13,
+          "step_distance": 1
+        },
+        {
+          "rank": 5,
+          "step_id": 15,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 2.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_135810"
+    },
+    {
+      "trace_id": "ersel/opencart_contact_35",
+      "actual_fault_step": 16,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 16,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 19,
+          "step_distance": 3
+        },
+        {
+          "rank": 3,
+          "step_id": 20,
+          "step_distance": 4
+        },
+        {
+          "rank": 4,
+          "step_id": 18,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 21,
+          "step_distance": 5
+        }
+      ],
+      "mad@5": 2.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_150101"
+    },
+    {
+      "trace_id": "ersel/opencart_manufacturer_404_35",
+      "actual_fault_step": 23,
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 1,
+      "rank_distance": 0,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 23,
+          "step_distance": 0
+        },
+        {
+          "rank": 2,
+          "step_id": 0,
+          "step_distance": 23
+        },
+        {
+          "rank": 3,
+          "step_id": 24,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 10,
+          "step_distance": 13
+        },
+        {
+          "rank": 5,
+          "step_id": 25,
+          "step_distance": 2
+        }
+      ],
+      "mad@5": 7.8,
+      "top1_step_distance": 0,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_150101"
+    },
+    {
+      "trace_id": "ersel/opencart_purchase_40",
+      "actual_fault_step": 21,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 3
+        },
+        {
+          "rank": 2,
+          "step_id": 21,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 22,
+          "step_distance": 1
+        },
+        {
+          "rank": 4,
+          "step_id": 23,
+          "step_distance": 2
+        },
+        {
+          "rank": 5,
+          "step_id": 12,
+          "step_distance": 9
+        }
+      ],
+      "mad@5": 3.0,
+      "top1_step_distance": 3,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_150101"
+    },
+    {
+      "trace_id": "ersel/opencart_wishlist_35",
+      "actual_fault_step": 22,
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "rank_position": 2,
+      "rank_distance": 1,
+      "step_distances": [
+        {
+          "rank": 1,
+          "step_id": 24,
+          "step_distance": 2
+        },
+        {
+          "rank": 2,
+          "step_id": 22,
+          "step_distance": 0
+        },
+        {
+          "rank": 3,
+          "step_id": 0,
+          "step_distance": 22
+        },
+        {
+          "rank": 4,
+          "step_id": 23,
+          "step_distance": 1
+        },
+        {
+          "rank": 5,
+          "step_id": 19,
+          "step_distance": 3
+        }
+      ],
+      "mad@5": 5.6,
+      "top1_step_distance": 2,
+      "vlm_status": "ok",
+      "exclude_from_aggregate": false,
+      "provenance": "run_json:20260609_150101"
+    }
+  ]
+}
