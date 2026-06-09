@@ -34,7 +34,12 @@ from src.screenshot_resolver import ScreenshotResolver
 from src.trace_filter import parse_trace_ids, trace_selected
 from src.vlm_reasoner import VlmReasoner
 
-from v2.fusion import FusionWeights
+from v2.fusion import (
+    FusionWeights,
+    active_channels_for_run,
+    run_metrics_prefix,
+    serialize_fusion_config,
+)
 from v2.runner import run_trace_v2
 
 
@@ -151,15 +156,25 @@ def main() -> None:
         )
         print(f"VLM enabled: {vlm.model}")
 
+    use_pixel = not args.no_pixel
+    run_active = active_channels_for_run(
+        use_llm=args.llm, use_vlm=args.vlm, use_pixel=use_pixel
+    )
+    px_note = " (no-pixel)" if args.no_pixel else ""
+
     print("TraceLens v2 — unified fusion ranking")
     if args.llm and args.vlm:
-        print(f"Mode: v2 llm+vlm (fusion channels: text, causal, symptom, pixel, llm_prior, vlm_prior)")
+        print(
+            f"Mode: v2 llm+vlm{px_note} "
+            f"(fusion channels: {', '.join(sorted(run_active))})"
+        )
     elif args.llm:
-        print("Mode: v2 llm")
+        print(f"Mode: v2 llm{px_note} (fusion channels: {', '.join(sorted(run_active))})")
     elif args.vlm:
-        print("Mode: v2 vlm")
+        print(f"Mode: v2 vlm (fusion channels: {', '.join(sorted(run_active))})")
     else:
-        print("Mode: v2 heuristic")
+        label = "heuristic (text only)" if args.no_pixel else "heuristic + pixel"
+        print(f"Mode: v2 {label} (fusion channels: {', '.join(sorted(run_active))})")
 
     if trace_filter:
         print(f"Trace filter: {', '.join(sorted(trace_filter))}")
@@ -202,7 +217,7 @@ def main() -> None:
                 ground_truth=ground_truth,
                 use_llm=args.llm,
                 use_vlm=args.vlm,
-                use_pixel=not args.no_pixel,
+                use_pixel=use_pixel,
                 use_eval=not args.no_eval,
                 fusion_weights=fusion_weights,
             )
@@ -226,18 +241,22 @@ def main() -> None:
         return
 
     run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    px_tag = " no-pixel" if args.no_pixel else ""
     if args.llm and args.vlm:
-        run_mode = f"v2:llm+vlm ({cfg['model']['llm_model']} + {cfg.get('vlm', {}).get('vlm_model', 'vlm')})"
-        run_prefix = "v2_llm+vlm"
+        run_mode = (
+            f"v2:llm+vlm{px_tag} "
+            f"({cfg['model']['llm_model']} + {cfg.get('vlm', {}).get('vlm_model', 'vlm')})"
+        )
     elif args.vlm:
         run_mode = f"v2:vlm ({cfg.get('vlm', {}).get('vlm_model', 'unknown')})"
-        run_prefix = "v2_vlm"
     elif args.llm:
-        run_mode = f"v2:llm ({cfg['model']['llm_model']})"
-        run_prefix = "v2_llm"
+        run_mode = f"v2:llm{px_tag} ({cfg['model']['llm_model']})"
     else:
-        run_mode = "v2:heuristic"
-        run_prefix = "v2_heuristic"
+        run_mode = f"v2:heuristic{px_tag}" if args.no_pixel else "v2:heuristic+pixel"
+    run_prefix = run_metrics_prefix(
+        use_llm=args.llm, use_vlm=args.vlm, no_pixel=args.no_pixel
+    )
+    fusion_config = serialize_fusion_config(fusion_weights, run_active)
 
     if not args.no_eval:
         excluded_traces = [
@@ -281,6 +300,11 @@ def main() -> None:
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "mode": run_mode,
                 "pipeline_version": "v2",
+                "run_flags": {
+                    "use_llm": args.llm,
+                    "use_vlm": args.vlm,
+                    "use_pixel": use_pixel,
+                },
                 "filter_source": args.source,
                 "filter_trace": args.trace,
                 "n_traces_run": trace_count,
@@ -289,7 +313,7 @@ def main() -> None:
                 "excluded_traces": excluded_traces,
                 "aggregate": agg,
                 "per_trace": per_trace_rows,
-                "fusion_weights": fusion_weights.__dict__,
+                "fusion_config": fusion_config,
             }
             runs_dir = Path(cfg["outputs"]["metrics"]) / "runs"
             runs_dir.mkdir(parents=True, exist_ok=True)

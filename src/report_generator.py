@@ -83,31 +83,83 @@ class ReportGenerator:
     # ── formatting ────────────────────────────────────────────────────────────
 
     @staticmethod
+    def _brief_step_reason(step: dict) -> str:
+        """2–3 word label for why a step was ranked (heuristic / fusion signals)."""
+        if step.get("action_score", 0) >= 0.5:
+            return "wrong action"
+        if step.get("intent_score", 0) >= 0.9:
+            return "verify failed"
+        if float(step.get("visual_causal_score") or 0) > 0:
+            return "visual change"
+        if step.get("console_score", 0) >= 0.5:
+            return "console error"
+        if step.get("network_score", 0) >= 0.5:
+            return "network error"
+        if float(step.get("pixel_score") or 0) >= 0.35:
+            return "screenshot diff"
+        ch = step.get("fusion_channels") or {}
+        if float(ch.get("llm_prior") or 0) >= 0.8:
+            return "LLM favored"
+        if float(ch.get("vlm_prior") or 0) >= 0.5:
+            return "visual signal"
+        if float(step.get("fusion_score") or step.get("combined_score") or 0) > 0:
+            return "heuristic score"
+        return "weak signal"
+
+    @classmethod
+    def _format_other_rank_briefs(cls, ranked_steps: list[dict]) -> str:
+        """One line summarizing ranks #2–#5 with short reasons."""
+        if len(ranked_steps) < 2:
+            return ""
+        parts = []
+        for step in ranked_steps[1:5]:
+            rank = step.get("rank", "?")
+            sid = step.get("step_id", "?")
+            reason = cls._brief_step_reason(step)
+            parts.append(f"#{rank} step {sid} ({reason})")
+        return "Other top suspects: " + ", ".join(parts)
+
+    @classmethod
     def _format_plain_language_summary(
+        cls,
         stakeholder_summary: str,
         diagnosis: dict,
         vlm_output: dict | None,
+        ranked_steps: list[dict],
         *,
         ran_vlm: bool,
     ) -> str:
         """Stakeholder text must not be replaced by VLM visual_summary bullets."""
         plain = (stakeholder_summary or "").strip()
-        if plain:
-            return plain
-        if diagnosis.get("root_cause_summary"):
-            return (
-                f"{diagnosis['root_cause_summary']}\n\n"
-                "(Stakeholder rewrite unavailable; showing technical summary.)"
-            )
-        if ran_vlm and vlm_output:
-            visual = (vlm_output.get("visual_summary") or "").strip()
-            if visual:
-                return (
-                    "(Pass --llm for a full plain-language stakeholder summary.)\n\n"
-                    "Key visual finding:\n"
-                    + "\n".join(f"  {ln}" for ln in visual.splitlines() if ln.strip())
+        if not plain:
+            if diagnosis.get("root_cause_summary"):
+                plain = (
+                    f"{diagnosis['root_cause_summary']}\n\n"
+                    "(Stakeholder rewrite unavailable; showing technical summary.)"
                 )
-        return "(LLM not run — pass --llm for technical and plain-language summaries.)"
+            elif ran_vlm and vlm_output:
+                visual = (vlm_output.get("visual_summary") or "").strip()
+                if visual:
+                    plain = (
+                        "(Pass --llm for a full plain-language stakeholder summary.)\n\n"
+                        "Key visual finding:\n"
+                        + "\n".join(f"  {ln}" for ln in visual.splitlines() if ln.strip())
+                    )
+            if not plain and ranked_steps:
+                top = ranked_steps[0]
+                sid = top.get("step_id", "?")
+                reason = cls._brief_step_reason(top)
+                plain = (
+                    f"Top-ranked step {sid} ({reason}). "
+                    "(Pass --llm for a full plain-language summary.)"
+                )
+            elif not plain:
+                plain = "(LLM not run — pass --llm for technical and plain-language summaries.)"
+
+        other = cls._format_other_rank_briefs(ranked_steps)
+        if other:
+            plain = f"{plain}\n\n{other}" if plain else other
+        return plain
 
     @staticmethod
     def _layers_label(base: str, layers: list[str]) -> str:
@@ -406,7 +458,16 @@ class ReportGenerator:
             ]
             for note in ranking_decisions:
                 lines.append(f"  • {note}")
-            if is_v2 and meta.get("fusion_weights"):
+            if is_v2 and meta.get("fusion_config"):
+                fc = meta["fusion_config"]
+                parts = []
+                for k, v in sorted(fc.get("score_channels", {}).items()):
+                    parts.append(f"{k}={v}")
+                for k, v in sorted(fc.get("tuning", {}).items()):
+                    parts.append(f"{k}={v}")
+                if parts:
+                    lines.append(f"  • Fusion weights: {', '.join(parts)}")
+            elif is_v2 and meta.get("fusion_weights"):
                 fw = meta["fusion_weights"]
                 w_str = ", ".join(f"{k}={v}" for k, v in sorted(fw.items()))
                 lines.append(f"  • Fusion weights: {w_str}")
@@ -495,6 +556,7 @@ class ReportGenerator:
                 stakeholder_summary,
                 diagnosis,
                 vlm_output,
+                ranked,
                 ran_vlm=bool(ran_vlm and vlm_status != "failed"),
             ),
         ]

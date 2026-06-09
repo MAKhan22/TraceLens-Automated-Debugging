@@ -31,10 +31,14 @@ from src.vlm_reasoner import VlmAnalysisError, VlmReasoner
 
 from v2.fusion import (
     FusionWeights,
+    active_channels,
     llm_prior_from_order,
     rank_by_fusion,
+    serialize_fusion_config,
     vlm_prior_from_output,
 )
+
+
 def _classify_vlm_error(err: str) -> str:
     low = err.lower()
     if "no screenshot" in low or "missing pass or fail" in low:
@@ -305,11 +309,13 @@ def run_trace_v2(
         except (TypeError, ValueError):
             vlm_root_step_id = None
 
+    fusion_use_llm = bool(use_llm and llm_prior)
+    fusion_use_vlm = bool(use_vlm and vlm_prior)
     final_ranked, fusion_notes, _channels = rank_by_fusion(
         pool_steps,
         weights=weights,
-        use_llm=bool(use_llm and llm_prior),
-        use_vlm=bool(use_vlm and vlm_prior),
+        use_llm=fusion_use_llm,
+        use_vlm=fusion_use_vlm,
         has_visual=has_visual,
         llm_prior=llm_prior,
         vlm_prior=vlm_prior,
@@ -317,6 +323,8 @@ def run_trace_v2(
         strong_observer_pixel=strong_px,
         top_k=ranker.top_k,
     )
+    fusion_active = active_channels(fusion_use_llm, fusion_use_vlm, has_visual)
+    fusion_config = serialize_fusion_config(weights, fusion_active)
     ranking_decisions.extend(fusion_notes)
     final_ranked = ranker.add_rank_metadata(final_ranked)
 
@@ -411,7 +419,12 @@ def run_trace_v2(
             "source": source,
             "fault_type": ground_truth.get(source, {}).get(trace_cfg["id"], {}).get("fault_type"),
             "ranking_decisions": ranking_decisions,
-            "fusion_weights": weights.__dict__,
+            "fusion_config": fusion_config,
+            "run_flags": {
+                "use_llm": use_llm,
+                "use_vlm": use_vlm,
+                "use_pixel": use_pixel,
+            },
             "vlm_status": vlm_status,
             "vlm_error": vlm_error,
             "vlm_error_code": vlm_error_code,

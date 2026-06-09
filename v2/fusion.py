@@ -37,11 +37,35 @@ class FusionWeights:
         return cls(**{k: raw[k] for k in cls.__dataclass_fields__ if k in raw})
 
 
-def _active_channels(
+SCORE_CHANNEL_NAMES = frozenset(
+    {
+        "text",
+        "navigation",
+        "causal_action",
+        "observer_symptom",
+        "visual_causal",
+        "pixel",
+        "llm_prior",
+        "vlm_prior",
+    }
+)
+
+_TUNING_ALWAYS = (
+    "downstream_penalty",
+    "downstream_text_exempt",
+    "observer_after_causal_cap",
+    "observer_after_causal_min_text",
+)
+_TUNING_IF_LLM = ("causal_llm_bonus", "action_llm_bonus", "vlm_root_llm_min")
+_TUNING_IF_VLM = ("observer_vlm_cap", "vlm_root_bonus")
+
+
+def active_channels(
     use_llm: bool,
     use_vlm: bool,
     has_visual: bool,
 ) -> set[str]:
+    """Channels that contribute to fusion_score for this trace."""
     active = {"text", "navigation", "causal_action", "observer_symptom"}
     if has_visual:
         active |= {"visual_causal", "pixel"}
@@ -50,6 +74,76 @@ def _active_channels(
     if use_vlm:
         active.add("vlm_prior")
     return active
+
+
+def active_channels_for_run(
+    *,
+    use_llm: bool,
+    use_vlm: bool,
+    use_pixel: bool,
+) -> set[str]:
+    """
+    Run-level channel set for metrics JSON (reflects CLI flags, not per-trace
+    screenshot availability). Visual score channels appear only when --no-pixel
+    was not passed (use_pixel) or when --vlm is on.
+    """
+    active = {"text", "navigation", "causal_action", "observer_symptom"}
+    if use_vlm or use_pixel:
+        active |= {"visual_causal", "pixel"}
+    if use_llm:
+        active.add("llm_prior")
+    if use_vlm:
+        active.add("vlm_prior")
+    return active
+
+
+def serialize_fusion_config(
+    weights: FusionWeights,
+    active: set[str],
+) -> dict:
+    """Export only fusion weights that apply to the given active channel set."""
+    raw = weights.__dict__
+    score_channels = {k: raw[k] for k in sorted(active) if k in raw}
+    tuning: dict[str, float] = {
+        k: raw[k] for k in _TUNING_ALWAYS if k in raw
+    }
+    if "llm_prior" in active:
+        tuning.update({k: raw[k] for k in _TUNING_IF_LLM if k in raw})
+    if "vlm_prior" in active:
+        tuning.update({k: raw[k] for k in _TUNING_IF_VLM if k in raw})
+    return {
+        "active_channels": sorted(active),
+        "score_channels": score_channels,
+        "tuning": tuning,
+    }
+
+
+def run_metrics_prefix(
+    *,
+    use_llm: bool,
+    use_vlm: bool,
+    no_pixel: bool,
+) -> str:
+    """Filename prefix for a v2 metrics run JSON."""
+    if use_llm and use_vlm:
+        base = "v2_llm+vlm"
+    elif use_vlm:
+        base = "v2_vlm"
+    elif use_llm:
+        base = "v2_llm"
+    else:
+        base = "v2_heuristic"
+    if no_pixel:
+        base += "_no-pixel"
+    return base
+
+
+def _active_channels(
+    use_llm: bool,
+    use_vlm: bool,
+    has_visual: bool,
+) -> set[str]:
+    return active_channels(use_llm, use_vlm, has_visual)
 
 
 def fusion_score(
@@ -147,19 +241,20 @@ def rank_by_fusion(
         sid = step["step_id"]
         ch = channels[sid]
         fs = fusion_score(ch, weights, active)
+        all_ch = {
+            "text": round(ch.text, 3),
+            "navigation": round(ch.navigation, 3),
+            "causal_action": round(ch.causal_action, 3),
+            "observer_symptom": round(ch.observer_symptom, 3),
+            "visual_causal": round(ch.visual_causal, 3),
+            "pixel": round(ch.pixel, 3),
+            "llm_prior": round(ch.llm_prior, 3),
+            "vlm_prior": round(ch.vlm_prior, 3),
+        }
         row = {
             **step,
             "fusion_score": round(fs, 4),
-            "fusion_channels": {
-                "text": round(ch.text, 3),
-                "navigation": round(ch.navigation, 3),
-                "causal_action": round(ch.causal_action, 3),
-                "observer_symptom": round(ch.observer_symptom, 3),
-                "visual_causal": round(ch.visual_causal, 3),
-                "pixel": round(ch.pixel, 3),
-                "llm_prior": round(ch.llm_prior, 3),
-                "vlm_prior": round(ch.vlm_prior, 3),
-            },
+            "fusion_channels": {k: v for k, v in all_ch.items() if k in active},
         }
         scored_rows.append((fs, sid, row, ch))
 

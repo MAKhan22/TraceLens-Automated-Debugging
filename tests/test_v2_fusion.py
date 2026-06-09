@@ -2,9 +2,12 @@
 
 from v2.fusion import (
     FusionWeights,
+    active_channels_for_run,
     fusion_score,
     llm_prior_from_order,
     rank_by_fusion,
+    run_metrics_prefix,
+    serialize_fusion_config,
     vlm_prior_from_output,
 )
 from v2.features import StepChannels, build_all_channels
@@ -172,6 +175,41 @@ def test_observer_not_capped_when_llm_favors_verify():
     assert channels[13].observer_symptom >= 0.75
 
 
+def test_serialize_fusion_config_heuristic_no_pixel():
+    w = FusionWeights()
+    active = active_channels_for_run(use_llm=False, use_vlm=False, use_pixel=False)
+    cfg = serialize_fusion_config(w, active)
+    assert "pixel" not in cfg["score_channels"]
+    assert "llm_prior" not in cfg["score_channels"]
+    assert "vlm_prior" not in cfg["score_channels"]
+    assert "causal_llm_bonus" not in cfg["tuning"]
+
+
+def test_serialize_fusion_config_llm_only():
+    w = FusionWeights()
+    active = active_channels_for_run(use_llm=True, use_vlm=False, use_pixel=True)
+    cfg = serialize_fusion_config(w, active)
+    assert "llm_prior" in cfg["score_channels"]
+    assert "pixel" in cfg["score_channels"]
+    assert "vlm_prior" not in cfg["score_channels"]
+    assert "causal_llm_bonus" in cfg["tuning"]
+    assert "vlm_root_bonus" not in cfg["tuning"]
+
+
+def test_serialize_fusion_config_llm_no_pixel():
+    w = FusionWeights()
+    active = active_channels_for_run(use_llm=True, use_vlm=False, use_pixel=False)
+    cfg = serialize_fusion_config(w, active)
+    assert "pixel" not in cfg["score_channels"]
+    assert "llm_prior" in cfg["score_channels"]
+
+
+def test_run_metrics_prefix_no_pixel():
+    assert run_metrics_prefix(use_llm=True, use_vlm=False, no_pixel=True) == "v2_llm_no-pixel"
+    assert run_metrics_prefix(use_llm=False, use_vlm=False, no_pixel=True) == "v2_heuristic_no-pixel"
+    assert run_metrics_prefix(use_llm=True, use_vlm=True, no_pixel=True) == "v2_llm+vlm_no-pixel"
+
+
 def test_downstream_penalty_applies_without_text():
     w = FusionWeights()
     active = {"text", "visual_causal", "observer_symptom", "pixel"}
@@ -189,5 +227,9 @@ if __name__ == "__main__":
     test_vlm_root_observer_not_capped_when_llm_favors_verify()
     test_observer_cap_when_llm_favors_causal_root()
     test_observer_not_capped_when_llm_favors_verify()
+    test_serialize_fusion_config_heuristic_no_pixel()
+    test_serialize_fusion_config_llm_only()
+    test_serialize_fusion_config_llm_no_pixel()
+    test_run_metrics_prefix_no_pixel()
     test_downstream_penalty_applies_without_text()
     print("ok")
