@@ -1,0 +1,27 @@
+# Default run JSON paths for plot_metrics.py
+# Each config entry is a single file or a list merged by trace_id (later files override).
+
+v1:
+  heuristic:
+    - outputs/metrics/runs/special/heuristic_run_20260526_115449.json
+  heuristic_no_pixel:
+    - outputs/metrics/runs/heuristic_run_20260609_171826.json
+  llm:
+    - outputs/metrics/runs/special/COMBINED_llm_run_20260529_efe_irem_areeb_salem.json
+  vlm:
+    - outputs/metrics/runs/special/COMBINED_vlm_run_20260529_efe_irem_areeb_salem.json
+  hybrid:
+    - outputs/metrics/runs/special/llm+vlm_run_20260530_203844.json
+    - outputs/metrics/runs/special/llm+vlm_run_20260531_000627.json
+
+v2:
+  heuristic:
+    - outputs/v2/metrics/runs/special/v2_heuristic_run_20260606_090646.json
+  heuristic_no_pixel:
+    - outputs/v2/metrics/runs/special/v2_heuristic_no-pixel_run_20260609_134127.json
+  llm:
+    - outputs/v2/metrics/runs/special/COMBINED_v2_llm_run_20260608_efe_irem_areeb_salem_ersel.json
+  vlm:
+    - outputs/v2/metrics/runs/special/COMBINED_v2_vlm_run_20260609_efe_irem_areeb_salem_ersel.json
+  hybrid:
+    - outputs/v2/metrics/runs/special/COMBINED_v2_llm+vlm_run_20260606_efe_irem_areeb_salem_ersel.json
