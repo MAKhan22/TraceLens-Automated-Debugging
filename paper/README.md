@@ -1,6 +1,8 @@
 # TraceLens Paper
 
-LaTeX draft for the conference submission on **multimodal relative debugging** of UI test regressions.
+LaTeX draft for the CS 460 project on **multimodal relative debugging** of UI test regressions.
+
+**Artifact:** [github.com/MAKhan22/TraceLens-Automated-Debugging](https://github.com/MAKhan22/TraceLens-Automated-Debugging)
 
 ## Contents
 

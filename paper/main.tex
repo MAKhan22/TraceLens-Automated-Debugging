@@ -5,9 +5,15 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{microtype}
+\usepackage{xurl}
+\usepackage{array}
 \usepackage{tikz}
 \usetikzlibrary{positioning, arrows.meta, calc}
 \input{figures/arch_tikz_styles.tex}
+
+\newcommand{\repoURL}{https://github.com/MAKhan22/TraceLens-Automated-Debugging}
+\newcommand{\repoLink}{\href{\repoURL}{github.com/MAKhan22/TraceLens-Automated-Debugging}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \settopmatter{printacmref=false, printccs=true, printfolios=true}
 \setcopyright{none}
@@ -19,7 +25,7 @@
 \title{TraceLens: Multimodal Relative Debugging of UI Test Regressions via Pass--Fail Trace Comparison}
 
 \author{Musab Ahmed Khan}
-\authornote{CS 460 Project, Sabanci University. Student ID: 33017.}
+\authornote{CS~460 Project, Sabanci University. Student ID: 33017.\\[0.25em]Artifact: \repoLink}
 \affiliation{%
   \institution{Sabanci University}
   \city{Istanbul}
@@ -172,27 +178,28 @@ Four text signals in $[0,1]$ are combined with fixed weights (renormalized when 
   \item \textbf{Intent:} changed verification outcome strings (available on one source schema).
 \end{itemize}
 
-\textbf{Navigation signals} detect wrong-page loads: expected URL absent and unintended page present (\texttt{wrong\_navigation}), boosting steps that explain silent navigation faults.
+\textbf{Navigation signals} detect wrong-page loads: expected URL absent and unintended page present (\path{wrong_navigation}), boosting steps that explain silent navigation faults.
 
-\textbf{Noise filtering} removes placeholder domains (e.g., \texttt{example.com} distractors) and known telemetry patterns so relative diffs focus on test-relevant traffic.
+\textbf{Noise filtering} removes placeholder domains (e.g., \path{example.com} distractors) and known telemetry patterns so relative diffs focus on test-relevant traffic.
 
-\textbf{Pixel diff} (local, no API) compares pass/fail PNGs for the heuristic top-5; enabled by default, disabled with \texttt{--no-pixel}.
+\textbf{Pixel diff} (local, no API) compares pass/fail PNGs for the heuristic top-5; enabled by default, disabled with \path{--no-pixel}.
 
-Table~\ref{tab:signals} summarizes signals; the baseline mode is \texttt{python main2.py} without flags.
+Table~\ref{tab:signals} summarizes signals; the baseline mode is \path{python main2.py} without flags.
 
 \begin{table}[t]
   \caption{Pass--fail relative signals in \textsc{TraceLens}.}
   \label{tab:signals}
-  \small
-  \begin{tabular}{p{0.18\linewidth}p{0.38\linewidth}p{0.28\linewidth}}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}P{0.15\linewidth}P{0.33\linewidth}P{0.23\linewidth}@{}}
     \toprule
-    Signal & Relative comparison & Example \\
+    Signal & Comparison & Example \\
     \midrule
     Network & New/changed errors in fail & HTTP 500 \\
     Console & New JS errors in fail & UI crash \\
     Action & Text or type diverges & Invalid form \\
-    Navigation & Wrong page loaded & Wrong click \\
-    Pixel & Screenshot diff & Visual regression \\
+    Navigation & Wrong page & Wrong click \\
+    Pixel & Screenshot diff & Visual change \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -252,11 +259,11 @@ v2's main design contribution is a \textbf{single fusion score} per step:
 where channels $\mathcal{C}$ include text, navigation, causal action, observer symptom, visual causal, pixel, and optionally LLM and VLM priors (denoted \texttt{llm\_prior} and \texttt{vlm\_prior} in code).
 
 \paragraph{Fusion weight selection (not benchmark-tuned).}
-We did \textbf{not} grid-search \texttt{llm\_prior} or \texttt{vlm\_prior} on the 22 labeled traces.
-Both values were fixed in \texttt{v2/config.yaml} \emph{before} aggregate reporting, using a principled carry-over from v1's hybrid ensemble.
-In v1, the final LLM+VLM blend used \texttt{ensemble\_vlm\_weight}${=}0.4$ in \texttt{config.yaml}: each step's hybrid score was $60\%$ LLM rank position and $40\%$ VLM visual score ($1-w$ vs.\ $w$).
-v2 maps the same \textbf{60/40 LLM--VLM ratio} onto the model-prior channels: \texttt{llm\_prior}${=}0.28$ and \texttt{vlm\_prior}${=}0.18$, so $0.28/(0.28+0.18)\approx 61\%$ of the \emph{model-prior budget} goes to the LLM and $39\%$ to the VLM.
-Heuristic channels (text, navigation, pixel, etc.) use separate fixed weights chosen from v1 development experience; only the LLM/VLM split is inherited from the established ensemble policy.
+We did \textbf{not} grid-search the LLM/VLM prior weights on the 22 labeled traces.
+Both values were fixed in \path{v2/config.yaml} \emph{before} aggregate reporting, using a principled carry-over from v1's hybrid ensemble.
+In v1, the final LLM+VLM blend used \path{ensemble_vlm_weight=0.4}: each step's hybrid score was $60\%$ LLM rank position and $40\%$ VLM visual score ($1-w$ vs.\ $w$).
+v2 maps the same \textbf{60/40 LLM--VLM ratio} onto the model-prior channels (\path{llm_prior=0.28}, \path{vlm_prior=0.18}), so ${\approx}61\%$ of the \emph{model-prior budget} goes to the LLM and ${\approx}39\%$ to the VLM.
+Heuristic channels (text, navigation, pixel, etc.) use separate fixed weights from v1 development experience; only the LLM/VLM split is inherited from the established ensemble policy.
 Section~\ref{sec:threats} discusses this as an internal-validity constraint.
 
 \textbf{Causal attribution} distinguishes \emph{action} steps (clicks, typing) from \emph{observer} steps (verify, wait).
@@ -277,7 +284,7 @@ Hybrid mode (\texttt{--llm --vlm}) activates all channels; LLM-only and VLM-only
 We compare five configurations from the same v2 ranker (Section~\ref{sec:eval} reports outcomes):
 \begin{itemize}
   \item \textbf{Heuristic (baseline):} pass--fail diff only; no LLM/VLM calls (\texttt{python main2.py}).
-  \item \textbf{No pixel:} baseline without local screenshot diff (\texttt{--no-pixel}).
+  \item \textbf{No pixel:} baseline without local screenshot diff (\path{--no-pixel}).
   \item \textbf{LLM:} adds text reranking and an \texttt{llm\_prior} channel (\texttt{--llm}).
   \item \textbf{VLM:} adds screenshot-pair analysis and a \texttt{vlm\_prior} channel (\texttt{--vlm}).
   \item \textbf{Hybrid:} all channels active (\texttt{--llm --vlm}).
@@ -327,9 +334,10 @@ v1 remains in the repository as a reference implementation; all reported main re
 \subsection{Benchmark and setup}
 
 We evaluate on \textbf{22 traces} from three independent collections: 8 from efe/irem, 10 from areeb/salem, and 4 from ersel.
-The ersel traces use a third schema (directory-based \texttt{steps.json}, session-wide console/network logs, and per-step \emph{intent} strings) and are labeled separately in figures as \emph{held-out} only in the sense of a distinct collector---not a statistically held-out train/test split (all 22 traces contribute to aggregate metrics).
+The ersel traces use a third schema (directory-based \path{steps.json}, session-wide console/network logs, and per-step \emph{intent} strings).
+We label ersel separately in figures because its collector format differs from the other two sources; this is \emph{not} a train/test split---all 22 traces contribute to aggregate metrics.
 Ground truth specifies one fault step per trace.
-Table~\ref{tab:benchmark} summarizes fault-type frequencies; the full trace catalog is in our repository.
+Table~\ref{tab:benchmark} summarizes fault-type frequencies; the full trace catalog is in our repository (Section~\ref{sec:data}).
 
 \begin{table}[t]
   \caption{Benchmark fault-type frequencies ($n{=}22$ traces). Coverage is collector-driven (e.g., seven HTTP-error traces, one JS exception).}
@@ -350,11 +358,12 @@ Table~\ref{tab:benchmark} summarizes fault-type frequencies; the full trace cata
   \end{tabular}
 \end{table}
 
-All main results use v2 (\texttt{main2.py}) with frozen run JSONs listed in \texttt{scripts/metrics\_manifest.yaml}.
-Baseline: \texttt{python main2.py}.
+All main results use v2 (\path{main2.py}) with frozen run JSONs listed in \path{scripts/metrics_manifest.yaml}.
+Baseline: \path{python main2.py}.
 \textbf{Models (free tier).}
-LLM: \texttt{nvidia/nemotron-3-super-120b-a12b:free} via OpenRouter ($T{=}0$).
-VLM: \texttt{meta-llama/llama-4-scout-17b-16e-instruct} via Groq ($T{=}0$), five screenshot pairs per trace (\texttt{top\_k\_for\_vlm}, Section~\ref{sec:llm}).
+LLM: Nemotron-3 Super~120B on OpenRouter ($T{=}0$).
+VLM: Llama-4 Scout~17B on Groq ($T{=}0$), five screenshot pairs per trace (Section~\ref{sec:llm}).
+Full provider model IDs are in \path{config.yaml}.
 We chose separate free-tier providers to stay within daily quotas without paid credits; this constrains model choice and throughput relative to commercial APIs.
 
 \subsection{Results}
@@ -480,7 +489,7 @@ Single fault-step labels simplify evaluation but blur symptom vs.\ cause (e.g., 
 Hit@$k$ and rank distance partially mitigate this by rewarding near-misses.
 
 \textbf{Internal validity.}
-Fusion weights were fixed in \texttt{v2/config.yaml} before aggregate reporting; \texttt{llm\_prior}/\texttt{vlm\_prior} inherit v1's 60/40 LLM--VLM ensemble ratio (\texttt{ensemble\_vlm\_weight}${=}0.4$) rather than being tuned on ground-truth ranks.
+Fusion weights were fixed in \path{v2/config.yaml} before aggregate reporting; LLM/VLM prior weights inherit v1's 60/40 ensemble ratio (\path{ensemble_vlm_weight=0.4}) rather than being tuned on ground-truth ranks.
 Structural rules were motivated by recurring failure \emph{types}, not by per-trace grid search on ground truth in v2.
 
 \textbf{External validity.}
@@ -512,9 +521,11 @@ v2's unified fusion replaces v1's trace-specific guard brittleness with a single
 
 %==============================================================================
 \section*{Data Availability}
+\label{sec:data}
 
-The repository includes trace data, ground truth, the v2 pipeline (\texttt{main2.py}), frozen metric JSONs, and figure scripts.
-Regenerate figures with \texttt{python scripts/plot\_metrics.py}.
+Source code, installation instructions, ground truth, the v2 pipeline (\path{main2.py}), frozen metric JSONs, and figure scripts are available at \repoLink.
+Regenerate figures with \path{python scripts/plot_metrics.py}.
+See \path{INSTALL.md} and \path{docs/DATA_LAYOUT.md} in the repository for setup and trace layout.
 
 %==============================================================================
 \appendix
