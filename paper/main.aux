@@ -55,38 +55,36 @@
 \newlabel{sec:llm}{{3.4}{3}{LLM relative reranking}{subsection.3.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Why top-15 for the LLM pool.}{3}{section*.13}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Why top-5 for VLM screenshot pairs.}{3}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hybrid ordering (LLM then VLM).}{3}{section*.15}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5}v2 unified fusion}{3}{subsection.3.5}\protected@file@percent }
 \newlabel{sec:fusion}{{3.5}{3}{v2 unified fusion}{subsection.3.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces v1 stacked pipeline (\texttt  {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }}{3}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:arch-v1}{{2}{3}{v1 stacked pipeline (\texttt {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }{figure.caption.16}{}}
-\@writefile{toc}{\contentsline {paragraph}{Evaluation modes.}{3}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fusion weight selection (not benchmark-tuned).}{3}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Evaluation modes.}{3}{section*.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.6}v1 architecture and limitations}{3}{subsection.3.6}\protected@file@percent }
 \newlabel{sec:v1}{{3.6}{3}{v1 architecture and limitations}{subsection.3.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Benchmark fault-type frequencies ($n{=}22$ traces). Coverage is collector-driven (e.g., seven HTTP-error traces, one JS exception).\relax }}{4}{table.caption.17}\protected@file@percent }
-\newlabel{tab:benchmark}{{2}{4}{Benchmark fault-type frequencies ($n{=}22$ traces). Coverage is collector-driven (e.g., seven HTTP-error traces, one JS exception).\relax }{table.caption.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces v1 stacked pipeline (\texttt  {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }}{4}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:arch-v1}{{2}{4}{v1 stacked pipeline (\texttt {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }{figure.caption.18}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{4}{section.4}\protected@file@percent }
 \newlabel{sec:eval}{{4}{4}{Evaluation}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Research questions}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Benchmark fault-type frequencies ($n{=}22$ traces). Coverage is collector-driven (e.g., seven HTTP-error traces, one JS exception).\relax }}{4}{table.caption.19}\protected@file@percent }
+\newlabel{tab:benchmark}{{2}{4}{Benchmark fault-type frequencies ($n{=}22$ traces). Coverage is collector-driven (e.g., seven HTTP-error traces, one JS exception).\relax }{table.caption.19}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt  {dictionary} excluded: incomplete screenshot pairs for top-$K$ candidates).\relax }}{4}{table.caption.20}\protected@file@percent }
+\newlabel{tab:main}{{3}{4}{v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt {dictionary} excluded: incomplete screenshot pairs for top-$K$ candidates).\relax }{table.caption.20}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Benchmark and setup}{4}{subsection.4.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt  {dictionary} excluded: incomplete screenshot pairs for top-$K$ candidates).\relax }}{4}{table.caption.18}\protected@file@percent }
-\newlabel{tab:main}{{3}{4}{v2 aggregate results on 22 traces. Baseline = heuristic with pixel. VLM $n{=}21$ (\texttt {dictionary} excluded: incomplete screenshot pairs for top-$K$ candidates).\relax }{table.caption.18}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces LLM vs.\ hybrid (v2, 22 traces). LLM leads on Hit@1 (top-1 localization); hybrid leads on Hit@3, mean rank distance, and MAD@5 (overall rank quality).\relax }}{4}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:tradeoff}{{3}{4}{LLM vs.\ hybrid (v2, 22 traces). LLM leads on Hit@1 (top-1 localization); hybrid leads on Hit@3, mean rank distance, and MAD@5 (overall rank quality).\relax }{figure.caption.19}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Results}{4}{subsection.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Hit@1/3/5 across modes; v1 vs.\ v2 evolution. Heuristic is the baseline.\relax }}{5}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:hitk}{{4}{5}{Hit@1/3/5 across modes; v1 vs.\ v2 evolution. Heuristic is the baseline.\relax }{figure.caption.20}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Multi-metric radar (v1 and v2). On the v2 panel, LLM extends furthest on Hit@1; hybrid leads on Hit@3/5, rank distance, and MAD@5.\relax }}{5}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:radar}{{5}{5}{Multi-metric radar (v1 and v2). On the v2 panel, LLM extends furthest on Hit@1; hybrid leads on Hit@3/5, rank distance, and MAD@5.\relax }{figure.caption.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Per-trace Hit@1 heatmap (v2). Trace names colored by source (legend). Blank VLM cell: \texttt  {dictionary} excluded (missing screenshots for top-$K$ steps).\relax }}{5}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:heatmap}{{6}{5}{Per-trace Hit@1 heatmap (v2). Trace names colored by source (legend). Blank VLM cell: \texttt {dictionary} excluded (missing screenshots for top-$K$ steps).\relax }{figure.caption.22}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces v2 Hit@1 by source collection and mode.\relax }}{5}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:source}{{7}{5}{v2 Hit@1 by source collection and mode.\relax }{figure.caption.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces LLM vs.\ hybrid (v2, 22 traces). LLM leads on Hit@1 (top-1 localization); hybrid leads on Hit@3, mean rank distance, and MAD@5 (overall rank quality).\relax }}{5}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:tradeoff}{{3}{5}{LLM vs.\ hybrid (v2, 22 traces). LLM leads on Hit@1 (top-1 localization); hybrid leads on Hit@3, mean rank distance, and MAD@5 (overall rank quality).\relax }{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Hit@1/3/5 across modes; v1 vs.\ v2 evolution. Heuristic is the baseline.\relax }}{5}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:hitk}{{4}{5}{Hit@1/3/5 across modes; v1 vs.\ v2 evolution. Heuristic is the baseline.\relax }{figure.caption.22}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Case studies}{5}{subsection.4.4}\protected@file@percent }
 \newlabel{sec:case}{{4.4}{5}{Case studies}{subsection.4.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Analysis by signal type}{5}{subsection.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Discussion}{5}{subsection.4.6}\protected@file@percent }
-\newlabel{sec:discussion}{{4.6}{5}{Discussion}{subsection.4.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}v1 comparison}{5}{subsection.4.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Multi-metric radar (v1 and v2). On the v2 panel, LLM extends furthest on Hit@1; hybrid leads on Hit@3/5, rank distance, and MAD@5.\relax }}{5}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:radar}{{5}{5}{Multi-metric radar (v1 and v2). On the v2 panel, LLM extends furthest on Hit@1; hybrid leads on Hit@3/5, rank distance, and MAD@5.\relax }{figure.caption.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Per-trace Hit@1 heatmap (v2). Trace names colored by source (legend). Blank VLM cell: \texttt  {dictionary} excluded (missing screenshots for top-$K$ steps).\relax }}{5}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:heatmap}{{6}{5}{Per-trace Hit@1 heatmap (v2). Trace names colored by source (legend). Blank VLM cell: \texttt {dictionary} excluded (missing screenshots for top-$K$ steps).\relax }{figure.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces v2 Hit@1 by source collection and mode.\relax }}{5}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:source}{{7}{5}{v2 Hit@1 by source collection and mode.\relax }{figure.caption.25}{}}
 \bibstyle{ACM-Reference-Format}
 \bibdata{references}
 \bibcite{abramson1995sc}{{1}{1995}{{Abramson et~al\mbox  {.}}}{{}}}
@@ -95,6 +93,19 @@
 \bibcite{brown2020language}{{4}{2020}{{Brown et~al\mbox  {.}}}{{}}}
 \bibcite{deng2023mind2web}{{5}{2023}{{Deng et~al\mbox  {.}}}{{}}}
 \bibcite{hou2024llm}{{6}{2024}{{Hou et~al\mbox  {.}}}{{}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Analysis by signal type}{6}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Discussion}{6}{subsection.4.6}\protected@file@percent }
+\newlabel{sec:discussion}{{4.6}{6}{Discussion}{subsection.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}v1 comparison}{6}{subsection.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Threats to Validity}{6}{section.5}\protected@file@percent }
+\newlabel{sec:threats}{{5}{6}{Threats to Validity}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{6}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{6}{Conclusion}{section.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}v1 Aggregate Comparison}{6}{appendix.A}\protected@file@percent }
+\newlabel{app:v1}{{A}{6}{v1 Aggregate Comparison}{appendix.A}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces v1 vs.\ v2 Hit@1 on overlapping runs.\relax }}{6}{table.caption.27}\protected@file@percent }
+\newlabel{tab:v1v2}{{4}{6}{v1 vs.\ v2 Hit@1 on overlapping runs.\relax }{table.caption.27}{}}
+\@writefile{toc}{\contentsline {section}{References}{6}{section*.29}\protected@file@percent }
 \bibcite{jones2002visualization}{{7}{2002}{{Jones et~al\mbox  {.}}}{{}}}
 \bibcite{mesbah2012crawling}{{8}{2012}{{Mesbah et~al\mbox  {.}}}{{}}}
 \bibcite{ricca2001testing}{{9}{2001}{{Ricca and Tonella}}{{}}}
@@ -110,14 +121,5 @@
 \newlabel{tocindent1}{6.25499pt}
 \newlabel{tocindent2}{10.34999pt}
 \newlabel{tocindent3}{0pt}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Threats to Validity}{6}{section.5}\protected@file@percent }
-\newlabel{sec:threats}{{5}{6}{Threats to Validity}{section.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{6}{section.6}\protected@file@percent }
-\newlabel{sec:conclusion}{{6}{6}{Conclusion}{section.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces v1 vs.\ v2 Hit@1 on overlapping runs.\relax }}{6}{table.caption.25}\protected@file@percent }
-\newlabel{tab:v1v2}{{4}{6}{v1 vs.\ v2 Hit@1 on overlapping runs.\relax }{table.caption.25}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}v1 Aggregate Comparison}{6}{appendix.A}\protected@file@percent }
-\newlabel{app:v1}{{A}{6}{v1 Aggregate Comparison}{appendix.A}{}}
-\@writefile{toc}{\contentsline {section}{References}{6}{section*.27}\protected@file@percent }
-\newlabel{TotPages}{{6}{6}{}{page.6}{}}
-\gdef \@abspage@last{6}
+\newlabel{TotPages}{{7}{7}{}{page.7}{}}
+\gdef \@abspage@last{7}

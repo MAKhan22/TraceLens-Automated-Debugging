@@ -250,7 +250,14 @@ v2's main design contribution is a \textbf{single fusion score} per step:
   S(i) = \sum_{c \in \mathcal{C}} w_c \cdot f_c(i)
 \end{equation}
 where channels $\mathcal{C}$ include text, navigation, causal action, observer symptom, visual causal, pixel, and optionally LLM and VLM priors (denoted \texttt{llm\_prior} and \texttt{vlm\_prior} in code).
-Weights $w_c$ are fixed in configuration (\texttt{llm\_prior}${}=0.28$, \texttt{vlm\_prior}${}=0.18$, mirroring v1's 60/40 LLM/VLM blend).
+
+\paragraph{Fusion weight selection (not benchmark-tuned).}
+We did \textbf{not} grid-search \texttt{llm\_prior} or \texttt{vlm\_prior} on the 22 labeled traces.
+Both values were fixed in \texttt{v2/config.yaml} \emph{before} aggregate reporting, using a principled carry-over from v1's hybrid ensemble.
+In v1, the final LLM+VLM blend used \texttt{ensemble\_vlm\_weight}${=}0.4$ in \texttt{config.yaml}: each step's hybrid score was $60\%$ LLM rank position and $40\%$ VLM visual score ($1-w$ vs.\ $w$).
+v2 maps the same \textbf{60/40 LLM--VLM ratio} onto the model-prior channels: \texttt{llm\_prior}${=}0.28$ and \texttt{vlm\_prior}${=}0.18$, so $0.28/(0.28+0.18)\approx 61\%$ of the \emph{model-prior budget} goes to the LLM and $39\%$ to the VLM.
+Heuristic channels (text, navigation, pixel, etc.) use separate fixed weights chosen from v1 development experience; only the LLM/VLM split is inherited from the established ensemble policy.
+Section~\ref{sec:threats} discusses this as an internal-validity constraint.
 
 \textbf{Causal attribution} distinguishes \emph{action} steps (clicks, typing) from \emph{observer} steps (verify, wait).
 When errors appear on a verify step, a preceding action step may be the true relative root (\texttt{causal\_action} channel).
@@ -319,7 +326,8 @@ v1 remains in the repository as a reference implementation; all reported main re
 
 \subsection{Benchmark and setup}
 
-We evaluate on \textbf{22 traces} from three independent collections: 8 from efe/irem, 10 from areeb/salem, and 4 from ersel (reported as a \emph{test set} in figures due to distinct schema and intent fields).
+We evaluate on \textbf{22 traces} from three independent collections: 8 from efe/irem, 10 from areeb/salem, and 4 from ersel.
+The ersel traces use a third schema (directory-based \texttt{steps.json}, session-wide console/network logs, and per-step \emph{intent} strings) and are labeled separately in figures as \emph{held-out} only in the sense of a distinct collector---not a statistically held-out train/test split (all 22 traces contribute to aggregate metrics).
 Ground truth specifies one fault step per trace.
 Table~\ref{tab:benchmark} summarizes fault-type frequencies; the full trace catalog is in our repository.
 
@@ -472,7 +480,7 @@ Single fault-step labels simplify evaluation but blur symptom vs.\ cause (e.g., 
 Hit@$k$ and rank distance partially mitigate this by rewarding near-misses.
 
 \textbf{Internal validity.}
-Fusion weights were fixed in \texttt{v2/config.yaml} before aggregate reporting.
+Fusion weights were fixed in \texttt{v2/config.yaml} before aggregate reporting; \texttt{llm\_prior}/\texttt{vlm\_prior} inherit v1's 60/40 LLM--VLM ensemble ratio (\texttt{ensemble\_vlm\_weight}${=}0.4$) rather than being tuned on ground-truth ranks.
 Structural rules were motivated by recurring failure \emph{types}, not by per-trace grid search on ground truth in v2.
 
 \textbf{External validity.}
@@ -487,7 +495,7 @@ Free tiers impose daily request caps, TPM throttling, and a restricted model cat
 Because the LLM and VLM run on \emph{different} providers and model families, we do not assume equal capability across modalities; we report their complementary contributions under a fixed, cost-bounded configuration.
 
 \textbf{Evaluation bias.}
-ersel (4 traces) uses intent fields absent elsewhere.
+ersel (4 traces) uses intent fields and a different on-disk schema than the other collectors; we report it separately in by-source figures for transparency, not as a formal generalization test.
 VLM-only aggregate excludes \texttt{dictionary} ($n{=}21$): the trace artifact lacks complete pass/fail screenshot files for the heuristic top-$K$ candidates (${\sim}5$ steps), so the VLM could not analyze the ranked steps and the run is treated as unavailable (not scored as a miss).
 Hybrid mode still reports a fallback ranking for \texttt{dictionary} using text and pixel channels.
 

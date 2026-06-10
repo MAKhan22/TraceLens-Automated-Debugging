@@ -51,7 +51,7 @@ CONFIGS: list[tuple[str, str]] = [
 SOURCE_META = {
     "efe_irem": {"label": "efe/irem", "color": "#0072B2", "short": "efe"},
     "areeb_salem": {"label": "areeb/salem", "color": "#D55E00", "short": "areeb"},
-    "ersel": {"label": "ersel (test set)", "color": "#009E73", "short": "ersel"},
+    "ersel": {"label": "ersel (held-out schema)", "color": "#009E73", "short": "ersel"},
 }
 
 
@@ -419,7 +419,7 @@ def fig4_v2_rank_distance(runs: dict, out_dir: Path) -> None:
         ax.set_axisbelow(True)
         ax.tick_params(axis="y", labelsize=8)
 
-    axes[-1].set_xlabel("Test trace index (efe → areeb → ersel (test set))")
+    axes[-1].set_xlabel("Trace index (efe → areeb → ersel [distinct schema])")
     axes[-1].set_xticks(x)
     axes[-1].set_xticklabels([str(i) for i in x], fontsize=6, rotation=90)
 
