@@ -51,7 +51,7 @@ CONFIGS: list[tuple[str, str]] = [
 SOURCE_META = {
     "efe_irem": {"label": "efe/irem", "color": "#0072B2", "short": "efe"},
     "areeb_salem": {"label": "areeb/salem", "color": "#D55E00", "short": "areeb"},
-    "ersel": {"label": "ersel", "color": "#009E73", "short": "ersel"},
+    "ersel": {"label": "ersel (test set)", "color": "#009E73", "short": "ersel"},
 }
 
 

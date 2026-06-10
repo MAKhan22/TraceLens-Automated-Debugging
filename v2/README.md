@@ -3,6 +3,8 @@
 Unified fusion ranking: **weighted channels → one sort → no post-hoc promotes**.  
 LLM/VLM provide **soft priors**; diagnosis is **read-only**.
 
+Install and dependencies: [`../INSTALL.md`](../INSTALL.md).
+
 ## Run
 
 From the project root (same flags as `main.py`):
@@ -31,7 +33,7 @@ python main2.py --no-pixel --no-eval
 ```
 Parse → Align → Text scores → Visual scan (if --llm/--vlm)
     → LLM rerank → llm_prior (optional)
-    → VLM analyze → vlm_prior (optional)
+    → VLM analyze (heuristic top-K + injects, not LLM order) → vlm_prior (optional)
     → Fusion channels (v2/features.py)
     → Weighted score (v2/fusion.py)
     → Sort once → top-k

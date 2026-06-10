@@ -7,7 +7,7 @@ LaTeX draft for the conference submission on **multimodal relative debugging** o
 | File | Description |
 |------|-------------|
 | `main.tex` | Full paper (~10 pages when compiled) |
-| `references.bib` | Bibliography (replace placeholder/anonymous entries before submission) |
+| `references.bib` | Bibliography (16 verified entries) |
 | `figures/arch_v2_tikz.tex` | v2 pipeline (TikZ, rendered in LaTeX) |
 | `figures/arch_v1_tikz.tex` | v1 pipeline (TikZ, rendered in LaTeX) |
 | `figures/arch_tikz_styles.tex` | Shared TikZ styles |
@@ -45,11 +45,9 @@ cp paper/figures/arch_v*.png paper/figures/   # already written by script
 
 ## Before submission
 
-1. Replace placeholder `\author{...}` blocks with real names and affiliations.
-3. Swap placeholder bib entries (`kang2023llm`, `chen2024ui`) with published citations.
-4. Verify all numbers against `scripts/metrics_manifest.yaml`.
-5. Confirm page count against venue CFP (typically 10 pages + references).
-6. Add artifact DOI / GitHub link when de-anonymizing.
+1. Verify all numbers against `scripts/metrics_manifest.yaml`.
+2. Confirm page count against venue CFP (typically 10 pages + references).
+3. Add artifact DOI / GitHub link when required by the venue.
 
 ## Related docs
 

@@ -4,8 +4,38 @@ TraceLens is a multimodal automated debugging system that takes a **passing trac
 
 ---
 
+## Quick Start
+
+**Requirements:** Python **3.10+**, trace data on disk (see below). Full install guide: [`INSTALL.md`](INSTALL.md).
+
+```bash
+# 1. Install
+python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+# 2. API keys (.env in project root) — skip for heuristic-only runs
+#    OPENROUTER_API_KEY=...   (for --llm)
+#    GROQ_API_KEY=...         (for --vlm, default config)
+
+# 3. Trace data — see docs/DATA_LAYOUT.md (paths must match config.yaml → data.raw_base)
+
+# 4. Run (v2 = paper / benchmark pipeline)
+python main2.py --llm --vlm                              # all 22 traces
+python main2.py --source efe_irem --trace gutenberg      # one trace, no API
+```
+
+| Goal | Command |
+|------|---------|
+| Paper benchmark (v2) | `python main2.py --llm --vlm` |
+| Heuristic baseline only | `python main2.py` |
+| Legacy v1 pipeline | `python main.py` (same flags) |
+| Regenerate figures | `python scripts/plot_metrics.py` |
+
+---
+
 ## Table of Contents
 
+0. [Quick Start](#quick-start) · [`INSTALL.md`](INSTALL.md) · [`SUBMISSION.md`](SUBMISSION.md) (zip checklist)
 1. [Background & Problem](#1-background--problem)
 2. [Architecture Overview](#2-architecture-overview)
 3. [Pipeline Stages](#3-pipeline-stages)
@@ -19,7 +49,7 @@ TraceLens is a multimodal automated debugging system that takes a **passing trac
 11. [Configuration](#11-configuration)
 12. [Output Files](#12-output-files)
 
-> **Additional guides**: [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/MODES.md`](docs/MODES.md) — pipeline modes, flag behavior, pixel vs visual causal vs VLM. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`docs/RANKING_ARBITRATION.md`](docs/RANKING_ARBITRATION.md) — shared Hit@1 guard policy, deterministic/diagnosis gates. [`docs/TRACE_SELECTION.md`](docs/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
+> **Additional guides**: [`docs/DATA_LAYOUT.md`](docs/DATA_LAYOUT.md) — required folder tree and screenshot naming. [`docs/CONFIG.md`](docs/CONFIG.md) — full configuration reference. [`docs/MODES.md`](docs/MODES.md) — pipeline modes, flag behavior, pixel vs visual causal vs VLM. [`docs/VLM.md`](docs/VLM.md) — VLM + LLM integration, screenshot paths, tuning. [`docs/RANKING_ARBITRATION.md`](docs/RANKING_ARBITRATION.md) — shared Hit@1 guard policy, deterministic/diagnosis gates. [`docs/TRACE_SELECTION.md`](docs/TRACE_SELECTION.md) — trace selection rationale. [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) — traces that need VLM vs text-only fixes.
 
 ---
 
@@ -339,18 +369,19 @@ Hit@k guard tiers are defined in **`src/ranking_arbitrator.py`** (same order for
 
 | Scenario | Recommended command |
 |----------|---------------------|
-| Quick/offline testing, no API | `python main.py` |
-| Text-visible faults | `python main.py --llm` |
-| Screenshot-only faults (`saucedemo_2`, `pypi`, `bbc`) | `python main.py --llm --vlm` |
-| Full 22-trace evaluation (paper/benchmark) | `python main.py --llm --vlm` |
-| Debug VLM in isolation | `python main.py --vlm` |
+| Quick/offline testing, no API | `python main2.py` |
+| Text-visible faults | `python main2.py --llm` |
+| Screenshot-only faults (`saucedemo_2`, `pypi`, `bbc`) | `python main2.py --llm --vlm` |
+| Full 22-trace evaluation (paper/benchmark) | `python main2.py --llm --vlm` |
+| Debug VLM in isolation | `python main2.py --vlm` |
+| Legacy v1 guards / comparison | `python main.py` (same flags) |
 
 ```bash
-# Recommended final evaluation run
-python main.py --llm --vlm
+# Paper / benchmark run (v2)
+python main2.py --llm --vlm
 
 # Single visual-heavy trace
-python main.py --source efe_irem --trace saucedemo_2 --llm --vlm
+python main2.py --source efe_irem --trace saucedemo_2 --llm --vlm
 ```
 
 For screenshot path layouts, tuning `ensemble_vlm_weight`, and rate-limit guidance, see [`docs/VLM.md`](docs/VLM.md). For which pipeline stages run under each CLI flag, see [`docs/MODES.md`](docs/MODES.md).
@@ -400,7 +431,9 @@ Three data formats are supported, sourced from three prior projects provided by 
 | `areeb_salem` | `trace_pass.json` / `trace_fail.json` | JSON steps + external `.txt` log files | Separate `*_console_*.txt` and `*_network_*.txt` files per step |
 | `ersel` | `steps.json` (fail only, pass inferred) | Single `steps.json` with `intent` field | Global `global_console_logs.json` / `global_network_logs.json` (session-level, not per-step) |
 
-**Selected traces**: 22 traces across all three sources are used for evaluation, selected to cover a range of fault types. Full selection rationale (including excluded traces and reasons) is in [`data/evaluation/TRACE_SELECTION.md`](data/evaluation/TRACE_SELECTION.md).
+**Selected traces**: 22 traces across all three sources are used for evaluation, selected to cover a range of fault types. Full selection rationale (including excluded traces and reasons) is in [`docs/TRACE_SELECTION.md`](docs/TRACE_SELECTION.md).
+
+**Data layout**: Raw traces live under `data.raw_base` in `config.yaml`. See [`docs/DATA_LAYOUT.md`](docs/DATA_LAYOUT.md) for the full directory tree, per-trace JSON paths, and screenshot conventions. Ground truth: `data/evaluation/ground_truth.json` (include in submission; `data/` is gitignored).
 
 | Fault type | Example |
 |-----------|---------|
@@ -419,10 +452,13 @@ Three data formats are supported, sourced from three prior projects provided by 
 
 ```
 TraceLens-Automated-Debugging/
-├── main.py                      # Entrypoint — runs the full pipeline
+├── main2.py                     # v2 entrypoint (paper / benchmark) → outputs/v2/
+├── main.py                      # v1 entrypoint (legacy guards) → outputs/
+├── INSTALL.md                   # Install, dependencies, run commands
 ├── config.yaml                  # All paths, model settings, trace list, weights
 ├── requirements.txt
 ├── .env                         # API keys (not committed)
+├── v2/                          # Fusion ranker (features, fusion, runner)
 │
 ├── src/
 │   ├── trace_parser.py          # Raw → unified step schema
@@ -464,59 +500,38 @@ TraceLens-Automated-Debugging/
 
 ## 10. Setup & Running
 
-### Install dependencies
+See **[Quick Start](#quick-start)** and [`INSTALL.md`](INSTALL.md) for install, dependencies, API keys, and data layout.
+
+### v2 (`main2.py`) — recommended
+
+Same flags as v1; writes to `outputs/v2/`. This is the pipeline used in the paper evaluation.
 
 ```bash
-pip install -r requirements.txt
+python main2.py --llm --vlm                    # all 22 traces
+python main2.py --llm                          # LLM only
+python main2.py --source efe_irem --trace gutenberg   # heuristic, no API
+python main2.py --source ersel --no-eval
 ```
 
-### Set up API key
+### v1 (`main.py`) — legacy
 
-Create a `.env` file in the project root:
-
-```
-OPENROUTER_API_KEY=your_key_here
-```
-
-Get a free key at [openrouter.ai/keys](https://openrouter.ai/keys). The active provider and which env variable to read are set via `api_key_env` in `config.yaml`. See [`docs/CONFIG.md`](docs/CONFIG.md) for switching to Groq or Gemini.
-
-### Run a single trace (with LLM)
+Stacked guards and post-hoc promoters. Use for comparison with v1 metrics.
 
 ```bash
 python main.py --source efe_irem --trace gutenberg --llm
-```
-
-### Run a single trace (heuristic only, no API needed)
-
-```bash
-python main.py --source efe_irem --trace gutenberg
-```
-
-### Run all 22 traces (LLM + VLM — recommended)
-
-```bash
 python main.py --llm --vlm
 ```
 
-### Run all 22 traces (LLM only)
+### API keys
 
-```bash
-python main.py --llm
+```env
+OPENROUTER_API_KEY=...   # LLM (OpenRouter) — required for --llm
+GROQ_API_KEY=...         # VLM (Groq) — required for --vlm with default config
 ```
 
-> **Note on rate limits**: `--llm` makes ~66 API calls (3 per trace). `--llm --vlm` adds ~5 VLM calls per trace (~176 total). VLM calls are image-heavy and slower. TraceLens retries indefinitely with exponential backoff on 429. Split long runs with `--skip` or `--from` if needed. See [`docs/VLM.md`](docs/VLM.md) for details.
+Keys are read from `.env` via `api_key_env` in `config.yaml`. See [`docs/CONFIG.md`](docs/CONFIG.md) for Groq/Gemini LLM or OpenRouter VLM alternatives.
 
-### Run all traces for one source
-
-```bash
-python main.py --source ersel
-```
-
-### Skip evaluation (no ground truth needed)
-
-```bash
-python main.py --source efe_irem --trace gutenberg --no-eval
-```
+> **Rate limits**: `--llm` ≈ 3 API calls per trace; `--vlm` adds ≈ 5 image calls per trace. TraceLens retries on 429 with exponential backoff. Split long runs with `--skip` or `--from`. See [`docs/VLM.md`](docs/VLM.md).
 
 ---
 
@@ -528,17 +543,19 @@ Key fields:
 
 ```yaml
 model:
-  base_url:    "https://openrouter.ai/api/v1"   # provider endpoint
-  llm_model:   "openai/gpt-oss-120b:free"       # model ID
-  api_key_env: "OPENROUTER_API_KEY"             # env var name to read from .env
-  temperature: 0.0                             # greedy sampling for reproducible rerank/diagnosis JSON
-  prompt_cache: true                             # OpenRouter static prompt caching (see §5)
+  base_url:    "https://openrouter.ai/api/v1"
+  llm_model:   "nvidia/nemotron-3-super-120b-a12b:free"
+  api_key_env: "OPENROUTER_API_KEY"
+  temperature: 0.0
+  prompt_cache: true
 
 vlm:                              # only used with --vlm flag
-  vlm_model: "google/gemma-4-31b-it:free"
-  ensemble_vlm_weight: 0.4        # used when both --llm and --vlm (60% LLM + 40% VLM)
-  top_k_for_vlm: 5                # screenshot pairs sent to VLM per trace
-  per_step: true                   # one VLM API call per screenshot pair
+  base_url:    "https://api.groq.com/openai/v1"
+  vlm_model:   "meta-llama/llama-4-scout-17b-16e-instruct"
+  api_key_env: "GROQ_API_KEY"
+  ensemble_vlm_weight: 0.4        # when both --llm and --vlm (60% LLM + 40% VLM)
+  top_k_for_vlm: 5
+  per_step: true
 
 ranking:
   top_k:     5    # final ranked steps shown

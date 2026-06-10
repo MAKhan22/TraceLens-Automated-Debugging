@@ -11,74 +11,64 @@ Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=200001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-Warning--empty publisher in kang2023llm
-Warning--empty address in kang2023llm
-Warning--page numbers missing in both pages and numpages fields in kang2023llm
-Warning--empty publisher in chen2024ui
-Warning--empty address in chen2024ui
-Warning--page numbers missing in both pages and numpages fields in chen2024ui
+Warning--empty publisher in abramson1995sc
 Warning--empty publisher in brown2020language
 Warning--empty address in brown2020language
-Warning--page numbers missing in both pages and numpages fields in brown2020language
-Warning--empty publisher in liu2024mind2web
-Warning--empty address in liu2024mind2web
-Warning--page numbers missing in both pages and numpages fields in liu2024mind2web
-Warning--empty publisher in grechanik2009recovering
-Warning--empty address in grechanik2009recovering
-Warning--can't use both volume and number fields in mesbah2012crawling
-Warning--empty publisher in mesbah2012crawling
-Warning--empty address in mesbah2012crawling
-Warning--empty publisher in panichella2015test
-Warning--empty address in panichella2015test
+Warning--empty publisher in deng2023mind2web
+Warning--empty address in deng2023mind2web
+Warning--page numbers missing in both pages and numpages fields in deng2023mind2web
+Warning--no number and no volume in hou2024llm
+Warning--page numbers missing in both pages and numpages fields in hou2024llm
+Warning--empty publisher in jones2002visualization
+Warning--empty address in jones2002visualization
 Warning--empty publisher in ricca2001testing
 Warning--empty address in ricca2001testing
-Warning--empty publisher in wen2020reproducing
-Warning--empty address in wen2020reproducing
-Warning--empty publisher in deng2023webarena
-Warning--empty address in deng2023webarena
-Warning--page numbers missing in both pages and numpages fields in deng2023webarena
-Warning--can't use both volume and number fields in zeller2002simplifying
-Warning--empty publisher in zeller2002simplifying
-Warning--empty address in zeller2002simplifying
-You've used 15 entries,
+Warning--empty publisher in xu2009mining
+Warning--empty address in xu2009mining
+Warning--empty publisher in zheng2024seeact
+Warning--empty address in zheng2024seeact
+Warning--empty publisher in yao2023webarena
+Warning--empty address in yao2023webarena
+Warning--page numbers missing in both pages and numpages fields in yao2023webarena
+You've used 16 entries,
             5981 wiz_defined-function locations,
-            1556 strings with 20166 characters,
-and the built_in function-call counts, 16615 in all, are:
-= -- 1941
-> -- 429
+            1574 strings with 21311 characters,
+and the built_in function-call counts, 20799 in all, are:
+= -- 2620
+> -- 802
 < -- 0
-+ -- 147
-- -- 176
-* -- 1004
-:= -- 1544
-add.period$ -- 74
-call.type$ -- 15
-change.case$ -- 84
-chr.to.int$ -- 14
-cite$ -- 44
-duplicate$ -- 1656
-empty$ -- 1166
-format.name$ -- 196
-if$ -- 4057
-int.to.chr$ -- 3
++ -- 278
+- -- 272
+* -- 1576
+:= -- 2023
+add.period$ -- 79
+call.type$ -- 16
+change.case$ -- 147
+chr.to.int$ -- 16
+cite$ -- 35
+duplicate$ -- 1760
+empty$ -- 1232
+format.name$ -- 332
+if$ -- 5065
+int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 71
-newline$ -- 157
-num.names$ -- 104
-pop$ -- 731
+missing$ -- 72
+newline$ -- 192
+num.names$ -- 112
+pop$ -- 735
 preamble$ -- 1
-purify$ -- 202
+purify$ -- 275
 quote$ -- 0
-skip$ -- 604
+skip$ -- 633
 stack$ -- 0
-substring$ -- 1200
-swap$ -- 137
+substring$ -- 1495
+swap$ -- 177
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 388
-warning$ -- 29
-while$ -- 122
+type$ -- 368
+warning$ -- 19
+while$ -- 97
 width$ -- 0
-write$ -- 318
-(There were 29 warnings)
+write$ -- 367
+(There were 19 warnings)

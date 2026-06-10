@@ -1,3 +1,4 @@
+# Python 3.10+ recommended (tested on 3.12)
 openai>=1.30.0
 pyyaml>=6.0
 python-dotenv>=1.0.0

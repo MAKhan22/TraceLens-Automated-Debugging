@@ -71,7 +71,7 @@ We recommend LLM-only for sharp top-1 localization and hybrid fusion when top-$k
 
 Automated end-to-end (E2E) UI tests produce rich \emph{execution traces}: ordered steps recording browser actions, HTTP traffic, console messages, and screenshots.
 When a test that passed yesterday fails today, debugging is inherently \emph{relative}: engineers diff the good run against the bad run to locate where behavior first diverged.
-We call this task \textbf{relative debugging}, following the compare-against-reference paradigm of Abramson et al.~\cite{abramson1996relative,sosic1997guard}: given a passing trace~$P$ and a failing trace~$F$ for the same test case, rank execution steps by how likely each is the \emph{earliest root cause} of the regression.
+We call this task \textbf{relative debugging}, following the compare-against-reference paradigm of Abramson et al.~\cite{abramson1996relative,abramson1995sc,sosic1997guard}: given a passing trace~$P$ and a failing trace~$F$ for the same test case, rank execution steps by how likely each is the \emph{earliest root cause} of the regression.
 
 Relative debugging differs from classical source-level fault localization~\cite{wong2016survey,agrawal1995fault}.
 The artifact under analysis is an \emph{execution trace}, not a program graph.
@@ -79,7 +79,7 @@ The supervision signal is the pass--fail \emph{pair} itself: anomalies are defin
 
 Three difficulties recur in practice.
 \textbf{(1)~Symptom vs.\ cause.}
-A wrong credential at step~7 may surface only as a verification failure at step~8; ranking by error magnitude favors the symptom~\cite{panichella2015test}.
+A wrong credential at step~7 may surface only as a verification failure at step~8; ranking by error magnitude favors the symptom~\cite{jones2002visualization}.
 \textbf{(2)~Silent and visual faults.}
 Missing form fields, CAPTCHA walls, and stale CDN assets may produce no console or network signal; only screenshots reveal the divergence~\cite{mesbah2012crawling}.
 \textbf{(3)~Noise.}
@@ -87,25 +87,21 @@ Telemetry URLs, placeholder domains, and transient network flicker create spurio
 
 We built \textsc{TraceLens} to automate relative debugging for UI test traces.
 The system parses heterogeneous trace formats, aligns pass and fail steps, extracts multimodal relative features, ranks suspicious steps, and generates technical and stakeholder-facing explanations.
-We evaluate four modes against a \textbf{heuristic baseline} (pass--fail signal diffing without API calls): LLM reranking for causal text reasoning, VLM analysis for screenshot pairs, and hybrid fusion combining both.
+We evaluate five configurations against a \textbf{heuristic baseline} (pass--fail signal diffing without API calls): a no-pixel ablation, LLM reranking, VLM screenshot analysis, and hybrid fusion combining LLM+VLM.
 
 \paragraph{Running example.}
 On the \texttt{hackernews} trace, a Firebase timeout at step~12 causes many quiet steps afterward; heuristics rank a later verify step with higher pixel score.
 The LLM reranker reads \texttt{errors\_observed\_on\_next\_step} and promotes step~12, a canonical \emph{relative} causal pattern.
-On \texttt{amazon}, the ground-truth fault is an auth-gated click (step~20); LLM correctly places it first, but hybrid fusion elevates an earlier scroll step with large screenshot diff, illustrating the LLM/hybrid tradeoff we quantify in Section~\ref{sec:eval}.
+On \texttt{amazon}, the ground-truth fault is an auth-gated click (step~20); text and visual channels can disagree on which step to rank first---we analyze such cases in Section~\ref{sec:eval}.
 
-Our evaluation on 22 traces shows complementary strengths rather than a single winner.
-The heuristic baseline reaches 64\% Hit@1.
-\textbf{LLM-only} mode achieves the highest Hit@1 (\textbf{86\%}), indicating strong text and causal ranking when logs and actions are informative.
-\textbf{Hybrid} fusion matches or exceeds LLM on Hit@3 (100\% vs.\ 95\%) and on rank-quality metrics (lower mean rank distance and MAD@5), recovering visual-dominant or ambiguous cases (e.g., \texttt{github}) while occasionally regressing when visual noise overrides text (e.g., \texttt{amazon}).
-We therefore treat LLM as the default for sharp top-1 localization and hybrid as the multimodal setting when top-$k$ robustness and visual evidence matter.
+Section~\ref{sec:eval} reports results for all five configurations on 22 traces and discusses which mode fits different debugging workflows; we do not assume a winner before measurement.
 
 \paragraph{Contributions.}
 \begin{itemize}
   \item \textbf{TraceLens}, an end-to-end relative debugging pipeline for UI regression traces with interpretable multimodal signals and stakeholder reports.
   \item \textbf{Multimodal relative features}, including navigation mismatch detection, visual-causal walk-back from persistent screenshot divergence, and observer vs.\ action attribution.
   \item \textbf{v2 unified fusion}, replacing v1's trace-specific guard stack with a single weighted ranker; LLM/VLM outputs are soft priors and diagnosis is read-only.
-  \item \textbf{Empirical study} on 22 diverse traces with ablations and an LLM vs.\ hybrid tradeoff analysis.
+  \item \textbf{Empirical study} comparing all five configurations on 22 diverse traces, with ablations and per-mode analysis.
 \end{itemize}
 
 %==============================================================================
@@ -114,10 +110,11 @@ We therefore treat LLM as the default for sharp top-1 localization and hybrid as
 
 \paragraph{Relative and delta debugging.}
 Abramson et al.~\cite{abramson1996relative} introduced \emph{relative debugging}: locating errors by comparing a suspect program's state against a trusted reference execution.
-The \textsc{Guard} tool~\cite{sosic1997guard} operationalized this for scientific software evolution.
+Their SC'95 application to large numerical models~\cite{abramson1995sc} validated the approach on evolving scientific codes.
+The \textsc{Guard} tool~\cite{sosic1997guard} operationalized relative debugging for software evolution.
 We adapt the same principle to UI test traces: the pass run is the reference and the fail run is the suspect; divergence is measured per aligned step rather than per variable.
 Delta debugging~\cite{zeller2002simplifying} isolates failure-inducing \emph{inputs} by systematically simplifying test cases; relative debugging instead ranks \emph{execution steps} where pass and fail behavior diverge.
-Trace comparison also appears in log analysis~\cite{grechanik2009recovering,panichella2015test} and web testing~\cite{ricca2001testing,mesbah2012crawling}, but prior tools rarely publish reproducible ranking metrics over multimodal UI traces with ground-truth fault steps.
+Trace comparison also appears in log analysis~\cite{xu2009mining,jones2002visualization} and web testing~\cite{ricca2001testing,mesbah2012crawling}, but prior tools rarely publish reproducible ranking metrics over multimodal UI traces with ground-truth fault steps.
 
 \paragraph{Fault localization.}
 Spectrum-based and learning-based fault localization~\cite{wen2020reproducing,wong2016survey} rank \emph{source entities} (statements, methods) using coverage and pass/fail test outcomes.
@@ -125,9 +122,9 @@ Spectrum-based and learning-based fault localization~\cite{wen2020reproducing,wo
 The tasks are complementary: trace-step localization supports test maintainers; code-level FL supports developers patching production code.
 
 \paragraph{LLMs and VLMs for software engineering.}
-Recent surveys document LLM use for bug repair, log parsing, and code generation~\cite{kang2023llm,brown2020language}.
+Recent surveys document LLM use for bug repair, log parsing, and code generation~\cite{hou2024llm,brown2020language}.
 We use an LLM as a \emph{reranker} over compact relative features, not as a patch generator.
-Vision-language models enable GUI understanding~\cite{deng2023webarena,liu2024mind2web,chen2024ui}; we apply VLMs to \emph{pass vs.\ fail screenshot pairs} at candidate steps identified by cheaper heuristics, controlling API cost.
+Vision-language models enable GUI understanding~\cite{yao2023webarena,deng2023mind2web,zheng2024seeact}; we apply VLMs to \emph{pass vs.\ fail screenshot pairs} at candidate steps identified by cheaper heuristics, controlling API cost.
 
 \paragraph{Gap.}
 No prior work combines (i)~heterogeneous real UI trace schemas, (ii)~explicit relative multimodal features, (iii)~LLM and VLM priors in one fusion ranker, and (iv)~Hit@$k$ evaluation including text-invisible faults, in a reproducible open-source implementation with frozen benchmark runs.
@@ -210,7 +207,7 @@ Three visual layers differ in scope and cost:
 \textbf{Visual-causal attribution} scans all steps when visual mode is enabled, finds the earliest \emph{persistent} screenshot divergence, and walks back to a silent cause step (e.g., missing zipcode visible only on the next screen).
 This uses deterministic rules, not a neural model.
 
-\textbf{VLM analysis} sends pass/fail pairs for top-$K$ candidates (${\sim}5$ steps) to a vision-language model, returning per-step visual scores and a suggested root step.
+\textbf{VLM analysis} sends pass/fail pairs for top-$K$ candidates to a vision-language model, returning per-step visual scores and a suggested root step.
 Visual-causal steps are injected into the VLM candidate pool; scores can backfill from symptom steps onto cause steps.
 
 \subsection{LLM relative reranking}
@@ -223,6 +220,27 @@ The LLM returns an ordered list and a diagnosis.
 In \textbf{v2}, rerank positions map to an \texttt{llm\_prior} fusion channel; diagnosis \textbf{does not} change the final rank.
 
 We use OpenRouter with temperature~$0.0$ (Nemotron-3-Super-120B for text) to maximize reproducibility; provider routing may still introduce variance.
+
+\paragraph{Why top-15 for the LLM pool.}
+Our traces contain roughly 20--40 aligned steps.
+Sending all steps to the LLM (\texttt{pre\_llm\_k}${=}0$) increases token cost and context length on free-tier APIs without improving aggregate Hit@1 on our benchmark.
+Conversely, restricting the pool to heuristic top-5 would miss causal steps that score low on text alone (e.g., silent navigation faults later promoted by the LLM).
+\textbf{Top-15} balances recall and cost: it covers the heuristic shortlist while staying within prompt limits.
+Steps outside the top-15 can still enter the pool via \emph{injection} when they carry strong relative signals (navigation mismatch, action change, errors on the next step, visual-causal root).
+This design mirrors test-information visualization work that highlights a focused subset of execution events rather than entire traces~\cite{jones2002visualization}.
+The value is fixed in \texttt{config.yaml} before evaluation.
+
+\paragraph{Why top-5 for VLM screenshot pairs.}
+VLM inference is the dominant API cost: with \texttt{per\_step=true}, each analyzed step requires one multimodal call per trace.
+We set \texttt{top\_k\_for\_vlm}${=}5$ to match the final ranked output size (\texttt{top\_k}${=}5$) and our Hit@5 metric, while keeping daily free-tier quotas feasible on 22 traces.
+Visual-causal divergence steps are injected into the VLM pool even when they fall outside the top-5 heuristic band, analogous to LLM injection.
+Section~\ref{sec:threats} notes that incomplete screenshot artifacts (e.g., \texttt{dictionary}) can prevent VLM analysis of the full top-5 pool.
+
+\paragraph{Hybrid ordering (LLM then VLM).}
+Hybrid mode (\texttt{--llm --vlm}) runs the LLM reranker \emph{before} the VLM API call so both \texttt{llm\_prior} and \texttt{vlm\_prior} are ready at fusion time; the two model calls are sequential, not parallel.
+In \textbf{v2}, however, the VLM still selects screenshot pairs from the \textbf{heuristic} top-$K$ (plus visual-causal injects), not from the LLM rerank list: the LLM does not directly narrow which PNG pairs the VLM sees.
+Instead, both modalities contribute soft priors to the same fusion pool (Section~\ref{sec:fusion}).
+v1's stacked pipeline (\texttt{main.py}) \emph{did} pass the LLM-hard-ranked top-$K$ to the VLM---we removed that hard feed-forward in v2 to keep ranking policy in one fusion function rather than a chained override.
 
 \subsection{v2 unified fusion}
 \label{sec:fusion}
@@ -248,12 +266,14 @@ When the verify step itself is labeled as ground truth (symptom-on-verify faults
 Steps are sorted once by~$S(i)$.
 Hybrid mode (\texttt{--llm --vlm}) activates all channels; LLM-only and VLM-only use the same scorer with different channel subsets.
 
-\paragraph{Mode summary.}
+\paragraph{Evaluation modes.}
+We compare five configurations from the same v2 ranker (Section~\ref{sec:eval} reports outcomes):
 \begin{itemize}
-  \item \textbf{Heuristic (baseline):} fast, interpretable pass--fail diff; 64\% Hit@1; misses causal reasoning on hard traces.
-  \item \textbf{LLM:} best Hit@1 (86\%); strong when logs and actions encode causality.
-  \item \textbf{VLM:} addresses visual faults; weaker alone on network-heavy traces; higher latency and cost.
-  \item \textbf{Hybrid:} best Hit@3 and rank distance; trades one Hit@1 vs.\ LLM when visual channel overweighted.
+  \item \textbf{Heuristic (baseline):} pass--fail diff only; no LLM/VLM calls (\texttt{python main2.py}).
+  \item \textbf{No pixel:} baseline without local screenshot diff (\texttt{--no-pixel}).
+  \item \textbf{LLM:} adds text reranking and an \texttt{llm\_prior} channel (\texttt{--llm}).
+  \item \textbf{VLM:} adds screenshot-pair analysis and a \texttt{vlm\_prior} channel (\texttt{--vlm}).
+  \item \textbf{Hybrid:} all channels active (\texttt{--llm --vlm}).
 \end{itemize}
 
 \subsection{v1 architecture and limitations}
@@ -289,11 +309,11 @@ v1 remains in the repository as a reference implementation; all reported main re
 
 \subsection{Research questions}
 
-\textbf{RQ1:} How much do LLM and multimodal fusion improve relative step ranking over the heuristic baseline?
+\textbf{RQ1:} How much do LLM, VLM, and hybrid fusion improve relative step ranking over the heuristic baseline?
 
-\textbf{RQ2:} What is the contribution of pixel/visual channels?
+\textbf{RQ2:} What is the contribution of pixel/visual channels (no-pixel ablation)?
 
-\textbf{RQ3:} How do LLM-only and hybrid compare on Hit@1 vs.\ top-$k$ and rank-quality metrics?
+\textbf{RQ3:} How do LLM-only and hybrid compare across Hit@$k$ and rank-quality metrics?
 
 \textbf{RQ4:} How does performance vary across data sources and fault signal types?
 
@@ -326,7 +346,7 @@ All main results use v2 (\texttt{main2.py}) with frozen run JSONs listed in \tex
 Baseline: \texttt{python main2.py}.
 \textbf{Models (free tier).}
 LLM: \texttt{nvidia/nemotron-3-super-120b-a12b:free} via OpenRouter ($T{=}0$).
-VLM: \texttt{meta-llama/llama-4-scout-17b-16e-instruct} via Groq ($T{=}0$), ${\sim}5$ screenshot pairs per trace.
+VLM: \texttt{meta-llama/llama-4-scout-17b-16e-instruct} via Groq ($T{=}0$), five screenshot pairs per trace (\texttt{top\_k\_for\_vlm}, Section~\ref{sec:llm}).
 We chose separate free-tier providers to stay within daily quotas without paid credits; this constrains model choice and throughput relative to commercial APIs.
 
 \subsection{Results}
@@ -358,13 +378,15 @@ Every mode except no-pixel heuristic beats the baseline on Hit@3 or rank distanc
 
 \textbf{RQ2.} Removing pixel changes Hit@1 from 64\% to 68\% on this corpus; marginal on aggregate, but pixel and visual-causal channels are essential for screenshot-primary faults (Section~\ref{sec:case}).
 
-\textbf{RQ3.} Figure~\ref{fig:tradeoff} summarizes the LLM vs.\ hybrid tradeoff.
-Hybrid wins Hit@3 (100\% vs.\ 95\%) and mean rank distance (0.27 vs.\ 0.32) but loses one Hit@1 (18/22 vs.\ 19/22).
+\textbf{RQ3.} Figures~\ref{fig:tradeoff} and~\ref{fig:radar} compare LLM and hybrid directly.
+\textbf{LLM achieves the highest top-1 rate} (86\% Hit@1; 19/22 traces).
+\textbf{Hybrid is stronger on overall ranking quality}: 100\% Hit@3 (vs.\ 95\%), lower mean rank distance (0.27 vs.\ 0.32), and lower MAD@5 (6.07 vs.\ 6.94).
+Neither mode dominates every metric; per-trace disagreements (e.g., \texttt{amazon}, \texttt{github}) are analyzed in Section~\ref{sec:case}.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figures/fig6_llm_vs_hybrid_tradeoff.png}
-  \caption{LLM vs.\ hybrid on Hit@1/3, mean rank distance, and MAD@5 (v2, 22 traces).}
+  \caption{LLM vs.\ hybrid (v2, 22 traces). LLM leads on Hit@1 (top-1 localization); hybrid leads on Hit@3, mean rank distance, and MAD@5 (overall rank quality).}
   \Description{Bar chart comparing LLM and hybrid metrics.}
   \label{fig:tradeoff}
 \end{figure}
@@ -380,12 +402,12 @@ Hybrid wins Hit@3 (100\% vs.\ 95\%) and mean rank distance (0.27 vs.\ 0.32) but 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figures/fig5_radar_combined.png}
-  \caption{Multi-metric radar comparison across v1 and v2 modes (Hit@1/3/5, rank distance, MAD@5).}
+  \caption{Multi-metric radar (v1 and v2). On the v2 panel, LLM extends furthest on Hit@1; hybrid leads on Hit@3/5, rank distance, and MAD@5.}
   \Description{Radar chart comparing aggregate metrics for v1 and v2 configurations.}
   \label{fig:radar}
 \end{figure}
 
-Figure~\ref{fig:hitk} shows Hit@$k$ across all modes; Figure~\ref{fig:radar} summarizes multiple metrics on a common scale.
+Figure~\ref{fig:hitk} shows Hit@$k$ for all five configurations; Figure~\ref{fig:radar} summarizes multi-metric profiles.
 Figure~\ref{fig:heatmap} gives per-trace Hit@1; Figure~\ref{fig:source} breaks Hit@1 by source collection.
 
 \begin{figure}[t]
@@ -426,6 +448,16 @@ Grouping traces by primary signal type reveals expected mode strengths.
 \textbf{Screenshot-primary faults} (4 traces): the baseline reaches 75\% Hit@1 (3/4); both LLM and hybrid reach 100\% because v2's local visual-causal scan runs even in LLM-only mode.
 \textbf{Absence-of-activity} (\texttt{wolfram}, both \texttt{wikipedia} traces): navigation and missing-page features are critical; LLM reranking promotes the silent navigation fault over CDN noise.
 
+\subsection{Discussion}
+\label{sec:discussion}
+
+Table~\ref{tab:main} and Figures~\ref{fig:tradeoff}--\ref{fig:radar} show that no configuration dominates every metric.
+The heuristic baseline (64\% Hit@1) is fast and API-free but misses causal and screenshot-primary faults.
+\textbf{LLM-only} achieves the highest top-1 rate (86\% Hit@1) and suits workflows that need a single best suspect.
+\textbf{Hybrid} is strongest on overall ranking quality (100\% Hit@3, lowest mean rank distance and MAD@5) and suits workflows that need a robust shortlist.
+\textbf{VLM-only} is competitive on top-$k$ but weaker alone at top-1; we treat it primarily as a hybrid component given API cost.
+\textbf{No-pixel} ablation shows marginal aggregate gain from local screenshot diff but clear value on screenshot-primary traces (Section~\ref{sec:case}).
+
 \subsection{v1 comparison}
 
 On partial runs, v1 heuristic reached 55\% Hit@1 ($n{=}22$); v1 hybrid ${\sim}70\%$ ($n{=}10$) did not reliably beat v1 LLM (${\sim}72\%$, $n{=}18$) due to guard interactions.
@@ -465,7 +497,7 @@ Hybrid mode still reports a fallback ranking for \texttt{dictionary} using text 
 
 Relative debugging of UI test regressions benefits from multimodal pass--fail comparison.
 \textsc{TraceLens} demonstrates a reproducible pipeline from aligned trace diffs through LLM/VLM priors to ranked suspects and stakeholder explanations.
-Against a 64\% heuristic baseline, LLM-only achieves 86\% Hit@1; hybrid fusion trades one top-1 hit for perfect Hit@3 and better rank quality.
+Against a 64\% heuristic baseline, results show LLM-only achieves the best top-1 localization (86\% Hit@1) while hybrid fusion is strongest overall (100\% Hit@3, lowest rank distance and MAD@5).
 v2's unified fusion replaces v1's trace-specific guard brittleness with a single interpretable scorer.
 
 \textbf{Future work} includes a larger public relative-debugging benchmark, learned fusion weights, multi-fault labels, CI integration, and practitioner user studies.

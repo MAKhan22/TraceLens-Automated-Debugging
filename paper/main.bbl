@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -37,6 +37,19 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
+\bibitem[Abramson et~al\mbox{.}(1995)]%
+        {abramson1995sc}
+\bibfield{author}{\bibinfo{person}{David Abramson}, \bibinfo{person}{Ian
+  Foster}, \bibinfo{person}{John Michalakes}, {and} \bibinfo{person}{Rok
+  Sosi{\c{c}}}.} \bibinfo{year}{1995}\natexlab{}.
+\newblock \showarticletitle{Relative Debugging and its Application to the
+  Development of Large Numerical Models}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 1995 ACM/IEEE Conference on
+  Supercomputing (SC)}}. \bibinfo{address}{San Diego, CA, USA},
+  \bibinfo{pages}{51}.
+\newblock
+
+
 \bibitem[Abramson et~al\mbox{.}(1996)]%
         {abramson1996relative}
 \bibfield{author}{\bibinfo{person}{David Abramson}, \bibinfo{person}{Ian
@@ -47,6 +60,9 @@
 \newblock \bibinfo{journal}{\emph{Commun. ACM}} \bibinfo{volume}{39},
   \bibinfo{number}{11} (\bibinfo{year}{1996}), \bibinfo{pages}{67--77}.
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/240455.240475}
+\showDOI{\tempurl}
 
 
 \bibitem[Agrawal et~al\mbox{.}(1995)]%
@@ -60,85 +76,85 @@
   \bibinfo{volume}{21}, \bibinfo{number}{2} (\bibinfo{year}{1995}),
   \bibinfo{pages}{149--162}.
 \newblock
-
-
-\bibitem[Authors(2024a)]%
-        {kang2023llm}
-\bibfield{author}{\bibinfo{person}{Placeholder Authors}.}
-  \bibinfo{year}{2024}\natexlab{a}.
-\newblock \showarticletitle{Large Language Models for Software Engineering: A
-  Systematic Literature Review}. In \bibinfo{booktitle}{\emph{Proceedings of
-  the Conference Name Placeholder (Venue 'XX)}}.
-\newblock
-\newblock
-\shownote{Replace with published survey before submission}.
-
-
-\bibitem[Authors(2024b)]%
-        {chen2024ui}
-\bibfield{author}{\bibinfo{person}{Placeholder Authors}.}
-  \bibinfo{year}{2024}\natexlab{b}.
-\newblock \showarticletitle{Vision-Language Models for Graphical User Interface
-  Understanding}. In \bibinfo{booktitle}{\emph{Proceedings of the Conference
-  Name Placeholder (Venue 'XX)}}.
-\newblock
-\newblock
-\shownote{Replace with WebArena/Mind2Web or related citation}.
+\urldef\tempurl%
+\url{https://doi.org/10.1109/32.345428}
+\showDOI{\tempurl}
 
 
 \bibitem[Brown et~al\mbox{.}(2020)]%
         {brown2020language}
-\bibfield{author}{\bibinfo{person}{Tom~B. Brown} {et~al\mbox{.}}}
-  \bibinfo{year}{2020}\natexlab{}.
+\bibfield{author}{\bibinfo{person}{Tom~B. Brown}, \bibinfo{person}{Benjamin
+  Mann}, \bibinfo{person}{Nick Ryder}, \bibinfo{person}{Melanie Subbiah},
+  \bibinfo{person}{Jared Kaplan}, \bibinfo{person}{Prafulla Dhariwal},
+  \bibinfo{person}{Arvind Neelakantan}, \bibinfo{person}{Pranav Shyam},
+  \bibinfo{person}{Girish Sastry}, \bibinfo{person}{Amanda Askell},
+  {et~al\mbox{.}}} \bibinfo{year}{2020}\natexlab{}.
 \newblock \showarticletitle{Language Models are Few-Shot Learners}. In
   \bibinfo{booktitle}{\emph{Advances in Neural Information Processing Systems
-  (NeurIPS)}}.
+  (NeurIPS)}}, Vol.~\bibinfo{volume}{33}. \bibinfo{pages}{1877--1901}.
 \newblock
 
 
 \bibitem[Deng et~al\mbox{.}(2023)]%
-        {liu2024mind2web}
-\bibfield{author}{\bibinfo{person}{Xiang Deng} {et~al\mbox{.}}}
+        {deng2023mind2web}
+\bibfield{author}{\bibinfo{person}{Xiang Deng}, \bibinfo{person}{Yu Gu},
+  \bibinfo{person}{Boyuan Zheng}, \bibinfo{person}{Shijie Chen},
+  \bibinfo{person}{Samuel Stevens}, \bibinfo{person}{Boshi Wang},
+  \bibinfo{person}{Huan Sun}, {and} \bibinfo{person}{Yu Su}.}
   \bibinfo{year}{2023}\natexlab{}.
-\newblock \showarticletitle{Mind2Web: Towards a Generalist Agent for the Web}.
-  In \bibinfo{booktitle}{\emph{Advances in Neural Information Processing
+\newblock \showarticletitle{{Mind2Web}: Towards a Generalist Agent for the
+  Web}. In \bibinfo{booktitle}{\emph{Advances in Neural Information Processing
   Systems (NeurIPS)}}.
 \newblock
 
 
-\bibitem[Grechanik et~al\mbox{.}(2009)]%
-        {grechanik2009recovering}
-\bibfield{author}{\bibinfo{person}{Mark Grechanik}, \bibinfo{person}{Chen Fu},
-  {and} \bibinfo{person}{Qiang Xie}.} \bibinfo{year}{2009}\natexlab{}.
-\newblock \showarticletitle{Automatically Finding Performance Problems with
-  Feedback-Directed Monitoring as You Go}. In
-  \bibinfo{booktitle}{\emph{Proceedings of the International Symposium on
-  Software Testing and Analysis (ISSTA)}}. \bibinfo{pages}{227--238}.
+\bibitem[Hou et~al\mbox{.}(2024)]%
+        {hou2024llm}
+\bibfield{author}{\bibinfo{person}{Xinyi Hou}, \bibinfo{person}{Yanjie Zhao},
+  \bibinfo{person}{Yue Liu}, \bibinfo{person}{Zhou Yang},
+  \bibinfo{person}{Kailong Wang}, \bibinfo{person}{Li Li},
+  \bibinfo{person}{Xiapu Luo}, \bibinfo{person}{David Lo},
+  \bibinfo{person}{John Grundy}, {and} \bibinfo{person}{Haoyu Wang}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Large Language Models for Software Engineering: A
+  Systematic Literature Review}.
+\newblock \bibinfo{journal}{\emph{ACM Transactions on Software Engineering and
+  Methodology}} (\bibinfo{year}{2024}).
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3695988}
+\showDOI{\tempurl}
+
+
+\bibitem[Jones et~al\mbox{.}(2002)]%
+        {jones2002visualization}
+\bibfield{author}{\bibinfo{person}{James~A. Jones}, \bibinfo{person}{Mary~Jean
+  Harrold}, {and} \bibinfo{person}{John Stasko}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Visualization of Test Information to Assist Fault
+  Localization}. In \bibinfo{booktitle}{\emph{Proceedings of the 24th
+  International Conference on Software Engineering (ICSE)}}.
+  \bibinfo{pages}{467--477}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/1060527.1060605}
+\showDOI{\tempurl}
 
 
 \bibitem[Mesbah et~al\mbox{.}(2012)]%
         {mesbah2012crawling}
-\bibfield{author}{\bibinfo{person}{Ali Mesbah} {et~al\mbox{.}}}
+\bibfield{author}{\bibinfo{person}{Ali Mesbah}, \bibinfo{person}{Arie van
+  Deursen}, {and} \bibinfo{person}{Stefan Lenselink}.}
   \bibinfo{year}{2012}\natexlab{}.
-\newblock \showarticletitle{Crawling Ajax-Based Web Applications through
-  Dynamic Analysis of User Interface State Changes}. In
-  \bibinfo{booktitle}{\emph{ACM Transactions on the Web}},
-  Vol.~\bibinfo{volume}{6}. \bibinfo{pages}{1--30}.
+\newblock \showarticletitle{Crawling {Ajax-Based} Web Applications through
+  Dynamic Analysis of User Interface State Changes}.
+\newblock \bibinfo{journal}{\emph{ACM Transactions on the Web}}
+  \bibinfo{volume}{6}, \bibinfo{number}{1} (\bibinfo{year}{2012}),
+  \bibinfo{pages}{3:1--3:30}.
 \newblock
-
-
-\bibitem[Panichella et~al\mbox{.}(2015)]%
-        {panichella2015test}
-\bibfield{author}{\bibinfo{person}{Alessandro Panichella} {et~al\mbox{.}}}
-  \bibinfo{year}{2015}\natexlab{}.
-\newblock \showarticletitle{How Developers Debug Software: The Role of Log
-  Points}. In \bibinfo{booktitle}{\emph{Proceedings of the International
-  Conference on Software Maintenance and Evolution (ICSME)}}.
-  \bibinfo{pages}{1--10}.
-\newblock
-\newblock
-\shownote{Log-based debugging representative}.
+\urldef\tempurl%
+\url{https://doi.org/10.1145/2076796.2076799}
+\showDOI{\tempurl}
 
 
 \bibitem[Ricca and Tonella(2001)]%
@@ -146,9 +162,12 @@
 \bibfield{author}{\bibinfo{person}{Filippo Ricca} {and} \bibinfo{person}{Paolo
   Tonella}.} \bibinfo{year}{2001}\natexlab{}.
 \newblock \showarticletitle{Analysis and Testing of Web Applications}. In
-  \bibinfo{booktitle}{\emph{Proceedings of the International Conference on
+  \bibinfo{booktitle}{\emph{Proceedings of the 23rd International Conference on
   Software Engineering (ICSE)}}. \bibinfo{pages}{25--34}.
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/381896.381900}
+\showDOI{\tempurl}
 
 
 \bibitem[Sosi{\c{c}} and Abramson(1997)]%
@@ -160,38 +179,53 @@
   \bibinfo{volume}{27}, \bibinfo{number}{2} (\bibinfo{year}{1997}),
   \bibinfo{pages}{185--206}.
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1002/(SICI)1097-024X(199702)27:2<185::AID-SPE104>3.0.CO;2-1}
+\showDOI{\tempurl}
 
 
-\bibitem[Wen et~al\mbox{.}(2020)]%
+\bibitem[Wen et~al\mbox{.}(2021)]%
         {wen2020reproducing}
-\bibfield{author}{\bibinfo{person}{Ming Wen} {et~al\mbox{.}}}
-  \bibinfo{year}{2020}\natexlab{}.
-\newblock \showarticletitle{Historical Spectrum Based Fault Localization}. In
-  \bibinfo{booktitle}{\emph{Proceedings of the International Conference on
-  Software Engineering (ICSE)}}. \bibinfo{pages}{1--12}.
+\bibfield{author}{\bibinfo{person}{Ming Wen}, \bibinfo{person}{Junjie Chen},
+  \bibinfo{person}{Yongqiang Tian}, \bibinfo{person}{Rongxin Wu},
+  \bibinfo{person}{Dan Hao}, \bibinfo{person}{Shi Han}, {and}
+  \bibinfo{person}{Shing-Chi Cheung}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{Historical Spectrum Based Fault Localization}.
+\newblock \bibinfo{journal}{\emph{IEEE Transactions on Software Engineering}}
+  \bibinfo{volume}{47}, \bibinfo{number}{11} (\bibinfo{year}{2021}),
+  \bibinfo{pages}{2348--2368}.
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/TSE.2019.2948158}
+\showDOI{\tempurl}
 \newblock
-\shownote{Spectrum-based FL representative}.
+\shownote{Journal-first version, ICSE 2020}.
 
 
 \bibitem[Wong et~al\mbox{.}(2016)]%
         {wong2016survey}
-\bibfield{author}{\bibinfo{person}{W.~Eric Wong} {et~al\mbox{.}}}
+\bibfield{author}{\bibinfo{person}{W.~Eric Wong}, \bibinfo{person}{Ruizhi
+  Dong}, \bibinfo{person}{Yu Qi}, {and} \bibinfo{person}{Jian Zhang}.}
   \bibinfo{year}{2016}\natexlab{}.
 \newblock \showarticletitle{A Survey on Software Fault Localization}.
 \newblock \bibinfo{journal}{\emph{IEEE Transactions on Reliability}}
   \bibinfo{volume}{65}, \bibinfo{number}{3} (\bibinfo{year}{2016}),
   \bibinfo{pages}{841--867}.
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/TR.2016.2527818}
+\showDOI{\tempurl}
 
 
-\bibitem[Yao et~al\mbox{.}(2024)]%
-        {deng2023webarena}
-\bibfield{author}{\bibinfo{person}{Shunyu Yao} {et~al\mbox{.}}}
-  \bibinfo{year}{2024}\natexlab{}.
-\newblock \showarticletitle{WebArena: A Realistic Web Environment for Building
-  Autonomous Agents}. In \bibinfo{booktitle}{\emph{International Conference on
-  Learning Representations (ICLR)}}.
+\bibitem[Xu et~al\mbox{.}(2009)]%
+        {xu2009mining}
+\bibfield{author}{\bibinfo{person}{Wei Xu}, \bibinfo{person}{Ling Huang},
+  \bibinfo{person}{Armando Fox}, \bibinfo{person}{David~A. Patterson}, {and}
+  \bibinfo{person}{Michael~I. Jordan}.} \bibinfo{year}{2009}\natexlab{}.
+\newblock \showarticletitle{Detecting Large-Scale System Problems by Mining
+  Console Logs}. In \bibinfo{booktitle}{\emph{Proceedings of the 6th USENIX
+  Symposium on Operating Systems Design and Implementation (OSDI)}}.
+  \bibinfo{pages}{117--132}.
 \newblock
 
 
@@ -200,8 +234,39 @@
 \bibfield{author}{\bibinfo{person}{Andreas Zeller}.}
   \bibinfo{year}{2002}\natexlab{}.
 \newblock \showarticletitle{Simplifying and Isolating Failure-Inducing Input}.
-  In \bibinfo{booktitle}{\emph{IEEE Transactions on Software Engineering}},
-  Vol.~\bibinfo{volume}{28}. \bibinfo{pages}{183--200}.
+\newblock \bibinfo{journal}{\emph{IEEE Transactions on Software Engineering}}
+  \bibinfo{volume}{28}, \bibinfo{number}{2} (\bibinfo{year}{2002}),
+  \bibinfo{pages}{183--200}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/32.988498}
+\showDOI{\tempurl}
+
+
+\bibitem[Zheng et~al\mbox{.}(2024)]%
+        {zheng2024seeact}
+\bibfield{author}{\bibinfo{person}{Boyuan Zheng}, \bibinfo{person}{Boyu Gou},
+  \bibinfo{person}{Jihyung Kil}, \bibinfo{person}{Huan Sun}, {and}
+  \bibinfo{person}{Yu Su}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{GPT-4V}(ision) is a Generalist Web Agent, if
+  Grounded}. In \bibinfo{booktitle}{\emph{Proceedings of the 41st International
+  Conference on Machine Learning (ICML)}}, Vol.~\bibinfo{volume}{235}.
+  \bibinfo{pages}{61349--61385}.
+\newblock
+
+
+\bibitem[Zhou et~al\mbox{.}(2024)]%
+        {yao2023webarena}
+\bibfield{author}{\bibinfo{person}{Shuyan Zhou}, \bibinfo{person}{Frank~F. Xu},
+  \bibinfo{person}{Hao Zhu}, \bibinfo{person}{Xuhui Zhou},
+  \bibinfo{person}{Robert Lo}, \bibinfo{person}{Abishek Sridhar},
+  \bibinfo{person}{Xianyi Cheng}, \bibinfo{person}{Tianyue Ou},
+  \bibinfo{person}{Yonatan Bisk}, \bibinfo{person}{Daniel Fried},
+  \bibinfo{person}{Uri Alon}, {and} \bibinfo{person}{Graham Neubig}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{WebArena}: A Realistic Web Environment for
+  Building Autonomous Agents}. In \bibinfo{booktitle}{\emph{International
+  Conference on Learning Representations (ICLR)}}.
 \newblock
 
 
