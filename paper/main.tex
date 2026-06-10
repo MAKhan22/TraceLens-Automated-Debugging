@@ -300,27 +300,27 @@ v1 remains in the repository as a reference implementation; all reported main re
 \subsection{Benchmark and setup}
 
 We evaluate on \textbf{22 traces} from three independent collections: 8 from efe/irem, 10 from areeb/salem, and 4 from ersel (reported as a \emph{test set} in figures due to distinct schema and intent fields).
-Ground truth specifies one fault step per trace covering network errors, authentication failures, console crashes, screenshot-only faults, absence-of-activity faults, and form/input faults.
-Table~\ref{tab:benchmark} lists a representative subset; the full catalog is in our repository.
+Ground truth specifies one fault step per trace.
+Table~\ref{tab:benchmark} summarizes fault-type frequencies; the full trace catalog is in our repository.
 
-\begin{table*}[t]
-  \caption{Representative benchmark traces (22 total). GT = ground-truth fault step (0-indexed).}
+\begin{table}[t]
+  \caption{Benchmark fault-type frequencies ($n{=}22$ traces). Coverage is collector-driven (e.g., seven HTTP-error traces, one JS exception).}
   \label{tab:benchmark}
   \small
-  \begin{tabular}{llrll}
+  \begin{tabular}{lr}
     \toprule
-    Trace & Source & GT & Fault type & Primary signal \\
+    Failure type & $n$ \\
     \midrule
-    hackernews & areeb/salem & 12 & Firebase timeout & Console + network \\
-    amazon & areeb/salem & 20 & Auth-gated action & Console + action \\
-    github & areeb/salem & 23 & JS rendering crash & Console \\
-    saucedemo\_2 & efe/irem & 27 & Missing zipcode & Screenshot only \\
-    wolfram & efe/irem & 12 & Wrong element clicked & Absence of activity \\
-    wikipedia & efe/irem & 13 & Broken anchor / TOC & Network noise \\
-    opencart\_wishlist\_35 & ersel & 22 & HTTP 404 product & Intent + network \\
+    HTTP 404/500 & 7 \\
+    Wrong navigation / invalid input & 5 \\
+    UI state mismatch & 3 \\
+    Timeout / connection lost & 2 \\
+    Auth-gated / credential failure & 2 \\
+    Backend OK, frontend fail & 2 \\
+    JS exception & 1 \\
     \bottomrule
   \end{tabular}
-\end{table*}
+\end{table}
 
 All main results use v2 (\texttt{main2.py}) with frozen run JSONs listed in \texttt{scripts/metrics\_manifest.yaml}.
 Baseline: \texttt{python main2.py}.
@@ -446,6 +446,7 @@ Structural rules were motivated by recurring failure \emph{types}, not by per-tr
 \textbf{External validity.}
 22 English UI traces from academic collectors are not industry-scale.
 Three trace schemas limit generalization without adapter code.
+Table~\ref{tab:benchmark} shows uneven fault-type coverage, so mode strengths on rare categories (e.g., JS exceptions, $n{=}1$) are estimated from small samples.
 
 \textbf{Conclusion validity.}
 LLM/VLM APIs with $T{=}0$ may still vary by provider routing; we report frozen run timestamps in the repository.
