@@ -28,29 +28,29 @@
 \newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
 \@writefile{toc}{\contentsline {paragraph}{Running example.}{1}{section*.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Contributions.}{1}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Background and Related Work}{1}{section.2}\protected@file@percent }
-\newlabel{sec:related}{{2}{1}{Background and Related Work}{section.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Relative and delta debugging.}{1}{section*.7}\protected@file@percent }
 \citation{wen2020reproducing,wong2016survey}
 \citation{hou2024llm,brown2020language}
 \citation{yao2023webarena,deng2023mind2web,zheng2024seeact}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textsc  {TraceLens} v2 pipeline. Pass and fail traces are parsed, aligned, and differenced into fusion channels; optional LLM/VLM priors feed a single weighted sort. Diagnosis is read-only.\relax }}{2}{figure.caption.11}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:arch-v2}{{1}{2}{\textsc {TraceLens} v2 pipeline. Pass and fail traces are parsed, aligned, and differenced into fusion channels; optional LLM/VLM priors feed a single weighted sort. Diagnosis is read-only.\relax }{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background and Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Background and Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Relative and delta debugging.}{2}{section*.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Fault localization.}{2}{section*.8}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{LLMs and VLMs for software engineering.}{2}{section*.9}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Gap.}{2}{section*.10}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Pass--fail relative signals in \textsc  {TraceLens}.\relax }}{2}{table.caption.12}\protected@file@percent }
-\newlabel{tab:signals}{{1}{2}{Pass--fail relative signals in \textsc {TraceLens}.\relax }{table.caption.12}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Approach}{2}{section.3}\protected@file@percent }
 \newlabel{sec:approach}{{3}{2}{Approach}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Task formulation}{2}{subsection.3.1}\protected@file@percent }
 \newlabel{sec:task}{{3.1}{2}{Task formulation}{subsection.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textsc  {TraceLens} v2 pipeline. Pass and fail traces are parsed, aligned, and differenced into fusion channels; optional LLM/VLM priors feed a single weighted sort. Diagnosis is read-only.\relax }}{2}{figure.caption.11}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:arch-v2}{{1}{2}{\textsc {TraceLens} v2 pipeline. Pass and fail traces are parsed, aligned, and differenced into fusion channels; optional LLM/VLM priors feed a single weighted sort. Diagnosis is read-only.\relax }{figure.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Pass--fail relative signals in \textsc  {TraceLens}.\relax }}{2}{table.caption.12}\protected@file@percent }
+\newlabel{tab:signals}{{1}{2}{Pass--fail relative signals in \textsc {TraceLens}.\relax }{table.caption.12}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Relative signal extraction (heuristic baseline)}{2}{subsection.3.2}\protected@file@percent }
 \newlabel{sec:heuristic}{{3.2}{2}{Relative signal extraction (heuristic baseline)}{subsection.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Visual relative signals}{2}{subsection.3.3}\protected@file@percent }
-\newlabel{sec:visual}{{3.3}{2}{Visual relative signals}{subsection.3.3}{}}
 \citation{jones2002visualization}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Visual relative signals}{3}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:visual}{{3.3}{3}{Visual relative signals}{subsection.3.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}LLM relative reranking}{3}{subsection.3.4}\protected@file@percent }
 \newlabel{sec:llm}{{3.4}{3}{LLM relative reranking}{subsection.3.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Why top-15 for the LLM pool.}{3}{section*.13}\protected@file@percent }
@@ -60,10 +60,10 @@
 \newlabel{sec:fusion}{{3.5}{3}{v2 unified fusion}{subsection.3.5}{}}
 \@writefile{toc}{\contentsline {paragraph}{Fusion weight selection (not benchmark-tuned).}{3}{section*.16}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Evaluation modes.}{3}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}v1 architecture and limitations}{3}{subsection.3.6}\protected@file@percent }
-\newlabel{sec:v1}{{3.6}{3}{v1 architecture and limitations}{subsection.3.6}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces v1 stacked pipeline (\texttt  {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }}{4}{figure.caption.18}\protected@file@percent }
 \newlabel{fig:arch-v1}{{2}{4}{v1 stacked pipeline (\texttt {main.py}). Highlighted stages can override prior rankings. Hybrid runs LLM overrides before VLM overrides and a second guard pass.\relax }{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}v1 architecture and limitations}{4}{subsection.3.6}\protected@file@percent }
+\newlabel{sec:v1}{{3.6}{4}{v1 architecture and limitations}{subsection.3.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{4}{section.4}\protected@file@percent }
 \newlabel{sec:eval}{{4}{4}{Evaluation}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Research questions}{4}{subsection.4.1}\protected@file@percent }
@@ -88,8 +88,6 @@
 \bibstyle{ACM-Reference-Format}
 \bibdata{references}
 \bibcite{abramson1995sc}{{1}{1995}{{Abramson et~al\mbox  {.}}}{{}}}
-\bibcite{abramson1996relative}{{2}{1996}{{Abramson et~al\mbox  {.}}}{{}}}
-\bibcite{agrawal1995fault}{{3}{1995}{{Agrawal et~al\mbox  {.}}}{{}}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Analysis by signal type}{6}{subsection.4.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Discussion}{6}{subsection.4.6}\protected@file@percent }
 \newlabel{sec:discussion}{{4.6}{6}{Discussion}{subsection.4.6}{}}
@@ -103,7 +101,8 @@
 \newlabel{app:v1}{{A}{6}{v1 Aggregate Comparison}{appendix.A}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces v1 vs.\ v2 Hit@1 on overlapping runs.\relax }}{6}{table.caption.27}\protected@file@percent }
 \newlabel{tab:v1v2}{{4}{6}{v1 vs.\ v2 Hit@1 on overlapping runs.\relax }{table.caption.27}{}}
-\@writefile{toc}{\contentsline {section}{References}{6}{section*.29}\protected@file@percent }
+\bibcite{abramson1996relative}{{2}{1996}{{Abramson et~al\mbox  {.}}}{{}}}
+\bibcite{agrawal1995fault}{{3}{1995}{{Agrawal et~al\mbox  {.}}}{{}}}
 \bibcite{brown2020language}{{4}{2020}{{Brown et~al\mbox  {.}}}{{}}}
 \bibcite{deng2023mind2web}{{5}{2023}{{Deng et~al\mbox  {.}}}{{}}}
 \bibcite{hou2024llm}{{6}{2024}{{Hou et~al\mbox  {.}}}{{}}}
@@ -122,5 +121,6 @@
 \newlabel{tocindent1}{6.25499pt}
 \newlabel{tocindent2}{10.34999pt}
 \newlabel{tocindent3}{0pt}
+\@writefile{toc}{\contentsline {section}{References}{7}{section*.29}\protected@file@percent }
 \newlabel{TotPages}{{7}{7}{}{page.7}{}}
 \gdef \@abspage@last{7}
